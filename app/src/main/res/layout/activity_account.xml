@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_account"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:background="#8A978D"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_manage_accounts_24"
+            android:contentDescription="Account Icon"
+            android:layout_gravity="center_vertical" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/accountInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/avatar"
+            android:contentDescription="Avatar Image"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circular_shape"
+            android:clipToOutline="true"
+            android:outlineProvider="background" />
+
+        <TextView
+            android:id="@+id/profileUsername"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical" />
+
+        <ImageView
+            android:id="@+id/logoutBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_logout_24"
+            android:contentDescription="Logout Icon"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/accountInfo"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thiết lập tài khoản"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:background="#EDEDED"
+                android:textColor="#555555" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:background="#FFFFFF"
+                android:elevation="1dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/changeInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chỉnh sửa thông tin"
+                    android:padding="10dp"
+                    android:drawableEnd="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:background="?android:attr/selectableItemBackground" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Thay đổi mật khẩu"
+                    android:padding="10dp"
+                    android:drawableEnd="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:background="?android:attr/selectableItemBackground" />
+
+                <LinearLayout
+                    android:id="@+id/tvNotificationSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/tvNotificationLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Bật thông báo" />
+
+                    <Switch
+                        android:id="@+id/switchNotification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="Bật thông báo"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thông tin thêm"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:background="#EDEDED"
+                android:textColor="#555555" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:background="#FFFFFF"
+                android:elevation="1dp">
+
+                <TextView
+                    android:id="@+id/tvAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Về chúng tôi"
+                    android:padding="10dp"
+                    android:drawableEnd="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:background="?android:attr/selectableItemBackground" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chính sách bảo mật"
+                    android:padding="10dp"
+                    android:drawableEnd="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:background="?android:attr/selectableItemBackground" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/bottomNavigation"
+        layout="@layout/activity_bottom_nav_base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

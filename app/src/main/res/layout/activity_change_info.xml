@@ -1,0 +1,119 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_change_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5"
+    android:gravity="top"
+    >
+
+    <!-- Top Bar -->
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#8A978D"
+        android:padding="12dp"
+        android:elevation="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="16dp">
+
+        <!-- Back Icon -->
+        <ImageView
+            android:id="@+id/backIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back Icon"
+            android:padding="4dp"
+            android:src="@drawable/baseline_arrow_back_ios_new_24" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Thông tin tài khoản"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
+    <!-- Full Name EditText -->
+    <EditText
+        android:id="@+id/fullNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:textSize="14sp"
+        android:padding="12dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_background" />
+
+    <!-- Phone Number EditText -->
+    <EditText
+        android:id="@+id/phoneNumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number"
+        android:textSize="14sp"
+        android:padding="12dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_background" />
+
+
+    <!-- Date of Birth TextView -->
+    <TextView
+        android:id="@+id/dateOfBirthTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date of Birth"
+        android:textSize="14sp"
+        android:padding="12dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_background" />
+
+    <!-- Gender Selection with RadioGroup -->
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <RadioButton
+            android:id="@+id/maleCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nam"
+            android:layout_marginEnd="16dp"/>
+
+        <RadioButton
+            android:id="@+id/femaleCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nữ"
+            android:layout_marginEnd="16dp"/>
+    </RadioGroup>
+
+    <!-- Update Button -->
+    <Button
+        android:id="@+id/updateBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="#8A978D"
+        android:padding="14dp"
+        android:text="Chỉnh sửa"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true" />
+
+</LinearLayout>

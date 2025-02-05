@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8A978D">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="16dp"
+        android:text="Car Booking"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Pick-up Point -->
+    <EditText
+        android:id="@+id/et_pickup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/ic_location"
+        android:hint="Pick-up Point"
+        android:padding="12dp" />
+
+    <!-- Destination -->
+    <EditText
+        android:id="@+id/et_destination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_pickup"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/ic_destination"
+        android:hint="Destination"
+        android:padding="12dp" />
+
+    <!-- Departure Date -->
+    <TextView
+        android:id="@+id/tv_departure_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_destination"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/ic_calendar"
+        android:gravity="center_vertical"
+        android:padding="12dp"
+        android:text="Select Departure Date"
+        android:textColor="@color/black" />
+
+    <!-- Round-Trip Toggle -->
+    <LinearLayout
+        android:id="@+id/round_trip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_departure_date"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Round Trip"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/switch_round_trip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp" />
+    </LinearLayout>
+
+    <!-- Return Date -->
+    <TextView
+        android:id="@+id/tv_return_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/round_trip_layout"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/ic_calendar"
+        android:gravity="center_vertical"
+        android:padding="12dp"
+        android:text="Select Return Date"
+        android:textColor="@color/black"
+        android:visibility="gone" />
+
+    <!-- Booking Button -->
+    <Button
+        android:id="@+id/btn_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_return_date"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/black"
+        android:padding="14dp"
+        android:text="Book Now"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <include
+        android:id="@+id/bottomNavigation"
+        layout="@layout/activity_bottom_nav_base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "32472269058",
+    "project_id": "bookcar-ce16f",
+    "storage_bucket": "bookcar-ce16f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:32472269058:android:41c3753a9ec7f82df6421b",
+        "android_client_info": {
+          "package_name": "com.example.bookcar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDNNO9LqR9qbXSnFfG6Z4_LRGd4oSw70k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
