@@ -1,16 +1,26 @@
 package com.example.bookcar.model;
 
 public class Order {
+    private String documentId;
     private String departure;
     private String destination;
     private String departureDate;
     private String returnDate;
 
-    public Order(String departure, String destination, String departureDate, String returnDate) {
+    public Order(String documentId, String departure, String destination, String departureDate, String returnDate) {
+        this.documentId = documentId;
         this.departure = departure;
         this.destination = destination;
         this.departureDate = departureDate;
         this.returnDate = returnDate;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 
     public String getDeparture() {

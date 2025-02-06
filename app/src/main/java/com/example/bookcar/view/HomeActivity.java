@@ -151,10 +151,10 @@ public class HomeActivity extends AppCompatActivity {
                 .collection("orders")
                 .add(order)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(HomeActivity.this, "Booking Successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "Bạn đã đặt xe thành công", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(HomeActivity.this, "Failed to book: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "Đặt xe thất bại " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
         etPickup.setText("");

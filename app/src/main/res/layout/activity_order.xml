@@ -44,7 +44,9 @@
                         android:id="@+id/lvCurrentOrder"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:dividerHeight="1dp" />
+                        android:dividerHeight="1dp"
+                        />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -53,6 +55,11 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="8dp">
+                    <ListView
+                        android:id="@+id/lvCompleteOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:dividerHeight="1dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -61,6 +68,11 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="8dp">
+                    <ListView
+                        android:id="@+id/lvCancelOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:dividerHeight="1dp" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>

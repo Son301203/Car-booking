@@ -66,12 +66,12 @@ public class LoginActivity extends AppCompatActivity {
                 password = edtPassword.getText().toString();
 
                 if(TextUtils.isEmpty(email)) {
-                    Toast.makeText(LoginActivity.this, "Please enter email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Hãy nhập email", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(TextUtils.isEmpty(password)) {
-                    Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Hãy nhập mật khẩu", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -81,11 +81,11 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                                     Intent homeView = new Intent(LoginActivity.this, HomeActivity.class);
                                     startActivity(homeView);
                                 } else {
-                                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

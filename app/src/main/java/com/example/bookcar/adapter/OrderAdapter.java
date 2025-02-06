@@ -38,16 +38,16 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         Order order = orderList.get(position);
 
         TextView depature = convertView.findViewById(R.id.txtDepature);
-        depature.setText("Depature: " + order.getDeparture());
+        depature.setText("Điểm đón: " + order.getDeparture());
 
         TextView destination = convertView.findViewById(R.id.txtDestination);
-        destination.setText("Destination: " + order.getDestination());
+        destination.setText("Điểm đến: " + order.getDestination());
 
         TextView deparureDate = convertView.findViewById(R.id.txtDepatureDate);
-        deparureDate.setText("Deparute Date: " + order.getDepartureDate());
+        deparureDate.setText("Ngày đi: " + order.getDepartureDate());
 
         TextView returnDate = convertView.findViewById(R.id.txtReturnDate);
-        returnDate.setText("Return Date: " + order.getReturnDate());
+        returnDate.setText("Ngày về: " + order.getReturnDate());
 
         return convertView;
 
