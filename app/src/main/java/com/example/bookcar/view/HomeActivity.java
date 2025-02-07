@@ -1,5 +1,6 @@
 package com.example.bookcar.view;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -23,6 +29,7 @@ import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.installations.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,7 +39,7 @@ import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private TextView tvDepartureDate, tvReturnDate;
+    private TextView tvDepartureDate, tvReturnDate, tvLocationPickerDeparture, tvLocationPickerDestination;
     private EditText etPickup, etDestination;
     private Switch switchRoundTrip;
     private Button btnBook;
@@ -40,6 +47,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +67,8 @@ public class HomeActivity extends AppCompatActivity {
         etDestination = findViewById(R.id.et_destination);
         tvDepartureDate = findViewById(R.id.tv_departure_date);
         tvReturnDate = findViewById(R.id.tv_return_date);
+        tvLocationPickerDeparture = findViewById(R.id.tv_select_pickup_map);
+        tvLocationPickerDestination = findViewById(R.id.tv_select_destination_map);
         switchRoundTrip = findViewById(R.id.switch_round_trip);
         btnBook = findViewById(R.id.btn_book);
         calendar = Calendar.getInstance();
@@ -64,6 +76,14 @@ public class HomeActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        // Handle Location picker departure
+        tvLocationPickerDeparture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, LocationPickerDepartureActivity.class);
+                locationPickerActivityResultLauncher.launch(intent);
+            }
+        });
 
         // Handle Departure Date Selection
         tvDepartureDate.setOnClickListener(v -> showDatePickerDialog(tvDepartureDate));
@@ -81,6 +101,26 @@ public class HomeActivity extends AppCompatActivity {
 
         TabUtils.setupTabs(this);
     }
+
+    private ActivityResultLauncher<Intent> locationPickerActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult o) {
+                    if(o.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = o.getData();
+
+                        if(data != null) {
+                            latitude = data.getDoubleExtra("latitude", 0.0);
+                            longitude = data.getDoubleExtra("longitude", 0.0);
+                        }
+                    }
+                    else{
+                        Toast.makeText(HomeActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
 
     private void showDatePickerDialog(TextView textView) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(

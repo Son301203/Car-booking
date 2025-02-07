@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- Location permission -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +16,9 @@
         android:theme="@style/Theme.BookCar"
         tools:remove="android:appComponentFactory"
         tools:targetApi="31">
+        <activity
+            android:name=".view.LocationPickerDepartureActivity"
+            android:exported="false" />
         <activity
             android:name=".view.ChangeInfoActivity"
             android:exported="false" />
@@ -43,6 +49,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_api_key" />
     </application>
 
 </manifest>
