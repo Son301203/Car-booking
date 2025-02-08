@@ -50,6 +50,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private double latitude = 0.0;
     private double longitude = 0.0;
+    private String address = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +114,9 @@ public class HomeActivity extends AppCompatActivity {
                         if(data != null) {
                             latitude = data.getDoubleExtra("latitude", 0.0);
                             longitude = data.getDoubleExtra("longitude", 0.0);
+                            address = data.getStringExtra("address");
+
+                            tvLocationPickerDeparture.setText(address);
                         }
                     }
                     else{
