@@ -50,7 +50,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private double latitude = 0.0;
     private double longitude = 0.0;
+
+    private double departureLatitude = 0.0, departureLongitude = 0.0;
+    private double destinationLatitude = 0.0, destinationLongitude = 0.0;
     private String address = "";
+
+    private boolean isPickingDeparture = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +86,16 @@ public class HomeActivity extends AppCompatActivity {
         tvLocationPickerDeparture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isPickingDeparture = true;
+                Intent intent = new Intent(HomeActivity.this, LocationPickerDepartureActivity.class);
+                locationPickerActivityResultLauncher.launch(intent);
+            }
+        });
+
+        tvLocationPickerDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isPickingDeparture = false;
                 Intent intent = new Intent(HomeActivity.this, LocationPickerDepartureActivity.class);
                 locationPickerActivityResultLauncher.launch(intent);
             }
@@ -116,7 +131,15 @@ public class HomeActivity extends AppCompatActivity {
                             longitude = data.getDoubleExtra("longitude", 0.0);
                             address = data.getStringExtra("address");
 
-                            tvLocationPickerDeparture.setText(address);
+                            if(isPickingDeparture) {
+                                tvLocationPickerDeparture.setText(address);
+                                departureLatitude = latitude;
+                                departureLongitude = longitude;
+                            }else{
+                                tvLocationPickerDestination.setText(address);
+                                destinationLatitude = latitude;
+                                destinationLongitude = longitude;
+                            }
                         }
                     }
                     else{
@@ -178,11 +201,10 @@ public class HomeActivity extends AppCompatActivity {
         String returnDate = switchRoundTrip.isChecked() ? tvReturnDate.getText().toString() : "";
 
         if (pickup.isEmpty() || destination.isEmpty() || departureDate.equals("Select Departure Date")) {
-            Toast.makeText(this, "Please fill all required fields!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Bạn hãy nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Create order details
         Map<String, Object> order = new HashMap<>();
         order.put("pickup", pickup);
         order.put("destination", destination);
@@ -195,6 +217,26 @@ public class HomeActivity extends AppCompatActivity {
                 .collection("orders")
                 .add(order)
                 .addOnSuccessListener(documentReference -> {
+                    String orderId = documentReference.getId(); // Get the newly created order ID
+
+                    // Departure Coordinates
+                    Map<String, Object> departureCoords = new HashMap<>();
+                    departureCoords.put("latitude", departureLatitude);
+                    departureCoords.put("longitude", departureLongitude);
+                    db.collection("users").document(userId)
+                            .collection("orders").document(orderId)
+                            .collection("departureCoordinates")
+                            .add(departureCoords);
+
+                    // Destination Coordinates
+                    Map<String, Object> destinationCoords = new HashMap<>();
+                    destinationCoords.put("latitude", destinationLatitude);
+                    destinationCoords.put("longitude", destinationLongitude);
+                    db.collection("users").document(userId)
+                            .collection("orders").document(orderId)
+                            .collection("destinationCoordinates")
+                            .add(destinationCoords);
+
                     Toast.makeText(HomeActivity.this, "Bạn đã đặt xe thành công", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
@@ -203,8 +245,11 @@ public class HomeActivity extends AppCompatActivity {
 
         etPickup.setText("");
         etDestination.setText("");
-        tvDepartureDate.setText("");
-        tvReturnDate.setText("");
+        tvDepartureDate.setText("Ngày đi");
+        tvReturnDate.setText("Ngày về");
+        tvLocationPickerDeparture.setText("Chọn điểm đón trên bản đồ");
+        tvLocationPickerDestination.setText("Chọn điểm đến trên bản đồ");
 
     }
+
 }
