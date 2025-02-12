@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Main Driver</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="../frontend/css/dashboard.css">
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <div id="sidebar">
+        <h3>Dashboard</h3>
+        <a href="./manage_main_driver.html">🚗 Main Driver</a>
+        <a href="./arange_driver.html">👤 Arrange Driver</a>
+    </div>
+
+    <div class="container mt-4">
+        <h2>🚗 Manage Main Drivers</h2>
+
+        <!-- Add Driver Form -->
+        <form id="driverForm">
+            <div class="form-group">
+                <input type="text" id="name" class="form-control" placeholder="Driver Name" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="phone" class="form-control" placeholder="Phone Number" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="license" class="form-control" placeholder="License Number" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="identification" class="form-control" placeholder="Identification Number"
+                    required>
+            </div>
+            <div class="form-group">
+                <input type="date" id="date_of_birth" class="form-control" placeholder="Date of Birth" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" class="form-control" placeholder="Email Address" required>
+            </div>
+            <div class="form-group">
+                <select id="gender" class="form-control" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="roll" class="form-control" required>
+                    <option value="main">Main</option>
+                    <option value="transit">Transit</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Driver</button>
+        </form>
+
+        <!-- Driver List -->
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>License</th>
+                    <th>Identification</th>
+                    <th>Date of Birth</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Roll</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="driverList"></tbody>
+        </table>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Driver</h5>
+                    <button type="button" class="close" onclick="editModal.style.display='none'">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDriverForm">
+                        <div class="form-group">
+                            <input type="text" id="edit_name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="edit_phone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="edit_license" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="edit_identification" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" id="edit_date_of_birth" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="edit_email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="edit_gender" class="form-control" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="edit_roll" class="form-control" required>
+                                <option value="main">Main</option>
+                                <option value="transit">Transit</option>
+                            </select>
+                        </div>
+                        <button type="button" id="updateDriver" class="btn btn-success">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../frontend/js/dashboard.js"></script>
+    <script type="module" src="../backend/manage_driver.js"></script>
+
+</body>
+
+
+</html>

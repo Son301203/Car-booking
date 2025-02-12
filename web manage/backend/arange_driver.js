@@ -18,29 +18,23 @@ const firebaseConfig = {
   measurementId: "G-MSLG5YBGE5"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Function to fetch users and their sub-collections (orders)
 async function fetchUserData() {
   const usersCollection = collection(db, "users");
   const usersSnapshot = await getDocs(usersCollection);
   let userDataArray = [];
 
-  // Iterate over each user document
   for (const userDoc of usersSnapshot.docs) {
     const userData = userDoc.data();
     const userId = userDoc.id;
     
-    // Access the sub-collection "orders" for each user
     const ordersCollection = collection(db, `users/${userId}/orders`);
 
-    // Create a query to only fetch documents where state is "booked"
     const q = query(ordersCollection, where("state", "==", "Booked"));
     const ordersSnapshot = await getDocs(q);
 
-    // Process each order that matches the query
     ordersSnapshot.forEach((orderDoc) => {
       const orderData = orderDoc.data();
       userDataArray.push({
@@ -57,7 +51,6 @@ async function fetchUserData() {
   renderTable(userDataArray);
 }
 
-// Function to render data into the table
 function renderTable(userDataArray) {
   const tbody = document.getElementById("tbody_user_info");
   tbody.innerHTML = "";
