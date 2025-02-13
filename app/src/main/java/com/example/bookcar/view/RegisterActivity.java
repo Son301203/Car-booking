@@ -92,12 +92,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(username) ||
                 TextUtils.isEmpty(password) || TextUtils.isEmpty(re_password) || TextUtils.isEmpty(phone)) {
-            Toast.makeText(RegisterActivity.this, "Please fill all the field", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Các trường không được để trống", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!password.equals(re_password)) {
-            Toast.makeText(RegisterActivity.this, "Password not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -112,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
                             finish();
 
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -129,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         db.collection("users").document(userId)
                 .set(user)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Sign up successfully", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to Save User" + e.getMessage(), Toast.LENGTH_SHORT).show());
 
     }
