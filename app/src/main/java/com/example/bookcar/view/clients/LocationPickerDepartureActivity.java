@@ -1,4 +1,4 @@
-package com.example.bookcar.view;
+package com.example.bookcar.view.clients;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -43,7 +43,6 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 public class LocationPickerDepartureActivity extends AppCompatActivity implements OnMapReadyCallback {
 

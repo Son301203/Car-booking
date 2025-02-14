@@ -34,10 +34,11 @@ async function addDriver(e) {
     const email = document.getElementById("email").value;
     const gender = document.getElementById("gender").value;
     const roll = document.getElementById("roll").value;
+    const password = generatePassword();
     
     try {
         await addDoc(collection(db, "drivers"), {
-            name, phone, license, identification, date_of_birth, email, gender, roll
+            name, phone, license, identification, date_of_birth, email, gender, roll, password
         });
         alert("Driver added successfully!");
         driverForm.reset();
@@ -48,6 +49,17 @@ async function addDriver(e) {
 }
 
 driverForm.addEventListener("submit", addDriver);
+
+// random password
+function generatePassword() {
+    var length = 8,
+        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
+}
 
 // Fetch & Display Drivers
 async function fetchDrivers() {

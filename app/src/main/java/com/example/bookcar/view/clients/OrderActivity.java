@@ -1,7 +1,6 @@
-package com.example.bookcar.view;
+package com.example.bookcar.view.clients;
 
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;

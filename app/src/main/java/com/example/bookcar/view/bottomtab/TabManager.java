@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.widget.LinearLayout;
 
 import com.example.bookcar.view.AccountActivity;
-import com.example.bookcar.view.HomeActivity;
+import com.example.bookcar.view.clients.HomeActivity;
 import com.example.bookcar.view.NotificationsActivity;
-import com.example.bookcar.view.OrderActivity;
+import com.example.bookcar.view.clients.OrderActivity;
 
 
 public class TabManager {

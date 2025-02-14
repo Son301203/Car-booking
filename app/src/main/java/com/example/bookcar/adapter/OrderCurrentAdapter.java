@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.example.bookcar.R;
 import com.example.bookcar.model.Order;
-import com.example.bookcar.view.OrderActivity;
+import com.example.bookcar.view.clients.OrderActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
