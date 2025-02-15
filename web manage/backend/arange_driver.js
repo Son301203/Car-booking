@@ -25,12 +25,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Global array to store customer data
+
 let customerData = [];
 
-// Global variable to store the current driver role ("transit" or "main")
+
 let currentRole = "";
 
+
+//  Fetch Customers
 
 async function fetchUserData() {
   const usersCollection = collection(db, "users");
@@ -41,7 +43,7 @@ async function fetchUserData() {
     const userData = userDoc.data();
     const userId = userDoc.id;
 
-    // Access the subcollection "orders" for each user and only get orders where state is "Booked"
+    // state is "Booked"
     const ordersCollection = collection(db, `users/${userId}/orders`);
     const q = query(ordersCollection, where("state", "==", "Booked"));
     const ordersSnapshot = await getDocs(q);
@@ -75,7 +77,8 @@ function renderTable(dataArray) {
           data-userid="${customer.userId}"
           data-orderid="${customer.orderId}"
           data-username="${customer.username}"
-          data-phone="${customer.phone}">
+          data-phone="${customer.phone}"
+          data-departuredate="${customer.departureDate}">
       </td>
       <td>${index + 1}</td>
       <td>${customer.username}</td>
@@ -89,14 +92,13 @@ function renderTable(dataArray) {
   });
 }
 
-//Return an array of selected customer checkboxes
+// selected customer checkboxes
 function getSelectedCustomers() {
   const checkboxes = document.querySelectorAll(".customer-checkbox:checked");
   return Array.from(checkboxes);
 }
 
-
-// show driver for roll
+// Open Modal Driver Data
 async function showDriverModal(role) {
   currentRole = role; 
   const modalDriverList = document.getElementById("modalDriverList");
@@ -128,14 +130,20 @@ async function showDriverModal(role) {
   driverModal.show();
 }
 
-// Arrange Selected Driver for Each Selected Customer
-
+//arrange Driver
 async function arrangeDriver(selectedDriverId) {
   const selectedCustomers = getSelectedCustomers();
   if (selectedCustomers.length === 0) {
     alert("Please select at least one customer.");
     return;
   }
+  
+  const firstCheckbox = selectedCustomers[0];
+  const tripDate = firstCheckbox.dataset.departuredate;
+  
+  const tripDocRef = await addDoc(collection(db, `drivers/${selectedDriverId}/trips`), {
+    dateTrip: tripDate,
+  });
   
   for (const checkbox of selectedCustomers) {
     const userId = checkbox.dataset.userid;
@@ -159,8 +167,8 @@ async function arrangeDriver(selectedDriverId) {
       destinationCoordinates = doc.data(); 
     });
     
-    // Add a new document to the driver's trips subcollection
-    await addDoc(collection(db, `drivers/${selectedDriverId}/trips`), {
+    // Add client data to the trip's "clients" subcollection
+    await addDoc(collection(db, `drivers/${selectedDriverId}/trips/${tripDocRef.id}/clients`), {
       customerId: userId,
       customerName: username,
       phone: phone,
@@ -178,8 +186,6 @@ async function arrangeDriver(selectedDriverId) {
       updateData.mainDriverArranged = true;
       updateData.mainDriverId = selectedDriverId;
     }
-
-    // Update the order document with the arrangement info
     const orderDocRef = doc(db, "users", userId, "orders", orderId);
     await updateDoc(orderDocRef, updateData);
 
@@ -187,15 +193,13 @@ async function arrangeDriver(selectedDriverId) {
     const orderSnapshot = await getDoc(orderDocRef);
     const orderData = orderSnapshot.data();
     if (orderData.transitDriverArranged && orderData.mainDriverArranged) {
-      //update the state to "Arranged"
       await updateDoc(orderDocRef, { state: "Arranged" });
     }
   }
   
-  alert("Driver arranged for selected customers!");
+  alert("Driver arranged for selected customers in one trip!");
   fetchUserData();
 }
-
 document.getElementById("showTransitDrivers").addEventListener("click", () => {
   showDriverModal("transit");
 });
@@ -213,6 +217,5 @@ document.getElementById("modalArrangeDriverBtn").addEventListener("click", () =>
   const driverId = selectedRadio.value;
   arrangeDriver(driverId);
 });
-
 
 fetchUserData();
