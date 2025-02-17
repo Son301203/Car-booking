@@ -1,6 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:radius="12dp"
+    app:cardElevation="4dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="#FFFFFF">
+
+        <!-- Departure Date -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_date"
+                android:contentDescription="Departure Date"
+                android:layout_marginEnd="8dp"
+                app:tint="#2196F3" />
+
+            <TextView
+                android:id="@+id/departure_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ngày: 2025-02-17"
+                android:textSize="16sp"
+                android:textColor="#333333"
+                android:fontFamily="sans-serif-medium"/>
+        </LinearLayout>
+
+        <!-- Departure Time -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_time"
+                android:contentDescription="Departure Time"
+                app:tint="#2196F3"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/departure_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giờ: 14:30"
+                android:textSize="16sp"
+                android:textColor="#333333"
+                android:fontFamily="sans-serif-medium"/>
+        </LinearLayout>
+
+        <!-- Number of Passengers -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_passenger"
+                android:contentDescription="Number of Passengers"
+                android:layout_marginEnd="8dp"
+                app:tint="#2196F3" />
+
+            <TextView
+                android:id="@+id/num_passengers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số khách: 4"
+                android:textSize="16sp"
+                android:textColor="#333333"
+                android:fontFamily="sans-serif-medium"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

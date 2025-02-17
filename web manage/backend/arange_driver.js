@@ -5,7 +5,6 @@ import {
   getDocs,
   getDoc,
   query,
-  where,
   addDoc,
   updateDoc,
   doc
@@ -25,15 +24,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-
 let customerData = [];
 
-
-let currentRole = "";
-
-
-//  Fetch Customers
-
+// 1. Fetch Customers 
 async function fetchUserData() {
   const usersCollection = collection(db, "users");
   const usersSnapshot = await getDocs(usersCollection);
@@ -43,23 +36,25 @@ async function fetchUserData() {
     const userData = userDoc.data();
     const userId = userDoc.id;
 
-    // state is "Booked"
+    // Get orders with state "Booked"
     const ordersCollection = collection(db, `users/${userId}/orders`);
-    const q = query(ordersCollection, where("state", "==", "Booked"));
+    const q = query(ordersCollection); // You could add a where clause if needed
     const ordersSnapshot = await getDocs(q);
 
     ordersSnapshot.forEach((orderDoc) => {
       const orderData = orderDoc.data();
-      customerData.push({
-        userId,
-        orderId: orderDoc.id,
-        username: userData.username,
-        phone: userData.phone,
-        pickup: orderData.pickup,
-        destination: orderData.destination,
-        departureDate: orderData.departureDate,
-        returnDate: orderData.returnDate,
-      });
+      if (orderData.state === "Booked") {
+        customerData.push({
+          userId,
+          orderId: orderDoc.id,
+          username: userData.username,
+          phone: userData.phone,
+          pickup: orderData.pickup,
+          destination: orderData.destination,
+          departureDate: orderData.departureDate,
+          returnDate: orderData.returnDate,
+        });
+      }
     });
   }
 
@@ -92,20 +87,20 @@ function renderTable(dataArray) {
   });
 }
 
-// selected customer checkboxes
+// Utility: Return an array of selected customer checkboxes
 function getSelectedCustomers() {
   const checkboxes = document.querySelectorAll(".customer-checkbox:checked");
   return Array.from(checkboxes);
 }
 
-// Open Modal Driver Data
-async function showDriverModal(role) {
-  currentRole = role; 
+//Fetch Driver
+async function showDriverModal() {
   const modalDriverList = document.getElementById("modalDriverList");
   modalDriverList.innerHTML = "<p>Loading drivers...</p>";
 
+  // Query all drivers (since there's only one role now)
   const driversCollection = collection(db, "drivers");
-  const q = query(driversCollection, where("roll", "==", role));
+  const q = query(driversCollection);
   const driversSnapshot = await getDocs(q);
 
   let html = "";
@@ -120,17 +115,18 @@ async function showDriverModal(role) {
   });
 
   if (html === "") {
-    html = "<p>No drivers found for role: " + role + "</p>";
+    html = "<p>No drivers found.</p>";
   }
 
   modalDriverList.innerHTML = html;
 
+  // Show the modal using Bootstrap's modal API
   const driverModalEl = document.getElementById("driverModal");
   const driverModal = new bootstrap.Modal(driverModalEl);
   driverModal.show();
 }
 
-//arrange Driver
+
 async function arrangeDriver(selectedDriverId) {
   const selectedCustomers = getSelectedCustomers();
   if (selectedCustomers.length === 0) {
@@ -138,11 +134,22 @@ async function arrangeDriver(selectedDriverId) {
     return;
   }
   
+  // Get the trip start time from the modal input
+  const tripStartTimeInput = document.getElementById("tripStartTime");
+  if (!tripStartTimeInput.value) {
+    alert("Please select the trip start time.");
+    return;
+  }
+  const tripStartTime = tripStartTimeInput.value;
+  
+  // Use the departure date from the first selected customer for the trip date
   const firstCheckbox = selectedCustomers[0];
   const tripDate = firstCheckbox.dataset.departuredate;
   
+  // Create a new trip document in the driver's trips collection with both dateTrip and startTime
   const tripDocRef = await addDoc(collection(db, `drivers/${selectedDriverId}/trips`), {
     dateTrip: tripDate,
+    startTime: tripStartTime,
   });
   
   for (const checkbox of selectedCustomers) {
@@ -156,7 +163,7 @@ async function arrangeDriver(selectedDriverId) {
     const coordsSnapshot = await getDocs(departureCol);
     let pickupCoordinates = null;
     coordsSnapshot.forEach((doc) => {
-      pickupCoordinates = doc.data(); 
+      pickupCoordinates = doc.data();
     });
 
     // Fetch destination coordinates
@@ -164,7 +171,7 @@ async function arrangeDriver(selectedDriverId) {
     const destCoordsSnapshot = await getDocs(destinationCol);
     let destinationCoordinates = null;
     destCoordsSnapshot.forEach((doc) => {
-      destinationCoordinates = doc.data(); 
+      destinationCoordinates = doc.data();
     });
     
     // Add client data to the trip's "clients" subcollection
@@ -174,38 +181,22 @@ async function arrangeDriver(selectedDriverId) {
       phone: phone,
       pickupCoordinates: pickupCoordinates,
       destinationCoordinates: destinationCoordinates,
-      arrangedAt: new Date()
     });
 
-    // Build the update object for the order based on the current role
-    let updateData = {};
-    if (currentRole === "transit") {
-      updateData.transitDriverArranged = true;
-      updateData.transitDriverId = selectedDriverId;
-    } else if (currentRole === "main") {
-      updateData.mainDriverArranged = true;
-      updateData.mainDriverId = selectedDriverId;
-    }
+    // Update the order document with the arrangement info
     const orderDocRef = doc(db, "users", userId, "orders", orderId);
-    await updateDoc(orderDocRef, updateData);
-
-    // Retrieve the updated order document to check if both drivers have been arranged
-    const orderSnapshot = await getDoc(orderDocRef);
-    const orderData = orderSnapshot.data();
-    if (orderData.transitDriverArranged && orderData.mainDriverArranged) {
-      await updateDoc(orderDocRef, { state: "Arranged" });
-    }
+    await updateDoc(orderDocRef, {
+      state: "Arranged"
+    });
   }
   
   alert("Driver arranged for selected customers in one trip!");
   fetchUserData();
 }
-document.getElementById("showTransitDrivers").addEventListener("click", () => {
-  showDriverModal("transit");
-});
 
-document.getElementById("showMainDrivers").addEventListener("click", () => {
-  showDriverModal("main");
+
+document.getElementById("showDrivers").addEventListener("click", () => {
+  showDriverModal();
 });
 
 document.getElementById("modalArrangeDriverBtn").addEventListener("click", () => {

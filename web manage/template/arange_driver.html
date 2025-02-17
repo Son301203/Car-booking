@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Bootstrap CSS (using Bootstrap 5) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
-  rel="stylesheet">
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../frontend/css/dashboard.css">
   <title>Arrange Driver</title>
 </head>
@@ -36,22 +34,27 @@
       <tbody id="tbody_user_info"></tbody>
     </table>
 
-    <!-- Buttons to Show Drivers by Role -->
+    <!-- Button to Show Drivers -->
     <div class="mt-3">
-      <button id="showTransitDrivers" class="btn btn-info">Show Transit Drivers</button>
-      <button id="showMainDrivers" class="btn btn-info">Show Main Drivers</button>
+      <button id="showDrivers" class="btn btn-info">Show Drivers</button>
     </div>
   </div>
 
-  <!-- Bootstrap Modal for Driver Selection -->
+  <!-- Bootstrap Modal for Driver Selection & Trip Start Time -->
   <div class="modal fade" id="driverModal" tabindex="-1" aria-labelledby="driverModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="driverModalLabel">Select a Driver</h5>
+          <h5 class="modal-title" id="driverModalLabel">Select a Driver & Trip Start Time</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <!-- Trip Start Time Input -->
+          <div class="mb-3">
+            <label for="tripStartTime" class="form-label">Trip Start Time</label>
+            <input type="time" id="tripStartTime" class="form-control">
+          </div>
+          <!-- Driver List -->
           <div id="modalDriverList"></div>
         </div>
         <div class="modal-footer">
