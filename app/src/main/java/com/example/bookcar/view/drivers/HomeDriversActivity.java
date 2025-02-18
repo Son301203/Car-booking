@@ -1,7 +1,10 @@
 package com.example.bookcar.view.drivers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -48,6 +51,19 @@ public class HomeDriversActivity extends AppCompatActivity{
 
         // Fetch trips
         fetchTrips();
+
+        binding.tripsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Trips selectedTrip = tripsArrayList.get(i);
+                Intent intent = new Intent(HomeDriversActivity.this, TripDetailActivity.class);
+
+                intent.putExtra("driverId", selectedTrip.getDriverId());
+                intent.putExtra("tripId", selectedTrip.getTripId());
+
+                startActivity(intent);
+            }
+        });
     }
 
     private void fetchTrips() {
@@ -67,7 +83,7 @@ public class HomeDriversActivity extends AppCompatActivity{
                                         String startTime = tripDoc.getString("startTime");
 
                                         countClients(driverId, tripId, clientCount -> {
-                                            Trips trip = new Trips(dateTrip, startTime, clientCount);
+                                            Trips trip = new Trips(dateTrip, startTime, clientCount ,driverId, tripId);
                                             tripsArrayList.add(trip);
                                             tripAdapter.notifyDataSetChanged();
                                         });

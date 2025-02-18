@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:padding="15dp"
+    android:weightSum="1"
+    android:background="@drawable/rounded_background">
+
+    <!-- Left side with guest info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:orientation="vertical"
+        android:paddingEnd="15dp">
+
+        <!-- Guest name with icon -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_passenger"
+                android:layout_marginEnd="8dp"
+                app:tint="#2196F3"/>
+
+            <TextView
+                android:id="@+id/guest_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Guest Name"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Phone number with icon -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_phone"
+                android:layout_marginEnd="8dp"
+                app:tint="#2196F3"/>
+
+            <TextView
+                android:id="@+id/guest_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Phone Number"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Location link -->
+        <TextView
+            android:id="@+id/location_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:autoLink="web"
+            android:text="See location on map"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="16sp" />
+
+        <!-- Row for Pick up and Drop off buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <!-- Pick up Button -->
+            <Button
+                android:id="@+id/pickup_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:text="Đã đón"
+                android:textColor="@android:color/white" />
+
+            <!-- Drop off Button -->
+            <Button
+                android:id="@+id/dropoff_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:text="Đã trả"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:gravity="end"
+        android:orientation="vertical">
+
+        <!-- Call Button (ImageView) -->
+        <ImageView
+            android:id="@+id/call_button"
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:layout_marginBottom="10dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Call guest"
+            android:padding="10dp"
+            android:src="@drawable/call_icon" />
+    </LinearLayout>
+</LinearLayout>
