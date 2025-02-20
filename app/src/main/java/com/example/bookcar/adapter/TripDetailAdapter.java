@@ -1,6 +1,7 @@
 package com.example.bookcar.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.example.bookcar.R;
 import com.example.bookcar.model.Trips;
+import com.example.bookcar.view.drivers.LocationInMapActivity;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,15 @@ public class TripDetailAdapter extends ArrayAdapter<Trips> {
 
         TextView guestPhone = convertView.findViewById(R.id.guest_phone);
         guestPhone.setText(trips.getPhone());
+
+        TextView showLocation = convertView.findViewById(R.id.location_link);
+        showLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, LocationInMapActivity.class);
+                context.startActivity(intent);
+            }
+        });
 
         return convertView;
     }
