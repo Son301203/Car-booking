@@ -58,8 +58,8 @@ public class HomeDriversActivity extends AppCompatActivity{
                 Trips selectedTrip = tripsArrayList.get(i);
                 Intent intent = new Intent(HomeDriversActivity.this, TripDetailActivity.class);
 
-                intent.putExtra("driverId", selectedTrip.getDriverId());
-                intent.putExtra("tripId", selectedTrip.getTripId());
+                intent.putExtra("driverId", selectedTrip.getDriversId());
+                intent.putExtra("tripId", selectedTrip.getTripsId());
 
                 startActivity(intent);
             }

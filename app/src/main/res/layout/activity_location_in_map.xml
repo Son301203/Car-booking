@@ -48,7 +48,7 @@
     </RelativeLayout>
 
     <fragment
-        android:id="@+id/mapFragment"
+        android:id="@+id/mapFragmentDriver"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"

@@ -1,33 +1,25 @@
 package com.example.bookcar.model;
 
 public class Trips {
-    private String username;
-    private String phone;
     private String departure;
     private String destination;
     private String dateDeparture;
     private String dateDestination;
     private Double departureCoordinates;
     private Double destinationCoordinates;
+    private int quantity;
     private String dateTrips;
     private String timeTrips;
-    private int quantity;
-    private String driverId;
-    private String tripId;
+    private String driversId;
+    private String tripsId;
 
-    public Trips(String dateTrips, String timeTrips, int quantity, String driverId, String tripId) {
+    public Trips(String dateTrips, String timeTrips, int quantity, String driversId, String tripsId) {
         this.dateTrips = dateTrips;
         this.timeTrips = timeTrips;
         this.quantity = quantity;
-        this.driverId = driverId;
-        this.tripId = tripId;
+        this.driversId = driversId;
+        this.tripsId = tripsId;
     }
-
-    public Trips(String username, String phone) {
-        this.username = username;
-        this.phone = phone;
-    }
-
 
     public String getDateTrips() {
         return dateTrips;
@@ -53,20 +45,12 @@ public class Trips {
         this.timeTrips = timeTrips;
     }
 
-    public String getUsername() {
-        return username;
+    public String getDriversId() {
+        return driversId;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getDriverId() {
-        return driverId;
-    }
-
-    public String getTripId() {
-        return tripId;
+    public String getTripsId() {
+        return tripsId;
     }
 
     public String getDeparture() {
@@ -91,14 +75,6 @@ public class Trips {
 
     public Double getDestinationCoordinates() {
         return destinationCoordinates;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public void setDeparture(String departure) {

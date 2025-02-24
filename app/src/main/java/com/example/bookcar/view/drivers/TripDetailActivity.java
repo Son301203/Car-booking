@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.bookcar.R;
 import com.example.bookcar.adapter.TripDetailAdapter;
 import com.example.bookcar.databinding.ActivityTripDetailBinding;
-import com.example.bookcar.model.Trips;
+import com.example.bookcar.model.Seat;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -25,7 +25,7 @@ public class TripDetailActivity extends AppCompatActivity {
     private ActivityTripDetailBinding binding;
     private FirebaseFirestore db;
     private TripDetailAdapter tripDetailAdapter;
-    private ArrayList<Trips> tripsDetailList;
+    private ArrayList<Seat> tripsDetailList;
     private String driverId, tripId;
 
     @Override
@@ -59,25 +59,31 @@ public class TripDetailActivity extends AppCompatActivity {
 
     private void fetchClients() {
         db.collection("drivers")
-                .document(driverId)
+                .document(driverId)       // driverId obtained earlier (e.g., via getIntent())
                 .collection("trips")
-                .document(tripId)
+                .document(tripId)         // tripId obtained earlier
                 .collection("clients")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if(task.isSuccessful() && task.getResult() != null) {
-                        for(QueryDocumentSnapshot clientDoc : task.getResult()) {
-                            String clientName = clientDoc.getString("customerName");
-                            String clientPhone = clientDoc.getString("phone");
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (QueryDocumentSnapshot clientDoc : task.getResult()) {
+                            String clientId = clientDoc.getId();
 
-                            Trips clientTrip = new Trips(clientName, clientPhone);
-                            tripsDetailList.add(clientTrip);
+                            String customerName = clientDoc.getString("customerName");
+                            String phone = clientDoc.getString("phone");
+
+                            Seat seat = new Seat(clientId, driverId, tripId);
+
+                            seat.setUsername(customerName);
+                            seat.setPhone(phone);
+
+                            tripsDetailList.add(seat);
                         }
                         tripDetailAdapter.notifyDataSetChanged();
-                    }
-                    else{
+                    } else {
                         Log.e(TAG, "Error getting clients", task.getException());
                     }
                 });
     }
+
 }
