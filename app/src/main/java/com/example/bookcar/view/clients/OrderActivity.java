@@ -83,7 +83,7 @@ public class OrderActivity extends AppCompatActivity {
                 document(userId).
                 collection("orders");
 
-        ordersRef.whereIn("state", Arrays.asList("Booked", "Picked Up"))
+        ordersRef.whereIn("state", Arrays.asList("Booked", "Picked Up", "Arranged"))
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 orderCurrentList.clear();

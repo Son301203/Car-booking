@@ -46,7 +46,6 @@ public class TripDetailActivity extends AppCompatActivity {
         tripDetailAdapter = new TripDetailAdapter(this, R.layout.layout_listview_trip_detail_drivers, tripsDetailList);
         binding.tripDetailListView.setAdapter(tripDetailAdapter);
 
-        // Retrieve driverId and tripId from Intent
         driverId = getIntent().getStringExtra("driverId");
         tripId = getIntent().getStringExtra("tripId");
 
@@ -59,9 +58,9 @@ public class TripDetailActivity extends AppCompatActivity {
 
     private void fetchClients() {
         db.collection("drivers")
-                .document(driverId)       // driverId obtained earlier (e.g., via getIntent())
+                .document(driverId)
                 .collection("trips")
-                .document(tripId)         // tripId obtained earlier
+                .document(tripId)
                 .collection("clients")
                 .get()
                 .addOnCompleteListener(task -> {

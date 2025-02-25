@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -10,7 +11,8 @@
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/m_toolbar_height">
+        android:layout_height="@dimen/m_toolbar_height"
+        android:background="@color/white">
 
         <ImageButton
             android:id="@+id/toolbarbtnBack"
@@ -40,49 +42,47 @@
             android:padding="10dp"/>
 
         <View
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/quantum_grey"
             android:layout_alignParentBottom="true"/>
-
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/locationButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarRl"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:padding="8dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnPickUpPoint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Điểm đón"
+            android:background="@drawable/tab_button_selector"
+            android:textColor="@color/black"
+            android:padding="12dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDestination"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Điểm đích"
+            android:background="@drawable/tab_button_selector"
+            android:textColor="@color/black"
+            android:padding="12dp"/>
+    </LinearLayout>
 
     <fragment
         android:id="@+id/mapFragmentDriver"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_below="@+id/toolbarRl"/>
+        android:layout_below="@id/locationButtons"/>
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbarRl"
-        app:cardCornerRadius="8dp"
-        app:cardUseCompatPadding="true">
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/autocompleleFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"/>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <LinearLayout
-        android:id="@+id/doneLl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSelect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Đã đón"
-            app:cornerRadius="8dp"
-            android:minHeight="55dp"/>
-    </LinearLayout>
 </RelativeLayout>
