@@ -18,6 +18,7 @@ import com.example.bookcar.adapter.TripAdapter;
 import com.example.bookcar.contracts.ClientCountCallback;
 import com.example.bookcar.databinding.ActivityHomeDriversBinding;
 import com.example.bookcar.model.Trips;
+import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -64,6 +65,8 @@ public class HomeDriversActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+
+        TabUtils.setupTabs(this);
     }
 
     private void fetchTrips() {

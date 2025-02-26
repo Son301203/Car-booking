@@ -29,4 +29,11 @@
         android:padding="16dp"
         android:dividerHeight="1dp"
         android:scrollingCache="true" />
+
+    <include
+        android:id="@+id/bottomNavigationDriver"
+        layout="@layout/activity_buttom_nav_drivers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 </LinearLayout>

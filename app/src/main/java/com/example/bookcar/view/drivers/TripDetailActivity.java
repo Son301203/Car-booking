@@ -16,6 +16,7 @@ import com.example.bookcar.R;
 import com.example.bookcar.adapter.TripDetailAdapter;
 import com.example.bookcar.databinding.ActivityTripDetailBinding;
 import com.example.bookcar.model.Seat;
+import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -54,6 +55,8 @@ public class TripDetailActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Error loading trip details", Toast.LENGTH_SHORT).show();
         }
+
+        TabUtils.setupTabs(this);
     }
 
     private void fetchClients() {

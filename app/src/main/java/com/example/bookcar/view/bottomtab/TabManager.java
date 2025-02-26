@@ -8,6 +8,8 @@ import com.example.bookcar.view.AccountActivity;
 import com.example.bookcar.view.clients.HomeActivity;
 import com.example.bookcar.view.NotificationsActivity;
 import com.example.bookcar.view.clients.OrderActivity;
+import com.example.bookcar.view.drivers.CalenderDriverActivity;
+import com.example.bookcar.view.drivers.HomeDriversActivity;
 
 
 public class TabManager {
@@ -49,5 +51,24 @@ public class TabManager {
                 context.startActivity(intent);
             });
         }
+    }
+
+    public void setupTabDriver(LinearLayout tripTabDriver, LinearLayout calenderTabDriver, LinearLayout notifyTabDriver,  LinearLayout accountDriver){
+        if(tripTabDriver != null){
+            tripTabDriver.setOnClickListener(v -> {
+                Intent intent = new Intent(context, HomeDriversActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
+            });
+        }
+
+        if(calenderTabDriver != null){
+            calenderTabDriver.setOnClickListener(v -> {
+                Intent intent = new Intent(context, CalenderDriverActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
+            });
+        }
+
     }
 }
