@@ -19,17 +19,19 @@ import com.example.bookcar.contracts.ClientCountCallback;
 import com.example.bookcar.databinding.ActivityHomeDriversBinding;
 import com.example.bookcar.model.Trips;
 import com.example.bookcar.view.bottomtab.TabUtils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class HomeDriversActivity extends AppCompatActivity{
+public class HomeDriversActivity extends AppCompatActivity {
     private ActivityHomeDriversBinding binding;
     private TripAdapter tripAdapter;
     private ArrayList<Trips> tripsArrayList;
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +47,13 @@ public class HomeDriversActivity extends AppCompatActivity{
         });
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         tripsArrayList = new ArrayList<>();
         tripAdapter = new TripAdapter(this, R.layout.layout_listview_trips_drivers, tripsArrayList);
         binding.tripsListView.setAdapter(tripAdapter);
 
-        // Fetch trips
+
         fetchTrips();
 
         binding.tripsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -66,40 +69,32 @@ public class HomeDriversActivity extends AppCompatActivity{
             }
         });
 
-        TabUtils.setupTabs(this);
+        TabUtils.setupTabDriverUI(this);
     }
 
     private void fetchTrips() {
-        db.collection("drivers")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (QueryDocumentSnapshot driverDoc : task.getResult()) {
-                            String driverId = driverDoc.getId();
-                            CollectionReference tripsRef = db.collection("drivers").document(driverId).collection("trips");
+        String currentDriverId = mAuth.getCurrentUser().getUid();
 
-                            tripsRef.get().addOnCompleteListener(tripTask -> {
-                                if (tripTask.isSuccessful() && tripTask.getResult() != null) {
-                                    for (QueryDocumentSnapshot tripDoc : tripTask.getResult()) {
-                                        String tripId = tripDoc.getId();
-                                        String dateTrip = tripDoc.getString("dateTrip");
-                                        String startTime = tripDoc.getString("startTime");
+        CollectionReference tripsRef = db.collection("drivers").document(currentDriverId).collection("trips");
+        tripsRef.get().addOnCompleteListener(tripTask -> {
+            if (tripTask.isSuccessful() && tripTask.getResult() != null) {
+                tripsArrayList.clear();
+                for (QueryDocumentSnapshot tripDoc : tripTask.getResult()) {
+                    String tripId = tripDoc.getId();
+                    String dateTrip = tripDoc.getString("dateTrip");
+                    String startTime = tripDoc.getString("startTime");
 
-                                        countClients(driverId, tripId, clientCount -> {
-                                            Trips trip = new Trips(dateTrip, startTime, clientCount ,driverId, tripId);
-                                            tripsArrayList.add(trip);
-                                            tripAdapter.notifyDataSetChanged();
-                                        });
-                                    }
-                                } else {
-                                    Log.e("Firestore", "Error getting trips", tripTask.getException());
-                                }
-                            });
-                        }
-                    } else {
-                        Log.e("Firestore", "Error getting drivers", task.getException());
-                    }
-                });
+                    countClients(currentDriverId, tripId, clientCount -> {
+                        Trips trip = new Trips(dateTrip, startTime, clientCount, currentDriverId, tripId);
+                        tripsArrayList.add(trip);
+                        tripAdapter.notifyDataSetChanged();
+                    });
+                }
+            } else {
+                Log.e("Firestore", "Error getting trips", tripTask.getException());
+                Toast.makeText(this, "Lỗi khi tải danh sách chuyến đi", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void countClients(String driverId, String tripId, ClientCountCallback callback) {

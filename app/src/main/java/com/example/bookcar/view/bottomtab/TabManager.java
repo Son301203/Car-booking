@@ -70,5 +70,13 @@ public class TabManager {
             });
         }
 
+        if(accountDriver != null){
+            accountDriver.setOnClickListener(v -> {
+                Intent intent = new Intent(context, AccountActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
+            });
+        }
+
     }
 }

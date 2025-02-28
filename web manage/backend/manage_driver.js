@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -15,6 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 const driverForm = document.getElementById("driverForm");
 const driverList = document.getElementById("driverList");
@@ -22,10 +24,10 @@ const editModal = document.getElementById("editModal");
 const updateButton = document.getElementById("updateDriver");
 let editDriverId = "";
 
-// Add Driver
+// Add Driver with Authentication
 async function addDriver(e) {
     e.preventDefault();
-    
+
     const name = document.getElementById("name").value;
     const phone = document.getElementById("phone").value;
     const license = document.getElementById("license").value;
@@ -33,24 +35,38 @@ async function addDriver(e) {
     const date_of_birth = document.getElementById("date_of_birth").value;
     const email = document.getElementById("email").value;
     const gender = document.getElementById("gender").value;
-    const roll = document.getElementById("roll").value;
     const password = generatePassword();
-    
+
     try {
-        await addDoc(collection(db, "drivers"), {
-            name, phone, license, identification, date_of_birth, email, gender, roll, password
+        // user  Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "drivers", user.uid), {
+            name,
+            phone,
+            license,
+            identification,
+            date_of_birth,
+            email,
+            gender
         });
-        alert("Driver added successfully!");
+
+        //reset password
+        await sendPasswordResetEmail(auth, email);
+
+        alert("Driver added successfully! A password reset email has been sent to the driver.");
         driverForm.reset();
         fetchDrivers();
     } catch (error) {
         console.error("Error adding driver: ", error);
+        alert("Error adding driver: " + error.message);
     }
 }
 
 driverForm.addEventListener("submit", addDriver);
 
-// random password
+// Random password generator
 function generatePassword() {
     var length = 8,
         charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
@@ -76,9 +92,8 @@ async function fetchDrivers() {
                 <td>${driver.date_of_birth}</td>
                 <td>${driver.email}</td>
                 <td>${driver.gender}</td>
-                <td>${driver.roll}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm" onclick="openEditForm('${doc.id}', '${driver.name}', '${driver.phone}', '${driver.license}', '${driver.identification}', '${driver.date_of_birth}', '${driver.email}', '${driver.gender}', '${driver.roll}')">✏️ Edit</button>
+                    <button class="btn btn-warning btn-sm" onclick="openEditForm('${doc.id}', '${driver.name}', '${driver.phone}', '${driver.license}', '${driver.identification}', '${driver.date_of_birth}', '${driver.email}', '${driver.gender}')">✏️ Edit</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteDriver('${doc.id}')">🗑️ Delete</button>
                 </td>
             </tr>
@@ -87,7 +102,7 @@ async function fetchDrivers() {
 }
 
 // Open Edit Form
-window.openEditForm = function (id, name, phone, license, identification, date_of_birth, email, gender, roll) {
+window.openEditForm = function (id, name, phone, license, identification, date_of_birth, email, gender) {
     document.getElementById("edit_name").value = name;
     document.getElementById("edit_phone").value = phone;
     document.getElementById("edit_license").value = license;
@@ -95,7 +110,6 @@ window.openEditForm = function (id, name, phone, license, identification, date_o
     document.getElementById("edit_date_of_birth").value = date_of_birth;
     document.getElementById("edit_email").value = email;
     document.getElementById("edit_gender").value = gender;
-    document.getElementById("edit_roll").value = roll;
     editDriverId = id;
     editModal.style.display = "block";
 };
@@ -110,8 +124,7 @@ updateButton.addEventListener("click", async () => {
             identification: document.getElementById("edit_identification").value,
             date_of_birth: document.getElementById("edit_date_of_birth").value,
             email: document.getElementById("edit_email").value,
-            gender: document.getElementById("edit_gender").value,
-            roll: document.getElementById("edit_roll").value
+            gender: document.getElementById("edit_gender").value
         });
         alert("Driver updated successfully!");
         editModal.style.display = "none";

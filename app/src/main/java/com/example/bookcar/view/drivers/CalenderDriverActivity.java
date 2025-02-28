@@ -25,6 +25,6 @@ public class CalenderDriverActivity extends AppCompatActivity {
         });
 
 
-        TabUtils.setupTabs(this);
+        TabUtils.setupTabDriverUI(this);
     }
 }

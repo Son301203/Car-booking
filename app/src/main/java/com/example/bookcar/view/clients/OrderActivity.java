@@ -74,7 +74,7 @@ public class OrderActivity extends AppCompatActivity {
         loadCompleteOrders();
         loadCancelOrders();
         setupTabSelector();
-        TabUtils.setupTabs(this);
+        TabUtils.setupTabClientUI(this);
     }
 
     private void loadCurrentOrders() {

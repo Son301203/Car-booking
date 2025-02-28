@@ -24,6 +24,6 @@ public class NotificationsActivity extends AppCompatActivity {
             return insets;
         });
 
-        TabUtils.setupTabs(this);
+        TabUtils.setupTabDriverUI(this);
     }
 }

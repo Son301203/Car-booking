@@ -56,7 +56,7 @@ public class TripDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Error loading trip details", Toast.LENGTH_SHORT).show();
         }
 
-        TabUtils.setupTabs(this);
+        TabUtils.setupTabDriverUI(this);
     }
 
     private void fetchClients() {

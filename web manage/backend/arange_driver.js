@@ -26,7 +26,7 @@ const db = getFirestore(app);
 
 let customerData = [];
 
-// 1. Fetch Customers 
+// Fetch Customers 
 async function fetchUserData() {
   const usersCollection = collection(db, "users");
   const usersSnapshot = await getDocs(usersCollection);
@@ -38,7 +38,7 @@ async function fetchUserData() {
 
     // Get orders with state "Booked"
     const ordersCollection = collection(db, `users/${userId}/orders`);
-    const q = query(ordersCollection); // You could add a where clause if needed
+    const q = query(ordersCollection); 
     const ordersSnapshot = await getDocs(q);
 
     ordersSnapshot.forEach((orderDoc) => {

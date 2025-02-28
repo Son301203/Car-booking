@@ -111,7 +111,7 @@ public class HomeActivity extends AppCompatActivity {
         // Handle Booking
         btnBook.setOnClickListener(v -> checkStateOrder());
 
-        TabUtils.setupTabs(this);
+        TabUtils.setupTabClientUI(this);
     }
 
     private ActivityResultLauncher<Intent> locationPickerActivityResultLauncher = registerForActivityResult(
