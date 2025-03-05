@@ -85,4 +85,32 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_below="@id/locationButtons"/>
 
+    <LinearLayout
+        android:id="@+id/zoomControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:background="@android:color/transparent">
+
+        <ImageButton
+            android:id="@+id/zoomInButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_zoom_in"
+            android:background="@android:color/transparent"
+            android:padding="8dp"/>
+
+        <ImageButton
+            android:id="@+id/zoomOutButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_zoom_out"
+            android:background="@android:color/transparent"
+            android:padding="8dp"/>
+    </LinearLayout>
+
 </RelativeLayout>

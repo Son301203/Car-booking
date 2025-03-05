@@ -91,6 +91,9 @@ public class LocationInMapActivity extends AppCompatActivity implements OnMapRea
 
         initializeMap();
 
+        binding.zoomInButton.setOnClickListener(v -> zoomIn());
+        binding.zoomOutButton.setOnClickListener(v -> zoomOut());
+
         binding.btnDestination.setOnClickListener(v -> fetchCoordinates("destinationCoordinates", () -> updateMapWithDestination()));
         binding.btnPickUpPoint.setOnClickListener(v -> fetchCoordinates("pickupCoordinates", () -> updateMapWithPickup()));
         binding.toolbarbtnBack.setOnClickListener(v -> finish());
@@ -200,7 +203,6 @@ public class LocationInMapActivity extends AppCompatActivity implements OnMapRea
 
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-
 
     // Distance Marker ICON
     private BitmapDescriptor createDistanceMarkerIcon(String distanceText) {
@@ -335,7 +337,6 @@ public class LocationInMapActivity extends AppCompatActivity implements OnMapRea
         }).start();
     }
 
-
     //update Map With Pickup
     private void updateMapWithPickup() {
         if (mMap != null && isDriverLocationReady && isPickupLocationReady) {
@@ -382,12 +383,25 @@ public class LocationInMapActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Zoom in map
+    private void zoomIn() {
+        if (mMap != null) {
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        }
+    }
+
+    // Zoom out map
+    private void zoomOut() {
+        if (mMap != null) {
+            mMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         getDriverCurrentLocation();
     }
-
 
     //Request Permissions
     @Override
