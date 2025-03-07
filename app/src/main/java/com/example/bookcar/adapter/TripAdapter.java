@@ -42,7 +42,7 @@ public class TripAdapter extends ArrayAdapter<Trips> {
         departureTime.setText("Giờ: " + trips.getTimeTrips());
 
         TextView quantity = convertView.findViewById(R.id.num_passengers);
-        quantity.setText("Số lượng khách: " + trips.getQuantity());
+        quantity.setText("Tổng số lượng khách: " + trips.getQuantity());
 
         return convertView;
     }

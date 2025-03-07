@@ -93,12 +93,11 @@ function getSelectedCustomers() {
   return Array.from(checkboxes);
 }
 
-//Fetch Driver
+// Fetch Driver
 async function showDriverModal() {
   const modalDriverList = document.getElementById("modalDriverList");
   modalDriverList.innerHTML = "<p>Loading drivers...</p>";
 
-  // Query all drivers (since there's only one role now)
   const driversCollection = collection(db, "drivers");
   const q = query(driversCollection);
   const driversSnapshot = await getDocs(q);
@@ -120,12 +119,10 @@ async function showDriverModal() {
 
   modalDriverList.innerHTML = html;
 
-  // Show the modal using Bootstrap's modal API
   const driverModalEl = document.getElementById("driverModal");
   const driverModal = new bootstrap.Modal(driverModalEl);
   driverModal.show();
 }
-
 
 async function arrangeDriver(selectedDriverId) {
   const selectedCustomers = getSelectedCustomers();
@@ -146,11 +143,12 @@ async function arrangeDriver(selectedDriverId) {
   const firstCheckbox = selectedCustomers[0];
   const tripDate = firstCheckbox.dataset.departuredate;
   
-  // Create a new trip document in the driver's trips collection with both dateTrip and startTime
+  // Create a new trip document in the driver's trips collection
   const tripDocRef = await addDoc(collection(db, `drivers/${selectedDriverId}/trips`), {
     dateTrip: tripDate,
     startTime: tripStartTime,
   });
+  const tripId = tripDocRef.id; // Lấy tripId từ document vừa tạo
   
   for (const checkbox of selectedCustomers) {
     const userId = checkbox.dataset.userid;
@@ -175,7 +173,7 @@ async function arrangeDriver(selectedDriverId) {
     });
     
     // Add client data to the trip's "clients" subcollection
-    await addDoc(collection(db, `drivers/${selectedDriverId}/trips/${tripDocRef.id}/clients`), {
+    await addDoc(collection(db, `drivers/${selectedDriverId}/trips/${tripId}/clients`), {
       customerId: userId,
       customerName: username,
       phone: phone,
@@ -183,17 +181,17 @@ async function arrangeDriver(selectedDriverId) {
       destinationCoordinates: destinationCoordinates,
     });
 
-    // Update the order document with the arrangement info
+    // Update the order document with the arrangement info and tripId
     const orderDocRef = doc(db, "users", userId, "orders", orderId);
     await updateDoc(orderDocRef, {
-      state: "Arranged"
+      state: "Arranged",
+      tripId: tripId 
     });
   }
   
   alert("Driver arranged for selected customers in one trip!");
   fetchUserData();
 }
-
 
 document.getElementById("showDrivers").addEventListener("click", () => {
   showDriverModal();

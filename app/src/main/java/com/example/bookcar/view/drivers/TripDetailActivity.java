@@ -17,10 +17,15 @@ import com.example.bookcar.adapter.TripDetailAdapter;
 import com.example.bookcar.databinding.ActivityTripDetailBinding;
 import com.example.bookcar.model.Seat;
 import com.example.bookcar.view.bottomtab.TabUtils;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TripDetailActivity extends AppCompatActivity {
     private ActivityTripDetailBinding binding;
@@ -59,7 +64,10 @@ public class TripDetailActivity extends AppCompatActivity {
         TabUtils.setupTabDriverUI(this);
     }
 
-    private void fetchClients() {
+    public void fetchClients() {
+        tripsDetailList.clear();
+        tripDetailAdapter.notifyDataSetChanged();
+
         db.collection("drivers")
                 .document(driverId)
                 .collection("trips")
@@ -68,24 +76,49 @@ public class TripDetailActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
+                        List<Task<QuerySnapshot>> stateTasks = new ArrayList<>();
+
                         for (QueryDocumentSnapshot clientDoc : task.getResult()) {
                             String clientId = clientDoc.getId();
-
+                            String customerId = clientDoc.getString("customerId");
                             String customerName = clientDoc.getString("customerName");
                             String phone = clientDoc.getString("phone");
 
-                            Seat seat = new Seat(clientId, driverId, tripId);
+                            com.google.android.gms.tasks.Task<QuerySnapshot> stateTask = db.collection("users")
+                                    .document(customerId)
+                                    .collection("orders")
+                                    .whereIn("state", Arrays.asList("Booked", "Picked Up", "Arranged"))
+                                    .get();
 
-                            seat.setUsername(customerName);
-                            seat.setPhone(phone);
-
-                            tripsDetailList.add(seat);
+                            stateTasks.add(stateTask);
                         }
-                        tripDetailAdapter.notifyDataSetChanged();
+
+                        Tasks.whenAllSuccess(stateTasks).addOnCompleteListener(allTasks -> {
+                            if (allTasks.isSuccessful()) {
+                                int index = 0;
+                                for (QueryDocumentSnapshot clientDoc : task.getResult()) {
+                                    String clientId = clientDoc.getId();
+                                    String customerName = clientDoc.getString("customerName");
+                                    String phone = clientDoc.getString("phone");
+
+                                    QuerySnapshot stateResult = (QuerySnapshot) allTasks.getResult().get(index);
+                                    if (!stateResult.isEmpty()) {
+                                        Seat seat = new Seat(clientId, driverId, tripId);
+                                        seat.setUsername(customerName);
+                                        seat.setPhone(phone);
+
+                                        tripsDetailList.add(seat);
+                                    }
+                                    index++;
+                                }
+                                tripDetailAdapter.notifyDataSetChanged();
+                            } else {
+                                Log.e(TAG, "Error in state tasks", allTasks.getException());
+                            }
+                        });
                     } else {
                         Log.e(TAG, "Error getting clients", task.getException());
                     }
                 });
     }
-
 }
