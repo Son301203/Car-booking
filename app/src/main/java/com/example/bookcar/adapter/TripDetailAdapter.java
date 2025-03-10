@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TripDetailAdapter extends ArrayAdapter<Seat> {
     int idLayout;
@@ -177,7 +179,25 @@ public class TripDetailAdapter extends ArrayAdapter<Seat> {
                                                                         .update("state", "Completed")
                                                                         .addOnSuccessListener(aVoid -> {
                                                                             Toast.makeText(context, "Đã xác nhận trả khách thành công", Toast.LENGTH_SHORT).show();
-                                                                            // Fetch lại dữ liệu sau khi trả khách
+
+                                                                            // notifications
+                                                                            db.collection("notifications")
+                                                                                    .document("users")
+                                                                                    .collection("users")
+                                                                                    .add(new HashMap<String, Object>() {{
+                                                                                        put("userId", customerId);
+                                                                                        put("title", "Về chuyến đi");
+                                                                                        put("message", "Bạn đã hoàn thành chuyến đi");
+                                                                                        put("timestamp", System.currentTimeMillis());
+                                                                                        put("read", false);
+                                                                                    }})
+                                                                                    .addOnSuccessListener(docRef -> {
+                                                                                        Log.d("Notification", "Thông báo đã được lưu cho userId: " + customerId);
+                                                                                    })
+                                                                                    .addOnFailureListener(e -> {
+                                                                                        Log.e("Notification", "Lỗi khi lưu thông báo: " + e.getMessage());
+                                                                                    });
+
                                                                             if (context instanceof TripDetailActivity) {
                                                                                 ((TripDetailActivity) context).fetchClients();
                                                                             }
