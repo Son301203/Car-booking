@@ -184,20 +184,17 @@ public class TripDetailAdapter extends ArrayAdapter<Seat> {
                                                                             db.collection("notifications")
                                                                                     .document("users")
                                                                                     .collection("users")
-                                                                                    .add(new HashMap<String, Object>() {{
+                                                                                    .document(customerId)
+                                                                                    .collection("messages")
+                                                                                    .document(String.valueOf(System.currentTimeMillis()))
+                                                                                    .set(new HashMap<String, Object>() {{
                                                                                         put("userId", customerId);
                                                                                         put("title", "Về chuyến đi");
+                                                                                        put("image", "completed_trip.png");
                                                                                         put("message", "Bạn đã hoàn thành chuyến đi");
                                                                                         put("timestamp", System.currentTimeMillis());
                                                                                         put("read", false);
-                                                                                    }})
-                                                                                    .addOnSuccessListener(docRef -> {
-                                                                                        Log.d("Notification", "Thông báo đã được lưu cho userId: " + customerId);
-                                                                                    })
-                                                                                    .addOnFailureListener(e -> {
-                                                                                        Log.e("Notification", "Lỗi khi lưu thông báo: " + e.getMessage());
-                                                                                    });
-
+                                                                                    }});
                                                                             if (context instanceof TripDetailActivity) {
                                                                                 ((TripDetailActivity) context).fetchClients();
                                                                             }

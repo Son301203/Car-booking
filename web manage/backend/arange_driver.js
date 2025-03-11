@@ -7,7 +7,8 @@ import {
   query,
   addDoc,
   updateDoc,
-  doc
+  doc,
+  setDoc 
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 
 // Firebase configuration
@@ -36,7 +37,6 @@ async function fetchUserData() {
     const userData = userDoc.data();
     const userId = userDoc.id;
 
-    // Get orders with state "Booked"
     const ordersCollection = collection(db, `users/${userId}/orders`);
     const q = query(ordersCollection); 
     const ordersSnapshot = await getDocs(q);
@@ -143,6 +143,11 @@ async function arrangeDriver(selectedDriverId) {
   const firstCheckbox = selectedCustomers[0];
   const tripDate = firstCheckbox.dataset.departuredate;
   
+  // Lấy thông tin tài xế để lấy tên
+  const driverDocRef = doc(db, "drivers", selectedDriverId);
+  const driverDoc = await getDoc(driverDocRef);
+  const driverName = driverDoc.exists() ? driverDoc.data().name : "Tài xế không xác định";
+
   // Create a new trip document in the driver's trips collection
   const tripDocRef = await addDoc(collection(db, `drivers/${selectedDriverId}/trips`), {
     dateTrip: tripDate,
@@ -187,7 +192,29 @@ async function arrangeDriver(selectedDriverId) {
       state: "Arranged",
       tripId: tripId 
     });
+
+    // users notification
+    const userNotificationRef = doc(db, `notifications/users/users/${userId}/messages`, `${Date.now()}`); 
+    await setDoc(userNotificationRef, {
+      driverId: selectedDriverId,
+      title: "Về chuyến đi",
+      message: `${driverName} sẽ là tài xế của bạn`,
+      image: "trip.png", 
+      timestamp: Date.now(),
+      read: false
+    });
   }
+
+  // drivers notification
+  const driverNotificationRef = doc(db, `notifications/drivers/drivers/${selectedDriverId}/messages`, `${Date.now()}`);
+  await setDoc(driverNotificationRef, {
+    driverId: selectedDriverId,
+    title: "Chuyến đi",
+    message: `Bạn sẽ có chuyến đi lúc ${tripStartTime}, ${tripDate}`,
+    image: "trip.png", 
+    timestamp: Date.now(),
+    read: false
+  });
   
   alert("Driver arranged for selected customers in one trip!");
   fetchUserData();

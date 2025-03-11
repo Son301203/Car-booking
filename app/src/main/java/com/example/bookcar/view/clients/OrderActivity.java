@@ -1,6 +1,9 @@
 package com.example.bookcar.view.clients;
 
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -15,6 +18,7 @@ import com.example.bookcar.R;
 import com.example.bookcar.adapter.OrderAdapter;
 import com.example.bookcar.adapter.OrderCurrentAdapter;
 import com.example.bookcar.model.Order;
+import com.example.bookcar.view.animations.FadeIn;
 import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -56,18 +60,27 @@ public class OrderActivity extends AppCompatActivity {
         orderCurrentList = new ArrayList<>();
         orderCurrentAdapter = new OrderCurrentAdapter(this, R.layout.layout_listview_state_current_order, orderCurrentList);
         listViewCurrentOrder.setAdapter(orderCurrentAdapter);
+        FadeIn fadeInCurrentOrder = new FadeIn(this);
+        fadeInCurrentOrder.fadeIn(listViewCurrentOrder);
+
 
         // Complete order
         listViewCompleteOrder = findViewById(R.id.lvCompleteOrder);
         orderCompleleList = new ArrayList<>();
         orderCompleteAdapter = new OrderAdapter(this, R.layout.layout_listview_state_order, orderCompleleList);
         listViewCompleteOrder.setAdapter(orderCompleteAdapter);
+        FadeIn fadeInCompleteOrder = new FadeIn(this);
+        fadeInCompleteOrder.fadeIn(listViewCompleteOrder);
+
 
         // Cancel order
         listViewCancelOrder = findViewById(R.id.lvCancelOrder);
         orderCancelList = new ArrayList<>();
         orderCancelAdapter = new OrderAdapter(this, R.layout.layout_listview_state_order, orderCancelList);
         listViewCancelOrder.setAdapter(orderCancelAdapter);
+        FadeIn fadeInCancelOrder = new FadeIn(this);
+        fadeInCancelOrder.fadeIn(listViewCancelOrder);
+
 
         // Load orders from Firestore
         loadCurrentOrders();

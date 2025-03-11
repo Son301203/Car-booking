@@ -18,6 +18,7 @@ import com.example.bookcar.adapter.TripAdapter;
 import com.example.bookcar.contracts.ClientCountCallback;
 import com.example.bookcar.databinding.ActivityHomeDriversBinding;
 import com.example.bookcar.model.Trips;
+import com.example.bookcar.view.animations.FadeIn;
 import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -52,6 +53,8 @@ public class HomeDriversActivity extends AppCompatActivity {
         tripsArrayList = new ArrayList<>();
         tripAdapter = new TripAdapter(this, R.layout.layout_listview_trips_drivers, tripsArrayList);
         binding.tripsListView.setAdapter(tripAdapter);
+        FadeIn fadeIn = new FadeIn(this);
+        fadeIn.fadeIn(binding.tripsListView);
 
 
         fetchTrips();
