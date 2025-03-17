@@ -36,7 +36,7 @@ public class AccountActivity extends AppCompatActivity {
     private UserRole userRole;
 
     private ImageView btnLogout;
-    private TextView profileUsername, changeInfo;
+    private TextView profileUsername, changeInfo, changePassword;
     private View bottomNavigation, bottomNavigationDriver;
 
     @Override
@@ -56,8 +56,10 @@ public class AccountActivity extends AppCompatActivity {
         btnLogout = findViewById(R.id.logoutBtn);
         profileUsername = findViewById(R.id.profileUsername);
         changeInfo = findViewById(R.id.changeInfo);
-        bottomNavigation = findViewById(R.id.bottomNavigation); // Bottom nav khách hàng
-        bottomNavigationDriver = findViewById(R.id.bottomNavigationDriver); // Bottom nav tài xế
+        changePassword = findViewById(R.id.changePassword);
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigationDriver = findViewById(R.id.bottomNavigationDriver);
+
 
         btnLogout.setOnClickListener(v -> {
             mAuth.signOut();
@@ -69,6 +71,11 @@ public class AccountActivity extends AppCompatActivity {
 
         changeInfo.setOnClickListener(v -> {
             Intent intent = new Intent(this, ChangeInfoActivity.class);
+            startActivity(intent);
+        });
+
+        changePassword.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ChangePasswordActivity.class);
             startActivity(intent);
         });
 

@@ -190,13 +190,12 @@
                     android:id="@+id/btn_book"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:background="#6F1919"
+                    android:backgroundTint="#4CAF50"
                     android:elevation="4dp"
                     android:text="Đặt Xe Ngay"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    style="@style/Widget.AppCompat.Button"/>
+                    android:textStyle="bold"/>
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

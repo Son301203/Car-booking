@@ -28,7 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private EditText edtEmail, edtPassword;
-    private TextView signupLink;
+    private TextView signupLink, forgotPasswordLink;
     private Button loginButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         edtEmail = findViewById(R.id.emailEditText);
         edtPassword = findViewById(R.id.passwordEditText);
         progressBar = findViewById(R.id.progressBar);
+        forgotPasswordLink = findViewById(R.id.forgotPasswordLink);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -73,6 +74,17 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             loginUser(email, password);
+        });
+
+        forgotPasswordLink.setOnClickListener(view -> {
+            String email = edtEmail.getText().toString().trim();
+
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(LoginActivity.this, "Vui lòng nhập email để đặt lại mật khẩu", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            resetPassword(email);
         });
     }
 
@@ -105,6 +117,24 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Đăng nhập khách hàng thành công", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         finish();
+                    }
+                });
+    }
+
+    private void resetPassword(String email) {
+        progressBar.setVisibility(View.VISIBLE);
+
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    progressBar.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this,
+                                "Email đặt lại mật khẩu đã được gửi tới " + email,
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this,
+                                "Không thể gửi email đặt lại ",
+                                Toast.LENGTH_LONG).show();
                     }
                 });
     }

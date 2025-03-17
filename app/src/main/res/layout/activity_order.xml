@@ -51,7 +51,7 @@ android:layout_above="@id/bottomNavigation">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đơn hàng hiện tại"
+                android:text="Chuyến đi hiện tại"
                 android:textColor="#4CAF50"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -90,7 +90,7 @@ android:layout_above="@id/bottomNavigation">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đơn hàng đã hoàn thành"
+                android:text="Chuyến đi đã hoàn thành"
                 android:textColor="#2196F3"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -129,7 +129,7 @@ android:layout_above="@id/bottomNavigation">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đơn hàng đã hủy"
+                android:text="Chuyến đi đã hủy"
                 android:textColor="#F44336"
                 android:textSize="18sp"
                 android:textStyle="bold"
