@@ -4,141 +4,204 @@
     android:id="@+id/main_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#8A978D">
+    android:background="@drawable/gradient_background_order">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="16dp"
-        android:text="Đặt xe"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/et_pickup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_title"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_location"
-        android:hint="Chọn điểm đón"
-        android:padding="12dp" />
-
-    <!-- Destination -->
-    <EditText
-        android:id="@+id/et_destination"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_pickup"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_destination"
-        android:hint="Chọn điểm đến"
-        android:padding="12dp" />
-
-    <TextView
-        android:id="@+id/tv_select_pickup_map"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_destination"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_map"
-        android:gravity="center_vertical"
-        android:padding="12dp"
-        android:text="Chọn điểm đón trên bản đồ"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="16sp"
-        android:clickable="true"
-        android:focusable="true" />
-
-    <TextView
-        android:id="@+id/tv_select_destination_map"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_select_pickup_map"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_map"
-        android:gravity="center_vertical"
-        android:padding="12dp"
-        android:text="Chọn điểm đến trên bản đồ"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="16sp"
-        android:clickable="true"
-        android:focusable="true" />
-
-    <!-- Departure Date -->
-    <TextView
-        android:id="@+id/tv_departure_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_select_destination_map"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_calendar"
-        android:gravity="center_vertical"
-        android:padding="12dp"
-        android:text="Ngày đi"
-        android:textColor="@color/black" />
-
-    <!-- Round-Trip Toggle -->
+    <!-- Header Section -->
     <LinearLayout
-        android:id="@+id/round_trip_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_departure_date"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/header_background"
+        android:elevation="4dp">
 
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Đặt Xe"
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:shadowColor="#40000000"
+            android:shadowDy="2"
+            android:shadowDx="2"
+            android:shadowRadius="4" />
+
+        <!-- Decorative Subtitle -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Khứ hồi"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <Switch
-            android:id="@+id/switch_round_trip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp" />
+            android:layout_gravity="center"
+            android:text="Hành trình của bạn bắt đầu từ đây!"
+            android:textColor="#B0BEC5"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp" />
     </LinearLayout>
 
-    <!-- Return Date -->
-    <TextView
-        android:id="@+id/tv_return_date"
+    <!-- Main Content in ScrollView -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/round_trip_layout"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_calendar"
-        android:gravity="center_vertical"
-        android:padding="12dp"
-        android:text="Ngày về"
-        android:textColor="@color/black"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_above="@id/bottomNavigation"
+        android:padding="16dp">
 
-    <!-- Booking Button -->
-    <Button
-        android:id="@+id/btn_book"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_return_date"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/black"
-        android:padding="14dp"
-        android:text="Đặt xe"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:elevation="6dp">
 
+            <!-- Decorative Divider -->
+            <View
+                android:layout_width="50dp"
+                android:layout_height="2dp"
+                android:background="@drawable/gradient_divider"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Pickup Location -->
+            <EditText
+                android:id="@+id/et_pickup"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/rounded_input_background"
+                android:drawableStart="@drawable/ic_location"
+                android:drawablePadding="12dp"
+                android:hint="Chọn điểm đón"
+                android:padding="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="#757575"
+                android:textSize="16sp" />
+
+            <!-- Destination -->
+            <EditText
+                android:id="@+id/et_destination"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_input_background"
+                android:drawableStart="@drawable/ic_destination"
+                android:drawablePadding="12dp"
+                android:hint="Chọn điểm đến"
+                android:padding="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="#757575"
+                android:textSize="16sp" />
+
+            <!-- Select on Map Options -->
+            <TextView
+                android:id="@+id/tv_select_pickup_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_clickable_background"
+                android:drawableStart="@drawable/ic_map"
+                android:drawablePadding="12dp"
+                android:padding="14dp"
+                android:text="Chọn điểm đón trên bản đồ"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tv_select_destination_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_clickable_background"
+                android:drawableStart="@drawable/ic_map"
+                android:drawablePadding="12dp"
+                android:padding="14dp"
+                android:text="Chọn điểm đến trên bản đồ"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Departure Date -->
+            <TextView
+                android:id="@+id/tv_departure_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_input_background"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="12dp"
+                android:padding="14dp"
+                android:text="Ngày đi"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <!-- Round-Trip Toggle -->
+            <LinearLayout
+                android:id="@+id/round_trip_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:background="@drawable/rounded_toggle_background"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Khứ hồi"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <Switch
+                    android:id="@+id/switch_round_trip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:thumbTint="@android:color/white"
+                    android:trackTint="#B0BEC5" />
+            </LinearLayout>
+
+            <!-- Return Date -->
+            <TextView
+                android:id="@+id/tv_return_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_input_background"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="12dp"
+                android:padding="14dp"
+                android:text="Ngày về"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <!-- Decorative Icon Next to Button -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp">
+
+                <Button
+                    android:id="@+id/btn_book"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="#6F1919"
+                    android:elevation="4dp"
+                    android:text="Đặt Xe Ngay"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    style="@style/Widget.AppCompat.Button"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
     <include
         android:id="@+id/bottomNavigation"
         layout="@layout/activity_bottom_nav_base"

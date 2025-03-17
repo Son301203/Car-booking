@@ -5,83 +5,164 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@drawable/gradient_background_order"
     tools:context=".view.clients.OrderActivity">
 
     <!-- TabHost -->
-    <TabHost
-        android:id="@+id/TabOrderState"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<TabHost
+android:id="@+id/TabOrderState"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:layout_marginTop="16dp"
+android:layout_above="@id/bottomNavigation">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:padding="8dp" />
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#FFFFFF">
-
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <ListView
-                        android:id="@+id/lvCurrentOrder"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:dividerHeight="1dp"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-                    <ListView
-                        android:id="@+id/lvCompleteOrder"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:dividerHeight="1dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-                    <ListView
-                        android:id="@+id/lvCancelOrder"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:dividerHeight="1dp" />
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
-
-    <include
-        android:id="@+id/bottomNavigation"
-        layout="@layout/activity_bottom_nav_base"
+    <!-- TabWidget with Custom Background -->
+    <TabWidget
+        android:id="@android:id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
-</RelativeLayout>
+        android:background="@drawable/tab_background"
+        android:padding="8dp"
+        android:elevation="4dp" />
+
+    <!-- Tab Content -->
+    <FrameLayout
+        android:id="@android:id/tabcontent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <!-- Tab 1: Current Orders -->
+        <LinearLayout
+            android:id="@+id/tab1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/card_background_order"
+            android:padding="12dp"
+            android:elevation="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đơn hàng hiện tại"
+                android:textColor="#4CAF50"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:drawableStart="@drawable/ic_current_order"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="2dp"
+                android:background="@drawable/gradient_divider"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp" />
+
+            <ListView
+                android:id="@+id/lvCurrentOrder"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="8dp"
+                android:background="@null" />
+        </LinearLayout>
+
+        <!-- Tab 2: Completed Orders -->
+        <LinearLayout
+            android:id="@+id/tab2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/card_background_order"
+            android:padding="12dp"
+            android:elevation="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đơn hàng đã hoàn thành"
+                android:textColor="#2196F3"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:drawableStart="@drawable/ic_complete_order"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="2dp"
+                android:background="#2196F3"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp" />
+
+            <ListView
+                android:id="@+id/lvCompleteOrder"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="8dp"
+                android:background="@null" />
+        </LinearLayout>
+
+        <!-- Tab 3: Canceled Orders -->
+        <LinearLayout
+            android:id="@+id/tab3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/card_background_order"
+            android:padding="12dp"
+            android:elevation="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đơn hàng đã hủy"
+                android:textColor="#F44336"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:drawableStart="@drawable/ic_cancel_order"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="2dp"
+                android:background="#F44336"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp" />
+
+            <ListView
+                android:id="@+id/lvCancelOrder"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="8dp"
+                android:background="@null" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
+</TabHost>
+
+    <!-- Bottom Navigation -->
+<include
+android:id="@+id/bottomNavigation"
+layout="@layout/activity_bottom_nav_base"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_alignParentBottom="true" />
+    </RelativeLayout>

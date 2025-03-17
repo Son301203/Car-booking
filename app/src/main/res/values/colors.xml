@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#2196F3</color> <!-- Purple 500 -->
-    <color name="light_gray">#E0E0E0</color> <!-- Light gray for unselected state -->
-    <color name="white">#FFFFFF</color> <!-- For text or background if needed -->
-    <color name="black">#000000</color> <!-- For text -->
+    <color name="primary">#2196F3</color>
+    <color name="light_gray">#E0E0E0</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

@@ -7,14 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Phần header và account info giữ nguyên -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:background="#8A978D"
+        android:background="@drawable/gradient_background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
