@@ -1,12 +1,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_change_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#F5F5F5"
-    android:gravity="top"
-    >
+    android:gravity="top">
 
     <!-- Top Bar -->
     <RelativeLayout
@@ -29,7 +29,8 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back Icon"
             android:padding="4dp"
-            android:src="@drawable/baseline_arrow_back_ios_new_24" />
+            android:src="@drawable/baseline_arrow_back_ios_new_24"
+            app:tint="#FFFFFF" />
 
         <!-- Title -->
         <TextView

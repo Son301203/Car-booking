@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -41,7 +42,7 @@ public class TripDetailActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(binding.getRoot());
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_trip_detail), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -61,7 +62,8 @@ public class TripDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Error loading trip details", Toast.LENGTH_SHORT).show();
         }
 
-        TabUtils.setupTabDriverUI(this);
+        // back
+        binding.backIcon.setOnClickListener(v -> finish());
     }
 
     public void fetchClients() {

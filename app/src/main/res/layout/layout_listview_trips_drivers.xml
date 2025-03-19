@@ -30,7 +30,7 @@
                 android:src="@drawable/ic_date"
                 android:contentDescription="Departure Date"
                 android:layout_marginEnd="8dp"
-                app:tint="#2196F3" />
+                app:tint="#4CAF50" />
 
             <TextView
                 android:id="@+id/departure_date"
@@ -55,7 +55,7 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_time"
                 android:contentDescription="Departure Time"
-                app:tint="#2196F3"
+                app:tint="#4CAF50"
                 android:layout_marginEnd="8dp"/>
 
             <TextView
@@ -81,7 +81,7 @@
                 android:src="@drawable/ic_passenger"
                 android:contentDescription="Number of Passengers"
                 android:layout_marginEnd="8dp"
-                app:tint="#2196F3" />
+                app:tint="#4CAF50" />
 
             <TextView
                 android:id="@+id/num_passengers"

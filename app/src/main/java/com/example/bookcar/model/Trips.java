@@ -10,6 +10,8 @@ public class Trips {
     private int quantity;
     private String dateTrips;
     private String timeTrips;
+    private String description;
+    private int dayOfWeek;
     private String driversId;
     private String tripsId;
 
@@ -19,6 +21,12 @@ public class Trips {
         this.quantity = quantity;
         this.driversId = driversId;
         this.tripsId = tripsId;
+    }
+    public Trips(String description, int dayOfWeek, String timeTrips, String dateTrips) {
+        this.description = description;
+        this.dayOfWeek = dayOfWeek;
+        this.timeTrips = timeTrips;
+        this.dateTrips = dateTrips;
     }
 
     public String getDateTrips() {
@@ -39,6 +47,14 @@ public class Trips {
 
     public String getTimeTrips() {
         return timeTrips;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
     }
 
     public void setTimeTrips(String timeTrips) {
