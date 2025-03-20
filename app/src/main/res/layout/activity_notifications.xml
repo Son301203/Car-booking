@@ -9,10 +9,10 @@
     android:background="#F5F5F5"
     tools:context=".view.NotificationsActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="#4CAF50"
         android:elevation="4dp"
         android:padding="16dp">
 
@@ -20,10 +20,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Thông báo"
+            android:layout_centerInParent="true"
+            android:textColor="#fff"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
-    </LinearLayout>
+            android:textStyle="bold"/>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/lvNotification"

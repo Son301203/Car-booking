@@ -23,6 +23,7 @@ import com.example.bookcar.model.roles.ClientRole;
 import com.example.bookcar.model.roles.DriverRole;
 import com.example.bookcar.model.roles.UserRole;
 import com.example.bookcar.view.bottomtab.TabManager;
+import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -80,6 +81,20 @@ public class AccountActivity extends AppCompatActivity {
         });
 
         determineUserRoleAndFetchInfo();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (userRole instanceof DriverRole) {
+            TabUtils.setupTabDriverUI(this);
+            bottomNavigation.setVisibility(View.GONE);
+            bottomNavigationDriver.setVisibility(View.VISIBLE);
+        } else if (userRole instanceof ClientRole) {
+            TabUtils.setupTabClientUI(this);
+            bottomNavigation.setVisibility(View.VISIBLE);
+            bottomNavigationDriver.setVisibility(View.GONE);
+        }
     }
 
     private void determineUserRoleAndFetchInfo() {

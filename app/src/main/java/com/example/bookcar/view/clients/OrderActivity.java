@@ -90,6 +90,12 @@ public class OrderActivity extends AppCompatActivity {
         TabUtils.setupTabClientUI(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TabUtils.setupTabClientUI(this);
+    }
+
     private void loadCurrentOrders() {
         String userId = mAuth.getCurrentUser().getUid();
         CollectionReference ordersRef = db.collection("users").

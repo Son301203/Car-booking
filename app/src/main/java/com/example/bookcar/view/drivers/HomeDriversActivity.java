@@ -72,6 +72,11 @@ public class HomeDriversActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         TabUtils.setupTabDriverUI(this);
     }
 

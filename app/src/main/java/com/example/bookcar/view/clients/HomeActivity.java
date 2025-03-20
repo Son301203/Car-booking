@@ -114,6 +114,12 @@ public class HomeActivity extends AppCompatActivity {
         TabUtils.setupTabClientUI(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TabUtils.setupTabClientUI(this);
+    }
+
     private ActivityResultLauncher<Intent> locationPickerActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {

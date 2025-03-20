@@ -81,6 +81,12 @@ public class CalenderDriverActivity extends AppCompatActivity {
         backIcon.setOnClickListener(v -> finish());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TabUtils.setupTabDriverUI(this);
+    }
+
     // set up week
     private void setupScheduleSpinner() {
         schedules.clear();

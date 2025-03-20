@@ -71,6 +71,20 @@ public class NotificationsActivity extends AppCompatActivity {
         determineUserRole();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (userRole instanceof DriverRole) {
+            TabUtils.setupTabDriverUI(this);
+            bottomNavigation.setVisibility(View.GONE);
+            bottomNavigationDriver.setVisibility(View.VISIBLE);
+        } else if (userRole instanceof ClientRole) {
+            TabUtils.setupTabClientUI(this);
+            bottomNavigation.setVisibility(View.VISIBLE);
+            bottomNavigationDriver.setVisibility(View.GONE);
+        }
+    }
+
     private void determineUserRole() {
         String userId = mAuth.getCurrentUser().getUid();
 

@@ -17,6 +17,7 @@ import com.example.bookcar.R;
 import com.example.bookcar.adapter.TripDetailAdapter;
 import com.example.bookcar.databinding.ActivityTripDetailBinding;
 import com.example.bookcar.model.Seat;
+import com.example.bookcar.view.animations.FadeIn;
 import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -52,6 +53,9 @@ public class TripDetailActivity extends AppCompatActivity {
         tripsDetailList = new ArrayList<>();
         tripDetailAdapter = new TripDetailAdapter(this, R.layout.layout_listview_trip_detail_drivers, tripsDetailList);
         binding.tripDetailListView.setAdapter(tripDetailAdapter);
+
+        FadeIn fadeIn = new FadeIn(this);
+        fadeIn.fadeIn(binding.tripDetailListView);
 
         driverId = getIntent().getStringExtra("driverId");
         tripId = getIntent().getStringExtra("tripId");

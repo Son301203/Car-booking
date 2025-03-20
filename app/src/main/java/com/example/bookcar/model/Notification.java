@@ -6,13 +6,13 @@ public class Notification {
     private String title;
     private String message;
     private String image;
-    private boolean read;
+    private boolean isRead;
 
-    public Notification(String title, String message, String image, boolean read) {
+    public Notification(String title, String message, String image, boolean isRead) {
         this.title = title;
         this.message = message;
         this.image = image;
-        this.read = read;
+        this.isRead = isRead;
     }
 
     public String getTitle() {
@@ -35,6 +35,6 @@ public class Notification {
     }
 
     public boolean isRead() {
-        return read;
+        return isRead;
     }
 }
