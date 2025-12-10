@@ -2,14 +2,15 @@ package com.example.bookcar;
 
 import android.os.Bundle;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.bookcar.view.LoginActivity;
 import com.example.bookcar.view.clients.HomeActivity;
 import com.example.bookcar.view.drivers.HomeDriversActivity;
+import com.example.bookcar.view.setup.InitCoordinationActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -36,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        // OPTIONAL: Uncomment this to enable setup button for first-time coordination account creation
+//         Button btnSetup = findViewById(R.id.btnSetupCoordination);
+//         btnSetup.setVisibility(View.VISIBLE);
+//         btnSetup.setOnClickListener(v -> {
+//             startActivity(new Intent(this, InitCoordinationActivity.class));
+//         });
 
         if(mAuth.getCurrentUser() != null) {
             String userId = mAuth.getCurrentUser().getUid();

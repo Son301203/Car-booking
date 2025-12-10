@@ -25,6 +25,12 @@
             android:name=".view.ChangePasswordActivity"
             android:exported="false" />
         <activity
+            android:name=".view.coordination.ManageDriverActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.setup.InitCoordinationActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.drivers.CalenderDriverActivity"
             android:exported="false" />
         <activity

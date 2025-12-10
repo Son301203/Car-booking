@@ -23,7 +23,6 @@ import com.example.bookcar.view.clients.RegisterActivity;
 import com.example.bookcar.view.drivers.HomeDriversActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -91,14 +90,15 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
                         String uid = mAuth.getCurrentUser().getUid();
                         Log.d(TAG, "UID sau đăng nhập: " + uid);
                         checkUserRole(uid);
                     } else {
                         progressBar.setVisibility(View.GONE);
+                        String errorMessage = task.getException() != null ? task.getException().getMessage() : "Lỗi không xác định";
                         Toast.makeText(LoginActivity.this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "Đăng nhập thất bại: " + task.getException().getMessage());
+                        Log.e(TAG, "Đăng nhập thất bại: " + errorMessage);
                     }
                 });
     }
@@ -107,22 +107,48 @@ public class LoginActivity extends AppCompatActivity {
         // Check user's role from unified users collection
         db.collection("users").document(uid).get()
                 .addOnCompleteListener(task -> {
-                    progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful() && task.getResult().exists()) {
                         String roleId = task.getResult().getString("role_id");
 
-                        if ("driver".equals(roleId)) {
-                            Log.d(TAG, "Driver found with UID: " + uid);
-                            Toast.makeText(LoginActivity.this, "Đăng nhập tài xế thành công", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, HomeDriversActivity.class));
-                            finish();
-                        } else {
-                            Log.d(TAG, "Client found with UID: " + uid);
-                            Toast.makeText(LoginActivity.this, "Đăng nhập khách hàng thành công", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                            finish();
+                        if (roleId == null || roleId.isEmpty()) {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(LoginActivity.this, "Không tìm thấy role cho user", Toast.LENGTH_SHORT).show();
+                            return;
                         }
+
+                        // Get role name from roles collection
+                        db.collection("roles").document(roleId).get()
+                                .addOnSuccessListener(roleDoc -> {
+                                    progressBar.setVisibility(View.GONE);
+                                    if (roleDoc.exists()) {
+                                        String roleName = roleDoc.getString("name");
+
+                                        if ("coordination".equals(roleName)) {
+                                            Log.d(TAG, "Coordination found with UID: " + uid);
+                                            Toast.makeText(LoginActivity.this, "Đăng nhập điều phối viên thành công", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(LoginActivity.this, com.example.bookcar.view.coordination.ManageDriverActivity.class));
+                                            finish();
+                                        } else if ("drivers".equals(roleName)) {
+                                            Log.d(TAG, "Driver found with UID: " + uid);
+                                            Toast.makeText(LoginActivity.this, "Đăng nhập tài xế thành công", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(LoginActivity.this, HomeDriversActivity.class));
+                                            finish();
+                                        } else {
+                                            Log.d(TAG, "Client found with UID: " + uid);
+                                            Toast.makeText(LoginActivity.this, "Đăng nhập khách hàng thành công", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                            finish();
+                                        }
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "Không tìm thấy role", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(LoginActivity.this, "Lỗi khi kiểm tra role: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
                     } else {
+                        progressBar.setVisibility(View.GONE);
                         Log.e(TAG, "User not found with UID: " + uid);
                         Toast.makeText(LoginActivity.this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
                     }

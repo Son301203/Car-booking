@@ -11,4 +11,17 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
+    <!-- Hidden button for setup - Remove after first use -->
+    <Button
+        android:id="@+id/btnSetupCoordination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Setup Coordination"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:backgroundTint="#FF5722" />
+
 </RelativeLayout>
