@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.bookcar.R;
 import com.example.bookcar.adapter.DriverAdapter;
 import com.example.bookcar.model.Driver;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -25,15 +26,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ManageDriverActivity extends AppCompatActivity implements DriverAdapter.OnDriverActionListener {
-    private EditText edtDriverName, edtDriverPhone, edtDriverLicense, edtDriverIdentification,
-            edtDriverDateOfBirth, edtDriverEmail, edtDriverPassword;
-    private Spinner spinnerDriverGender;
-    private Button btnAddDriver;
-    private ProgressBar progressBar;
     private ListView listViewDrivers;
+    private FloatingActionButton fabAddDriver;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -52,47 +50,49 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
         // Initialize views
         initViews();
 
-        // Setup gender spinner
-        setupGenderSpinner();
-
-        // Setup date picker
-        setupDatePicker();
-
         // Load drivers
         loadDrivers();
 
-        // Add driver button
-        btnAddDriver.setOnClickListener(v -> validateAndAddDriver());
+        // FAB click listener
+        fabAddDriver.setOnClickListener(v -> showAddDriverDialog());
     }
 
     private void initViews() {
-        edtDriverName = findViewById(R.id.edtDriverName);
-        edtDriverPhone = findViewById(R.id.edtDriverPhone);
-        edtDriverLicense = findViewById(R.id.edtDriverLicense);
-        edtDriverIdentification = findViewById(R.id.edtDriverIdentification);
-        edtDriverDateOfBirth = findViewById(R.id.edtDriverDateOfBirth);
-        edtDriverEmail = findViewById(R.id.edtDriverEmail);
-        edtDriverPassword = findViewById(R.id.edtDriverPassword);
-        spinnerDriverGender = findViewById(R.id.spinnerDriverGender);
-        btnAddDriver = findViewById(R.id.btnAddDriver);
-        progressBar = findViewById(R.id.progressBar);
         listViewDrivers = findViewById(R.id.listViewDrivers);
+        fabAddDriver = findViewById(R.id.fabAddDriver);
 
         driverList = new ArrayList<>();
         driverAdapter = new DriverAdapter(this, R.layout.item_driver, driverList, this);
         listViewDrivers.setAdapter(driverAdapter);
     }
 
-    private void setupGenderSpinner() {
+    private void showAddDriverDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_driver, null);
+        builder.setView(dialogView);
+
+        // Initialize dialog views
+        EditText edtDialogName = dialogView.findViewById(R.id.edtDialogDriverName);
+        EditText edtDialogPhone = dialogView.findViewById(R.id.edtDialogDriverPhone);
+        EditText edtDialogLicense = dialogView.findViewById(R.id.edtDialogDriverLicense);
+        EditText edtDialogIdentification = dialogView.findViewById(R.id.edtDialogDriverIdentification);
+        EditText edtDialogDateOfBirth = dialogView.findViewById(R.id.edtDialogDriverDateOfBirth);
+        EditText edtDialogEmail = dialogView.findViewById(R.id.edtDialogDriverEmail);
+        EditText edtDialogPassword = dialogView.findViewById(R.id.edtDialogDriverPassword);
+        Spinner spinnerDialogGender = dialogView.findViewById(R.id.spinnerDialogDriverGender);
+        Button btnConfirm = dialogView.findViewById(R.id.btnConfirmAddDriver);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancelAddDriver);
+        ProgressBar progressBarDialog = dialogView.findViewById(R.id.progressBarDialog);
+
+        // Setup gender spinner
         String[] genders = {"Chọn giới tính", "Nam", "Nữ"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, genders);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDriverGender.setAdapter(adapter);
-    }
+        spinnerDialogGender.setAdapter(adapter);
 
-    private void setupDatePicker() {
-        edtDriverDateOfBirth.setOnClickListener(v -> {
+        // Setup date picker
+        edtDialogDateOfBirth.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
@@ -100,45 +100,54 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                     (view, year1, month1, dayOfMonth) -> {
-                        String date = String.format("%02d/%02d/%d", dayOfMonth, month1 + 1, year1);
-                        edtDriverDateOfBirth.setText(date);
+                        String date = String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month1 + 1, year1);
+                        edtDialogDateOfBirth.setText(date);
                     }, year, month, day);
             datePickerDialog.show();
         });
-    }
 
-    private void validateAndAddDriver() {
-        String name = edtDriverName.getText().toString().trim();
-        String phone = edtDriverPhone.getText().toString().trim();
-        String license = edtDriverLicense.getText().toString().trim();
-        String identification = edtDriverIdentification.getText().toString().trim();
-        String dateOfBirth = edtDriverDateOfBirth.getText().toString().trim();
-        String email = edtDriverEmail.getText().toString().trim();
-        String password = edtDriverPassword.getText().toString().trim();
-        String gender = spinnerDriverGender.getSelectedItem().toString();
+        AlertDialog dialog = builder.create();
 
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(license) ||
-                TextUtils.isEmpty(identification) || TextUtils.isEmpty(dateOfBirth) ||
-                TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || gender.equals("Chọn giới tính")) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // Confirm button click
+        btnConfirm.setOnClickListener(v -> {
+            String name = edtDialogName.getText().toString().trim();
+            String phone = edtDialogPhone.getText().toString().trim();
+            String license = edtDialogLicense.getText().toString().trim();
+            String identification = edtDialogIdentification.getText().toString().trim();
+            String dateOfBirth = edtDialogDateOfBirth.getText().toString().trim();
+            String email = edtDialogEmail.getText().toString().trim();
+            String password = edtDialogPassword.getText().toString().trim();
+            String gender = spinnerDialogGender.getSelectedItem().toString();
 
-        if (password.length() < 6) {
-            Toast.makeText(this, "Mật khẩu phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
-            return;
-        }
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(license) ||
+                    TextUtils.isEmpty(identification) || TextUtils.isEmpty(dateOfBirth) ||
+                    TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || gender.equals("Chọn giới tính")) {
+                Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        progressBar.setVisibility(View.VISIBLE);
-        btnAddDriver.setEnabled(false);
+            if (password.length() < 6) {
+                Toast.makeText(this, "Mật khẩu phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        // Check if "drivers" role exists
-        checkAndCreateDriverRole(name, phone, license, identification, dateOfBirth, email, password, gender);
+            progressBarDialog.setVisibility(View.VISIBLE);
+            btnConfirm.setEnabled(false);
+
+            checkAndCreateDriverRole(name, phone, license, identification, dateOfBirth, email, password, gender,
+                    progressBarDialog, btnConfirm, dialog);
+        });
+
+        // Cancel button click
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     private void checkAndCreateDriverRole(String name, String phone, String license,
                                           String identification, String dateOfBirth,
-                                          String email, String password, String gender) {
+                                          String email, String password, String gender,
+                                          ProgressBar progressBar, Button btnConfirm, AlertDialog dialog) {
         db.collection("roles")
                 .whereEqualTo("name", "drivers")
                 .get()
@@ -147,23 +156,24 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
                         // Role "drivers" already exists, get its ID
                         String roleId = queryDocumentSnapshots.getDocuments().get(0).getId();
                         createDriverAccount(name, phone, license, identification, dateOfBirth,
-                                email, password, gender, roleId);
+                                email, password, gender, roleId, progressBar, btnConfirm, dialog);
                     } else {
                         // Role "drivers" doesn't exist, create it first
                         createDriversRole(name, phone, license, identification, dateOfBirth,
-                                email, password, gender);
+                                email, password, gender, progressBar, btnConfirm, dialog);
                     }
                 })
                 .addOnFailureListener(e -> {
                     progressBar.setVisibility(View.GONE);
-                    btnAddDriver.setEnabled(true);
+                    btnConfirm.setEnabled(true);
                     Toast.makeText(this, "Lỗi khi kiểm tra role: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void createDriversRole(String name, String phone, String license,
                                    String identification, String dateOfBirth,
-                                   String email, String password, String gender) {
+                                   String email, String password, String gender,
+                                   ProgressBar progressBar, Button btnConfirm, AlertDialog dialog) {
         Map<String, Object> driversRole = new HashMap<>();
         driversRole.put("name", "drivers");
         driversRole.put("permissions", new HashMap<>());
@@ -173,27 +183,28 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
                 .addOnSuccessListener(documentReference -> {
                     String roleId = documentReference.getId();
                     createDriverAccount(name, phone, license, identification, dateOfBirth,
-                            email, password, gender, roleId);
+                            email, password, gender, roleId, progressBar, btnConfirm, dialog);
                 })
                 .addOnFailureListener(e -> {
                     progressBar.setVisibility(View.GONE);
-                    btnAddDriver.setEnabled(true);
+                    btnConfirm.setEnabled(true);
                     Toast.makeText(this, "Lỗi khi tạo role: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void createDriverAccount(String name, String phone, String license,
                                      String identification, String dateOfBirth,
-                                     String email, String password, String gender, String roleId) {
+                                     String email, String password, String gender, String roleId,
+                                     ProgressBar progressBar, Button btnConfirm, AlertDialog dialog) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
                         String userId = mAuth.getCurrentUser().getUid();
                         saveDriverToFirestore(userId, name, phone, license, identification,
-                                dateOfBirth, email, password, gender, roleId);
+                                dateOfBirth, email, password, gender, roleId, progressBar, btnConfirm, dialog);
                     } else {
                         progressBar.setVisibility(View.GONE);
-                        btnAddDriver.setEnabled(true);
+                        btnConfirm.setEnabled(true);
                         Toast.makeText(this, "Tạo tài khoản thất bại: " +
                                 (task.getException() != null ? task.getException().getMessage() : ""),
                                 Toast.LENGTH_SHORT).show();
@@ -203,7 +214,8 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
 
     private void saveDriverToFirestore(String userId, String name, String phone, String license,
                                        String identification, String dateOfBirth, String email,
-                                       String password, String gender, String roleId) {
+                                       String password, String gender, String roleId,
+                                       ProgressBar progressBar, Button btnConfirm, AlertDialog dialog) {
         Map<String, Object> driver = new HashMap<>();
         driver.put("name", name);
         driver.put("phone", phone);
@@ -220,14 +232,14 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
                 .set(driver)
                 .addOnSuccessListener(aVoid -> {
                     progressBar.setVisibility(View.GONE);
-                    btnAddDriver.setEnabled(true);
+                    btnConfirm.setEnabled(true);
                     Toast.makeText(this, "Thêm tài xế thành công", Toast.LENGTH_SHORT).show();
-                    clearForm();
+                    dialog.dismiss();
                     loadDrivers();
                 })
                 .addOnFailureListener(e -> {
                     progressBar.setVisibility(View.GONE);
-                    btnAddDriver.setEnabled(true);
+                    btnConfirm.setEnabled(true);
                     Toast.makeText(this, "Lỗi khi lưu tài xế: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
@@ -253,26 +265,15 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
                                     }
                                     driverAdapter.notifyDataSetChanged();
                                 })
-                                .addOnFailureListener(e -> {
+                                .addOnFailureListener(e ->
                                     Toast.makeText(this, "Lỗi khi tải danh sách tài xế: " + e.getMessage(),
-                                            Toast.LENGTH_SHORT).show();
-                                });
+                                            Toast.LENGTH_SHORT).show()
+                                );
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Lỗi khi tải role: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
-
-    private void clearForm() {
-        edtDriverName.setText("");
-        edtDriverPhone.setText("");
-        edtDriverLicense.setText("");
-        edtDriverIdentification.setText("");
-        edtDriverDateOfBirth.setText("");
-        edtDriverEmail.setText("");
-        edtDriverPassword.setText("");
-        spinnerDriverGender.setSelection(0);
+                .addOnFailureListener(e ->
+                    Toast.makeText(this, "Lỗi khi tải role: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 
     @Override
@@ -325,7 +326,7 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                     (view, year1, month1, dayOfMonth) -> {
-                        String date = String.format("%02d/%02d/%d", dayOfMonth, month1 + 1, year1);
+                        String date = String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month1 + 1, year1);
                         edtEditDateOfBirth.setText(date);
                     }, year, month, day);
             datePickerDialog.show();
@@ -348,7 +349,7 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
             }
 
             updateDriver(driver.getDocumentId(), name, phone, license, identification,
-                    dateOfBirth, gender, position);
+                    dateOfBirth, gender);
             dialog.dismiss();
         });
 
@@ -358,7 +359,7 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
     }
 
     private void updateDriver(String driverId, String name, String phone, String license,
-                             String identification, String dateOfBirth, String gender, int position) {
+                             String identification, String dateOfBirth, String gender) {
         Map<String, Object> updates = new HashMap<>();
         updates.put("name", name);
         updates.put("phone", phone);
@@ -373,9 +374,9 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
                     Toast.makeText(this, "Cập nhật tài xế thành công", Toast.LENGTH_SHORT).show();
                     loadDrivers();
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Cập nhật thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e ->
+                    Toast.makeText(this, "Cập nhật thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 }
 
