@@ -233,11 +233,10 @@ public class CalenderDriverActivity extends AppCompatActivity {
     private void fetchTrip() {
         String currentDriverId = mAuth.getCurrentUser().getUid();
 
-        CollectionReference tripsRef = db.collection("drivers")
-                                .document(currentDriverId)
-                                .collection("trips");
+        CollectionReference tripsRef = db.collection("trips");
 
-        tripsRef.get().addOnCompleteListener(task -> {
+        tripsRef.whereEqualTo("driver_id", currentDriverId)
+                .get().addOnCompleteListener(task -> {
             if(task.isSuccessful() && task.getResult() != null){
                 for (QueryDocumentSnapshot doc : task.getResult()){
                     String dateTrip = doc.getString("dateTrip");

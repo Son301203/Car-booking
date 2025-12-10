@@ -169,9 +169,9 @@ public class HomeActivity extends AppCompatActivity {
     private void checkStateOrder() {
         String userId = mAuth.getCurrentUser().getUid();
 
-        // Check existing bookings
-        db.collection("users").document(userId)
-                .collection("orders")
+        // Check existing bookings from root orders collection
+        db.collection("orders")
+                .whereEqualTo("client_id", userId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     boolean hasActiveOrder = false;
@@ -208,36 +208,22 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         Map<String, Object> order = new HashMap<>();
+        order.put("client_id", userId); // Reference to users/{userId}
         order.put("pickup", pickup);
         order.put("destination", destination);
         order.put("departureDate", departureDate);
         order.put("returnDate", returnDate);
         order.put("state", "Booked");
         order.put("timestamp", System.currentTimeMillis());
+        order.put("created_at", com.google.firebase.Timestamp.now());
 
-        db.collection("users").document(userId)
-                .collection("orders")
+        // Store coordinates as GeoPoint
+        order.put("pickup_coordinates", new com.google.firebase.firestore.GeoPoint(departureLatitude, departureLongitude));
+        order.put("destination_coordinates", new com.google.firebase.firestore.GeoPoint(destinationLatitude, destinationLongitude));
+
+        db.collection("orders")
                 .add(order)
                 .addOnSuccessListener(documentReference -> {
-                    String orderId = documentReference.getId(); // Get the newly created order ID
-
-                    // Departure Coordinates
-                    Map<String, Object> departureCoords = new HashMap<>();
-                    departureCoords.put("latitude", departureLatitude);
-                    departureCoords.put("longitude", departureLongitude);
-                    db.collection("users").document(userId)
-                            .collection("orders").document(orderId)
-                            .collection("departureCoordinates")
-                            .add(departureCoords);
-
-                    // Destination Coordinates
-                    Map<String, Object> destinationCoords = new HashMap<>();
-                    destinationCoords.put("latitude", destinationLatitude);
-                    destinationCoords.put("longitude", destinationLongitude);
-                    db.collection("users").document(userId)
-                            .collection("orders").document(orderId)
-                            .collection("destinationCoordinates")
-                            .add(destinationCoords);
 
                     Toast.makeText(HomeActivity.this, "Bạn đã đặt xe thành công", Toast.LENGTH_SHORT).show();
                 })

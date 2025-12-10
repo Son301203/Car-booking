@@ -98,11 +98,10 @@ public class OrderActivity extends AppCompatActivity {
 
     private void loadCurrentOrders() {
         String userId = mAuth.getCurrentUser().getUid();
-        CollectionReference ordersRef = db.collection("users").
-                document(userId).
-                collection("orders");
+        CollectionReference ordersRef = db.collection("orders");
 
-        ordersRef.whereIn("state", Arrays.asList("Booked", "Picked Up", "Arranged"))
+        ordersRef.whereEqualTo("client_id", userId)
+                .whereIn("state", Arrays.asList("Booked", "Picked Up", "Arranged"))
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 orderCurrentList.clear();
@@ -126,11 +125,10 @@ public class OrderActivity extends AppCompatActivity {
 
     private void loadCompleteOrders() {
         String userId = mAuth.getCurrentUser().getUid();
-        CollectionReference ordersRef = db.collection("users").
-                document(userId).
-                collection("orders");
+        CollectionReference ordersRef = db.collection("orders");
 
-        ordersRef.whereIn("state", Collections.singletonList("Completed"))
+        ordersRef.whereEqualTo("client_id", userId)
+                .whereIn("state", Collections.singletonList("Completed"))
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         orderCompleleList.clear();
@@ -154,11 +152,10 @@ public class OrderActivity extends AppCompatActivity {
 
     private void loadCancelOrders(){
         String userId = mAuth.getCurrentUser().getUid();
-        CollectionReference ordersRef = db.collection("users").
-                document(userId).
-                collection("orders");
+        CollectionReference ordersRef = db.collection("orders");
 
-        ordersRef.whereIn("state", Collections.singletonList("Cancel"))
+        ordersRef.whereEqualTo("client_id", userId)
+                .whereIn("state", Collections.singletonList("Cancel"))
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         orderCancelList.clear();

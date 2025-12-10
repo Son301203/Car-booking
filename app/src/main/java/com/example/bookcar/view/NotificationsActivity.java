@@ -88,31 +88,28 @@ public class NotificationsActivity extends AppCompatActivity {
     private void determineUserRole() {
         String userId = mAuth.getCurrentUser().getUid();
 
-        db.collection("drivers")
+        // Check user's role from unified users collection
+        db.collection("users")
                 .document(userId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult().exists()) {
-                        userRole = new DriverRole();
-                        setupTabDriverUI(this);
-                        bottomNavigation.setVisibility(View.GONE);
-                        bottomNavigationDriver.setVisibility(View.VISIBLE);
+                        String roleId = task.getResult().getString("role_id");
+
+                        if ("driver".equals(roleId)) {
+                            userRole = new DriverRole();
+                            setupTabDriverUI(this);
+                            bottomNavigation.setVisibility(View.GONE);
+                            bottomNavigationDriver.setVisibility(View.VISIBLE);
+                        } else {
+                            userRole = new ClientRole();
+                            setupTabClientUI(this);
+                            bottomNavigation.setVisibility(View.VISIBLE);
+                            bottomNavigationDriver.setVisibility(View.GONE);
+                        }
                         fetchNotificationInfo(userId);
                     } else {
-                        db.collection("users")
-                                .document(userId)
-                                .get()
-                                .addOnCompleteListener(task2 -> {
-                                    if (task2.isSuccessful() && task2.getResult().exists()) {
-                                        userRole = new ClientRole();
-                                        setupTabClientUI(this);
-                                        bottomNavigation.setVisibility(View.VISIBLE);
-                                        bottomNavigationDriver.setVisibility(View.GONE);
-                                        fetchNotificationInfo(userId);
-                                    } else {
-                                        Log.d("role", "User role not found in either collection");
-                                    }
-                                });
+                        Log.d("role", "User not found");
                     }
                 });
     }

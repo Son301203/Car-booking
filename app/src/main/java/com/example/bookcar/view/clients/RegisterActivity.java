@@ -100,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
                             String userId = mAuth.getCurrentUser().getUid();
                             saveUser(userId, username, phone, email, password);
                             finish();
@@ -113,19 +113,65 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveUser(String userId, String username, String phone, String email, String password){
+        // First, check if "clients" role exists in roles collection
+        db.collection("roles")
+                .whereEqualTo("name", "clients")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // Role "clients" already exists, get its ID
+                        String roleId = queryDocumentSnapshots.getDocuments().get(0).getId();
+                        createUserWithRoleId(userId, username, phone, email, password, roleId);
+                    } else {
+                        // Role "clients" doesn't exist, create it first
+                        createClientsRoleAndUser(userId, username, phone, email, password);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi khi kiểm tra role: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                });
+    }
+
+    private void createClientsRoleAndUser(String userId, String username, String phone, String email, String password) {
+        // Create the "clients" role
+        Map<String, Object> clientsRole = new HashMap<>();
+        clientsRole.put("name", "clients");
+        clientsRole.put("permissions", new HashMap<>()); // Add permissions if needed
+
+        db.collection("roles")
+                .add(clientsRole)
+                .addOnSuccessListener(documentReference -> {
+                    String roleId = documentReference.getId();
+                    createUserWithRoleId(userId, username, phone, email, password, roleId);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi khi tạo role: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                });
+    }
+
+    private void createUserWithRoleId(String userId, String username, String phone, String email, String password, String roleId) {
         Map<String, Object> user = new HashMap<>();
-        user.put("username", username);
+        user.put("name", username);
         user.put("email", email);
         user.put("password", password);
         user.put("phone", phone);
         user.put("gender", "");
-        user.put("date of birth", "");
+        user.put("date_of_birth", "");
+        user.put("role_id", roleId); // Reference to roles collection
+        user.put("created_at", com.google.firebase.Timestamp.now());
 
         db.collection("users").document(userId)
                 .set(user)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to Save User" + e.getMessage(), Toast.LENGTH_SHORT).show());
-
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi khi lưu user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                });
     }
 
 

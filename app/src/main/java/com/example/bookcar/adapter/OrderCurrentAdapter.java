@@ -65,12 +65,10 @@ public class OrderCurrentAdapter extends ArrayAdapter<Order> {
                     .setTitle("Hủy chuyến")
                     .setMessage("Bạn chắc chắn muốn hủy chuyến không?")
                     .setPositiveButton("Có", (dialog, which) -> {
-                        // Cancel this specific order in Firestore using the order's document ID
+                        // Cancel this specific order in root orders collection using the order's document ID
                         String orderDocumentId = order.getDocumentId();
-                        String userId = mAuth.getCurrentUser().getUid();
-                        db.collection("users")
-                                .document(userId)
-                                .collection("orders")
+
+                        db.collection("orders")
                                 .document(orderDocumentId)
                                 .update("state", "Cancel")
                                 .addOnSuccessListener(aVoid -> {

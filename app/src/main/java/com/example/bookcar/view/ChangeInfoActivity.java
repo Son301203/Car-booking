@@ -91,16 +91,23 @@ public class ChangeInfoActivity extends AppCompatActivity {
     private void determineUserRoleAndFetchInfo() {
         String userId = auth.getCurrentUser().getUid();
 
-        db.collection("drivers")
+        // Check user's role from unified users collection
+        db.collection("users")
                 .document(userId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult().exists()) {
-                        userRole = new DriverRole();
+                        String roleId = task.getResult().getString("role_id");
+                        if ("driver".equals(roleId)) {
+                            userRole = new DriverRole();
+                        } else {
+                            userRole = new ClientRole();
+                        }
+                        fetchUserInfo(userId);
                     } else {
-                        userRole = new ClientRole();
+                        Log.e(TAG, "User not found");
+                        Toast.makeText(this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
                     }
-                    fetchUserInfo(userId);
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Lỗi kiểm tra vai trò: " + e.getMessage());

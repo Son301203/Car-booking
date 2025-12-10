@@ -104,19 +104,27 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkUserRole(String uid) {
-        db.collection("drivers").document(uid).get()
+        // Check user's role from unified users collection
+        db.collection("users").document(uid).get()
                 .addOnCompleteListener(task -> {
                     progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful() && task.getResult().exists()) {
-                        Log.d(TAG, "Tài xế được tìm thấy với UID: " + uid);
-                        Toast.makeText(LoginActivity.this, "Đăng nhập tài xế thành công", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, HomeDriversActivity.class));
-                        finish();
+                        String roleId = task.getResult().getString("role_id");
+
+                        if ("driver".equals(roleId)) {
+                            Log.d(TAG, "Driver found with UID: " + uid);
+                            Toast.makeText(LoginActivity.this, "Đăng nhập tài xế thành công", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(LoginActivity.this, HomeDriversActivity.class));
+                            finish();
+                        } else {
+                            Log.d(TAG, "Client found with UID: " + uid);
+                            Toast.makeText(LoginActivity.this, "Đăng nhập khách hàng thành công", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            finish();
+                        }
                     } else {
-                        Log.d(TAG, "Không tìm thấy tài xế với UID: " + uid + " -> Xác định là khách hàng");
-                        Toast.makeText(LoginActivity.this, "Đăng nhập khách hàng thành công", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        finish();
+                        Log.e(TAG, "User not found with UID: " + uid);
+                        Toast.makeText(LoginActivity.this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

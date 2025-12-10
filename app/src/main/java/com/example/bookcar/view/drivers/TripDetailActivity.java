@@ -21,6 +21,7 @@ import com.example.bookcar.view.animations.FadeIn;
 import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -74,41 +75,39 @@ public class TripDetailActivity extends AppCompatActivity {
         tripsDetailList.clear();
         tripDetailAdapter.notifyDataSetChanged();
 
-        db.collection("drivers")
-                .document(driverId)
-                .collection("trips")
-                .document(tripId)
-                .collection("clients")
+        // Get all orders for this trip
+        db.collection("orders")
+                .whereEqualTo("trip_id", tripId)
+                .whereIn("state", Arrays.asList("Booked", "Picked Up", "Arranged"))
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        List<Task<QuerySnapshot>> stateTasks = new ArrayList<>();
+                        List<Task<DocumentSnapshot>> userTasks = new ArrayList<>();
 
-                        for (QueryDocumentSnapshot clientDoc : task.getResult()) {
-                            String clientId = clientDoc.getId();
-                            String customerId = clientDoc.getString("customerId");
-                            String customerName = clientDoc.getString("customerName");
-                            String phone = clientDoc.getString("phone");
+                        for (QueryDocumentSnapshot orderDoc : task.getResult()) {
+                            String clientId = orderDoc.getString("client_id");
+                            String orderId = orderDoc.getId();
 
-                            com.google.android.gms.tasks.Task<QuerySnapshot> stateTask = db.collection("users")
-                                    .document(customerId)
-                                    .collection("orders")
-                                    .whereIn("state", Arrays.asList("Booked", "Picked Up", "Arranged"))
+                            // Fetch user details
+                            Task<DocumentSnapshot> userTask = db.collection("users")
+                                    .document(clientId)
                                     .get();
 
-                            stateTasks.add(stateTask);
+                            userTasks.add(userTask);
                         }
 
-                        Tasks.whenAllSuccess(stateTasks).addOnCompleteListener(allTasks -> {
+                        Tasks.whenAllSuccess(userTasks).addOnCompleteListener(allTasks -> {
                             if (allTasks.isSuccessful()) {
                                 int index = 0;
-                                for (QueryDocumentSnapshot clientDoc : task.getResult()) {
-                                    String clientId = clientDoc.getId();
-                                    String customerName = clientDoc.getString("customerName");
-                                    String phone = clientDoc.getString("phone");
+                                for (QueryDocumentSnapshot orderDoc : task.getResult()) {
+                                    String clientId = orderDoc.getString("client_id");
+                                    String orderId = orderDoc.getId();
 
-                                    QuerySnapshot stateResult = (QuerySnapshot) allTasks.getResult().get(index);
-                                    if (!stateResult.isEmpty()) {
+                                    DocumentSnapshot userSnapshot = (DocumentSnapshot) allTasks.getResult().get(index);
+                                    if (userSnapshot.exists()) {
+                                        String customerName = userSnapshot.getString("name");
+                                        String phone = userSnapshot.getString("phone");
+
                                         Seat seat = new Seat(clientId, driverId, tripId);
                                         seat.setUsername(customerName);
                                         seat.setPhone(phone);
@@ -119,11 +118,11 @@ public class TripDetailActivity extends AppCompatActivity {
                                 }
                                 tripDetailAdapter.notifyDataSetChanged();
                             } else {
-                                Log.e(TAG, "Error in state tasks", allTasks.getException());
+                                Log.e(TAG, "Error in user tasks", allTasks.getException());
                             }
                         });
                     } else {
-                        Log.e(TAG, "Error getting clients", task.getException());
+                        Log.e(TAG, "Error getting orders", task.getException());
                     }
                 });
     }

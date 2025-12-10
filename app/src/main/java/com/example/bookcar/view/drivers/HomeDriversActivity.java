@@ -83,8 +83,9 @@ public class HomeDriversActivity extends AppCompatActivity {
     private void fetchTrips() {
         String currentDriverId = mAuth.getCurrentUser().getUid();
 
-        CollectionReference tripsRef = db.collection("drivers").document(currentDriverId).collection("trips");
-        tripsRef.get().addOnCompleteListener(tripTask -> {
+        CollectionReference tripsRef = db.collection("trips");
+        tripsRef.whereEqualTo("driver_id", currentDriverId)
+                .get().addOnCompleteListener(tripTask -> {
             if (tripTask.isSuccessful() && tripTask.getResult() != null) {
                 tripsArrayList.clear();
                 for (QueryDocumentSnapshot tripDoc : tripTask.getResult()) {
@@ -92,7 +93,7 @@ public class HomeDriversActivity extends AppCompatActivity {
                     String dateTrip = tripDoc.getString("dateTrip");
                     String startTime = tripDoc.getString("startTime");
 
-                    countClients(currentDriverId, tripId, clientCount -> {
+                    countClients(tripId, clientCount -> {
                         Trips trip = new Trips(dateTrip, startTime, clientCount, currentDriverId, tripId);
                         tripsArrayList.add(trip);
                         tripAdapter.notifyDataSetChanged();
@@ -105,12 +106,10 @@ public class HomeDriversActivity extends AppCompatActivity {
         });
     }
 
-    private void countClients(String driverId, String tripId, ClientCountCallback callback) {
-        db.collection("drivers")
-                .document(driverId)
-                .collection("trips")
-                .document(tripId)
-                .collection("clients")
+    private void countClients(String tripId, ClientCountCallback callback) {
+        // Count orders for this trip
+        db.collection("orders")
+                .whereEqualTo("trip_id", tripId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {

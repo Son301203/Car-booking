@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LocationInMapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -109,46 +110,46 @@ public class LocationInMapActivity extends AppCompatActivity implements OnMapRea
     // fetch clients's Coordinates
     private void fetchCoordinates(String key, Runnable onSuccess) {
         if (driverId != null && tripId != null && clientId != null) {
-            DocumentReference locationRef = db.collection("drivers")
-                    .document(driverId)
-                    .collection("trips")
-                    .document(tripId)
-                    .collection("clients")
-                    .document(clientId);
+            // Get the order for this client and trip
+            db.collection("orders")
+                    .whereEqualTo("client_id", clientId)
+                    .whereEqualTo("trip_id", tripId)
+                    .limit(1)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
 
-            locationRef.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists() && documentSnapshot.contains(key)) {
-                    Object obj = documentSnapshot.get(key);
-                    if (obj instanceof Map) {
-                        @SuppressWarnings("unchecked")
-                        Map<String, Object> coordinates = (Map<String, Object>) obj;
-                        Double lat = coordinates.get("latitude") instanceof Number ?
-                                ((Number) coordinates.get("latitude")).doubleValue() : null;
-                        Double lng = coordinates.get("longitude") instanceof Number ?
-                                ((Number) coordinates.get("longitude")).doubleValue() : null;
-
-                        if (lat != null && lng != null) {
+                            // Get GeoPoint coordinates
+                            com.google.firebase.firestore.GeoPoint geoPoint = null;
                             if (key.equals("pickupCoordinates")) {
-                                pickupLat = lat;
-                                pickupLng = lng;
-                                isPickupLocationReady = true;
+                                geoPoint = documentSnapshot.getGeoPoint("pickup_coordinates");
                             } else if (key.equals("destinationCoordinates")) {
-                                destLat = lat;
-                                destLng = lng;
+                                geoPoint = documentSnapshot.getGeoPoint("destination_coordinates");
                             }
-                            onSuccess.run();
+
+                            if (geoPoint != null) {
+                                Double lat = geoPoint.getLatitude();
+                                Double lng = geoPoint.getLongitude();
+
+                                if (key.equals("pickupCoordinates")) {
+                                    pickupLat = lat;
+                                    pickupLng = lng;
+                                    isPickupLocationReady = true;
+                                } else if (key.equals("destinationCoordinates")) {
+                                    destLat = lat;
+                                    destLng = lng;
+                                }
+                                onSuccess.run();
+                            } else {
+                                Toast.makeText(this, "No coordinates found", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(this, "Invalid coordinate data", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "No order found", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(this, "Coordinates format error", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(this, "No coordinates found", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(e ->
-                    Toast.makeText(this, "Failed to fetch data", Toast.LENGTH_SHORT).show()
-            );
+                    }).addOnFailureListener(e ->
+                            Toast.makeText(this, "Failed to fetch data: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                    );
         }
     }
 
