@@ -101,26 +101,56 @@ public class FirebaseRepository {
     }
 
     public Task<DocumentReference> createTrip(Trips trip) {
+        if (trip == null) {
+            throw new IllegalArgumentException("Trip cannot be null");
+        }
+        if (!trip.isValid()) {
+            throw new IllegalArgumentException("Trip validation failed: missing required fields");
+        }
         return getTripsCollection().add(trip.toFirestore());
     }
 
     public Task<Void> updateTrip(String tripId, Trips trip) {
+        if (tripId == null || tripId.isEmpty()) {
+            throw new IllegalArgumentException("Trip ID cannot be null or empty");
+        }
+        if (trip == null) {
+            throw new IllegalArgumentException("Trip cannot be null");
+        }
+        if (!trip.isValid()) {
+            throw new IllegalArgumentException("Trip validation failed: missing required fields");
+        }
         return getTripDocument(tripId).update(trip.toFirestore());
     }
 
     public Task<Void> deleteTrip(String tripId) {
+        if (tripId == null || tripId.isEmpty()) {
+            throw new IllegalArgumentException("Trip ID cannot be null or empty");
+        }
         return getTripDocument(tripId).delete();
     }
 
     public Query getTripsByDriver(String driverId) {
+        if (driverId == null || driverId.isEmpty()) {
+            throw new IllegalArgumentException("Driver ID cannot be null or empty");
+        }
         return getTripsCollection().whereEqualTo("driver_id", driverId);
     }
 
     public Query getTripsByStatus(String status) {
+        if (status == null || status.isEmpty()) {
+            throw new IllegalArgumentException("Status cannot be null or empty");
+        }
         return getTripsCollection().whereEqualTo("status", status);
     }
 
     public Query getTripsByDriverAndStatus(String driverId, String status) {
+        if (driverId == null || driverId.isEmpty()) {
+            throw new IllegalArgumentException("Driver ID cannot be null or empty");
+        }
+        if (status == null || status.isEmpty()) {
+            throw new IllegalArgumentException("Status cannot be null or empty");
+        }
         return getTripsCollection()
                 .whereEqualTo("driver_id", driverId)
                 .whereEqualTo("status", status);
@@ -141,22 +171,46 @@ public class FirebaseRepository {
     }
 
     public Task<DocumentReference> createOrder(Order order) {
+        if (order == null) {
+            throw new IllegalArgumentException("Order cannot be null");
+        }
+        if (!order.isValid()) {
+            throw new IllegalArgumentException("Order validation failed: missing required fields");
+        }
         return getOrdersCollection().add(order.toFirestore());
     }
 
     public Task<Void> updateOrder(String orderId, Order order) {
+        if (orderId == null || orderId.isEmpty()) {
+            throw new IllegalArgumentException("Order ID cannot be null or empty");
+        }
+        if (order == null) {
+            throw new IllegalArgumentException("Order cannot be null");
+        }
+        if (!order.isValid()) {
+            throw new IllegalArgumentException("Order validation failed: missing required fields");
+        }
         return getOrderDocument(orderId).update(order.toFirestore());
     }
 
     public Task<Void> deleteOrder(String orderId) {
+        if (orderId == null || orderId.isEmpty()) {
+            throw new IllegalArgumentException("Order ID cannot be null or empty");
+        }
         return getOrderDocument(orderId).delete();
     }
 
     public Query getOrdersByClient(String clientId) {
+        if (clientId == null || clientId.isEmpty()) {
+            throw new IllegalArgumentException("Client ID cannot be null or empty");
+        }
         return getOrdersCollection().whereEqualTo("client_id", clientId);
     }
 
     public Query getOrdersByTrip(String tripId) {
+        if (tripId == null || tripId.isEmpty()) {
+            throw new IllegalArgumentException("Trip ID cannot be null or empty");
+        }
         return getOrdersCollection().whereEqualTo("trip_id", tripId);
     }
 

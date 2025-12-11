@@ -83,10 +83,18 @@ public class TripDetailActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         List<Task<DocumentSnapshot>> userTasks = new ArrayList<>();
+                        List<String> validClientIds = new ArrayList<>();
 
                         for (QueryDocumentSnapshot orderDoc : task.getResult()) {
                             String clientId = orderDoc.getString("client_id");
-                            String orderId = orderDoc.getId();
+
+                            // Validate client_id before fetching user
+                            if (clientId == null || clientId.isEmpty()) {
+                                Log.w(TAG, "Order " + orderDoc.getId() + " has null or empty client_id, skipping");
+                                continue;
+                            }
+
+                            validClientIds.add(clientId);
 
                             // Fetch user details
                             Task<DocumentSnapshot> userTask = db.collection("users")
@@ -96,14 +104,17 @@ public class TripDetailActivity extends AppCompatActivity {
                             userTasks.add(userTask);
                         }
 
+                        if (userTasks.isEmpty()) {
+                            Log.w(TAG, "No valid orders found for this trip");
+                            return;
+                        }
+
                         Tasks.whenAllSuccess(userTasks).addOnCompleteListener(allTasks -> {
                             if (allTasks.isSuccessful()) {
-                                int index = 0;
-                                for (QueryDocumentSnapshot orderDoc : task.getResult()) {
-                                    String clientId = orderDoc.getString("client_id");
-                                    String orderId = orderDoc.getId();
+                                for (int i = 0; i < validClientIds.size(); i++) {
+                                    String clientId = validClientIds.get(i);
+                                    DocumentSnapshot userSnapshot = (DocumentSnapshot) allTasks.getResult().get(i);
 
-                                    DocumentSnapshot userSnapshot = (DocumentSnapshot) allTasks.getResult().get(index);
                                     if (userSnapshot.exists()) {
                                         String customerName = userSnapshot.getString("name");
                                         String phone = userSnapshot.getString("phone");
@@ -114,7 +125,6 @@ public class TripDetailActivity extends AppCompatActivity {
 
                                         tripsDetailList.add(seat);
                                     }
-                                    index++;
                                 }
                                 tripDetailAdapter.notifyDataSetChanged();
                             } else {

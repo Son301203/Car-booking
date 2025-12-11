@@ -88,49 +88,56 @@ public class TripDetailAdapter extends ArrayAdapter<Seat> {
             new AlertDialog.Builder(context)
                     .setTitle("Xác nhận đón khách")
                     .setPositiveButton("Xác nhận", (dialog, which) -> {
-                        String driverId = seat.getDriverId();
                         String tripId = seat.getTripId();
                         String clientId = seat.getClientId();
 
-                        db.collection("drivers")
-                                .document(driverId)
-                                .collection("trips")
-                                .document(tripId)
-                                .collection("clients")
-                                .document(clientId)
+                        // Validate inputs
+                        if (tripId == null || tripId.isEmpty()) {
+                            Toast.makeText(context, "Lỗi: Không tìm thấy thông tin chuyến đi", Toast.LENGTH_SHORT).show();
+                            Log.e("TripDetailAdapter", "tripId is null or empty");
+                            return;
+                        }
+
+                        if (clientId == null || clientId.isEmpty()) {
+                            Toast.makeText(context, "Lỗi: Không tìm thấy thông tin khách hàng", Toast.LENGTH_SHORT).show();
+                            Log.e("TripDetailAdapter", "clientId is null or empty");
+                            return;
+                        }
+
+                        // Query orders from root collection
+                        db.collection("orders")
+                                .whereEqualTo("trip_id", tripId)
+                                .whereEqualTo("client_id", clientId)
                                 .get()
-                                .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful() && task.getResult() != null) {
-                                        String customerId = task.getResult().getString("customerId");
+                                .addOnCompleteListener(orderTask -> {
+                                    if (orderTask.isSuccessful() && orderTask.getResult() != null) {
+                                        if (orderTask.getResult().isEmpty()) {
+                                            Toast.makeText(context, "Không tìm thấy đơn hàng", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
 
-                                        db.collection("users")
-                                                .document(customerId)
-                                                .collection("orders")
-                                                .whereEqualTo("tripId", tripId)
-                                                .get()
-                                                .addOnCompleteListener(orderTask -> {
-                                                    if (orderTask.isSuccessful() && orderTask.getResult() != null) {
-                                                        for (QueryDocumentSnapshot orderDoc : orderTask.getResult()) {
-                                                            String orderId = orderDoc.getId();
+                                        for (QueryDocumentSnapshot orderDoc : orderTask.getResult()) {
+                                            String orderId = orderDoc.getId();
 
-                                                            db.collection("users")
-                                                                    .document(customerId)
-                                                                    .collection("orders")
-                                                                    .document(orderId)
-                                                                    .update("state", "Picked Up")
-                                                                    .addOnSuccessListener(aVoid -> {
-                                                                        Toast.makeText(context, "Đã xác nhận đón khách thành công", Toast.LENGTH_SHORT).show();
-                                                                        // Fetch lại dữ liệu sau khi đón khách
-                                                                        if (context instanceof TripDetailActivity) {
-                                                                            ((TripDetailActivity) context).fetchClients();
-                                                                        }
-                                                                    })
-                                                                    .addOnFailureListener(e -> {
-                                                                        Toast.makeText(context, "Đã xảy ra lỗi trong quá trình xác nhận đón khách", Toast.LENGTH_SHORT).show();
-                                                                    });
+                                            // Update order state in root orders collection
+                                            db.collection("orders")
+                                                    .document(orderId)
+                                                    .update("state", "Picked Up")
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Toast.makeText(context, "Đã xác nhận đón khách thành công", Toast.LENGTH_SHORT).show();
+                                                        // Fetch lại dữ liệu sau khi đón khách
+                                                        if (context instanceof TripDetailActivity) {
+                                                            ((TripDetailActivity) context).fetchClients();
                                                         }
-                                                    }
-                                                });
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Toast.makeText(context, "Đã xảy ra lỗi trong quá trình xác nhận đón khách", Toast.LENGTH_SHORT).show();
+                                                        Log.e("TripDetailAdapter", "Error updating order", e);
+                                                    });
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "Lỗi khi tải thông tin đơn hàng", Toast.LENGTH_SHORT).show();
+                                        Log.e("TripDetailAdapter", "Error getting orders", orderTask.getException());
                                     }
                                 });
                     })
@@ -144,70 +151,80 @@ public class TripDetailAdapter extends ArrayAdapter<Seat> {
             new AlertDialog.Builder(context)
                     .setTitle("Xác nhận trả khách")
                     .setPositiveButton("Xác nhận", (dialog, which) -> {
-                        String driverId = seat.getDriverId();
                         String tripId = seat.getTripId();
                         String clientId = seat.getClientId();
 
-                        db.collection("drivers")
-                                .document(driverId)
-                                .collection("trips")
-                                .document(tripId)
-                                .collection("clients")
-                                .document(clientId)
+                        // Validate inputs
+                        if (tripId == null || tripId.isEmpty()) {
+                            Toast.makeText(context, "Lỗi: Không tìm thấy thông tin chuyến đi", Toast.LENGTH_SHORT).show();
+                            Log.e("TripDetailAdapter", "tripId is null or empty");
+                            return;
+                        }
+
+                        if (clientId == null || clientId.isEmpty()) {
+                            Toast.makeText(context, "Lỗi: Không tìm thấy thông tin khách hàng", Toast.LENGTH_SHORT).show();
+                            Log.e("TripDetailAdapter", "clientId is null or empty");
+                            return;
+                        }
+
+                        // Query orders from root collection - only Picked Up orders
+                        db.collection("orders")
+                                .whereEqualTo("trip_id", tripId)
+                                .whereEqualTo("client_id", clientId)
+                                .whereEqualTo("state", "Picked Up")
                                 .get()
-                                .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful() && task.getResult() != null) {
-                                        String customerId = task.getResult().getString("customerId");
+                                .addOnCompleteListener(orderTask -> {
+                                    if (orderTask.isSuccessful()) {
+                                        QuerySnapshot orderSnapshot = orderTask.getResult();
+                                        if (orderSnapshot != null && !orderSnapshot.isEmpty()) {
+                                            for (QueryDocumentSnapshot orderDoc : orderSnapshot) {
+                                                String orderId = orderDoc.getId();
 
-                                        db.collection("users")
-                                                .document(customerId)
-                                                .collection("orders")
-                                                .whereEqualTo("tripId", tripId)
-                                                .whereEqualTo("state", "Picked Up")
-                                                .get()
-                                                .addOnCompleteListener(orderTask -> {
-                                                    if (orderTask.isSuccessful()) {
-                                                        QuerySnapshot orderSnapshot = orderTask.getResult();
-                                                        if (orderSnapshot != null && !orderSnapshot.isEmpty()) {
-                                                            for (QueryDocumentSnapshot orderDoc : orderSnapshot) {
-                                                                String orderId = orderDoc.getId();
+                                                // Update order state to Completed
+                                                db.collection("orders")
+                                                        .document(orderId)
+                                                        .update("state", "Completed")
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            Toast.makeText(context, "Đã xác nhận trả khách thành công", Toast.LENGTH_SHORT).show();
 
-                                                                db.collection("users")
-                                                                        .document(customerId)
-                                                                        .collection("orders")
-                                                                        .document(orderId)
-                                                                        .update("state", "Completed")
-                                                                        .addOnSuccessListener(aVoid -> {
-                                                                            Toast.makeText(context, "Đã xác nhận trả khách thành công", Toast.LENGTH_SHORT).show();
+                                                            // Send notification to user
+                                                            db.collection("notifications")
+                                                                    .document("users")
+                                                                    .collection("users")
+                                                                    .document(clientId)
+                                                                    .collection("messages")
+                                                                    .document(String.valueOf(System.currentTimeMillis()))
+                                                                    .set(new HashMap<String, Object>() {{
+                                                                        put("userId", clientId);
+                                                                        put("title", "Về chuyến đi");
+                                                                        put("image", "completed_trip.png");
+                                                                        put("message", "Bạn đã hoàn thành chuyến đi");
+                                                                        put("timestamp", System.currentTimeMillis());
+                                                                        put("read", false);
+                                                                    }})
+                                                                    .addOnSuccessListener(documentReference -> {
+                                                                        Log.d("TripDetailAdapter", "Notification sent successfully");
+                                                                    })
+                                                                    .addOnFailureListener(e -> {
+                                                                        Log.e("TripDetailAdapter", "Error sending notification", e);
+                                                                    });
 
-                                                                            // notifications
-                                                                            db.collection("notifications")
-                                                                                    .document("users")
-                                                                                    .collection("users")
-                                                                                    .document(customerId)
-                                                                                    .collection("messages")
-                                                                                    .document(String.valueOf(System.currentTimeMillis()))
-                                                                                    .set(new HashMap<String, Object>() {{
-                                                                                        put("userId", customerId);
-                                                                                        put("title", "Về chuyến đi");
-                                                                                        put("image", "completed_trip.png");
-                                                                                        put("message", "Bạn đã hoàn thành chuyến đi");
-                                                                                        put("timestamp", System.currentTimeMillis());
-                                                                                        put("read", false);
-                                                                                    }});
-                                                                            if (context instanceof TripDetailActivity) {
-                                                                                ((TripDetailActivity) context).fetchClients();
-                                                                            }
-                                                                        })
-                                                                        .addOnFailureListener(e -> {
-                                                                            Toast.makeText(context, "Đã xảy ra lỗi trong quá trình xác nhận trả khách", Toast.LENGTH_SHORT).show();
-                                                                        });
+                                                            // Refresh the list
+                                                            if (context instanceof TripDetailActivity) {
+                                                                ((TripDetailActivity) context).fetchClients();
                                                             }
-                                                        } else {
-                                                            Toast.makeText(context, "Bạn phải đón khách trước khi trả", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-                                                });
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Toast.makeText(context, "Đã xảy ra lỗi trong quá trình xác nhận trả khách", Toast.LENGTH_SHORT).show();
+                                                            Log.e("TripDetailAdapter", "Error updating order", e);
+                                                        });
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "Bạn phải đón khách trước khi trả", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "Lỗi khi tải thông tin đơn hàng", Toast.LENGTH_SHORT).show();
+                                        Log.e("TripDetailAdapter", "Error getting orders", orderTask.getException());
                                     }
                                 });
                     })

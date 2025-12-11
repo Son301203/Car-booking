@@ -2,6 +2,8 @@ package com.example.bookcar.view.coordination;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ArrangeCustomersFragment extends Fragment {
+    private static final String TAG = "ArrangeCustomersFragment";
 
     private RecyclerView recyclerViewCustomers;
     private ProgressBar progressBarCustomers;
@@ -280,8 +283,37 @@ public class ArrangeCustomersFragment extends Fragment {
         // Use the departure date from first selected order
         String tripDate = selectedOrders.get(0).getDepartureDate();
 
-        // Create trip
-        Trips trip = new Trips(tripDate, tripStartTime, selectedOrders.size(), driverId, null);
+        // Validate inputs
+        if (TextUtils.isEmpty(driverId)) {
+            Toast.makeText(getContext(), "Không tìm thấy thông tin tài xế", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(tripStartTime)) {
+            Toast.makeText(getContext(), "Vui lòng nhập thời gian khởi hành", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(tripDate)) {
+            Toast.makeText(getContext(), "Không tìm thấy ngày khởi hành", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create trip with validation
+        Trips trip;
+        try {
+            trip = new Trips(tripDate, tripStartTime, selectedOrders.size(), driverId, null);
+
+            // Validate trip before saving
+            if (!trip.isValid()) {
+                Toast.makeText(getContext(), "Dữ liệu chuyến đi không hợp lệ", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Error creating trip", e);
+            return;
+        }
 
         db.collection("trips")
                 .add(trip.toFirestore())
