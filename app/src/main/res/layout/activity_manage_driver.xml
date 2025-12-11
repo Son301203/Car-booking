@@ -5,11 +5,9 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/main_manage_driver"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <!-- Header -->
         <TextView
@@ -20,24 +18,25 @@
             android:textStyle="bold"
             android:textColor="#4CAF50"
             android:gravity="center"
-            android:layout_marginBottom="16dp" />
+            android:padding="16dp" />
 
-        <!-- Driver List Header -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Danh sách tài xế"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Driver List -->
-        <ListView
-            android:id="@+id/listViewDrivers"
+        <!-- TabLayout -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp" />
+            android:layout_height="wrap_content"
+            android:background="#4CAF50"
+            app:tabTextColor="#FFFFFF"
+            app:tabSelectedTextColor="#FFFFFF"
+            app:tabIndicatorColor="#FFFFFF"
+            app:tabMode="fixed" />
+
+        <!-- ViewPager2 -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <!-- Floating Action Button -->

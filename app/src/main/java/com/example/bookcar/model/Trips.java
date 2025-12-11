@@ -90,7 +90,9 @@ public class Trips {
         data.put("pickup_coordinates", departureCoordinates);
         data.put("destination_coordinates", destinationCoordinates);
         data.put("quantity", quantity);
+        data.put("dateTrip", dateTrips);  // Also store as dateTrip for consistency with web
         data.put("dateTrips", dateTrips);
+        data.put("startTime", timeTrips);  // Also store as startTime for consistency with web
         data.put("timeTrips", timeTrips);
         data.put("description", description);
         data.put("dayOfWeek", dayOfWeek);

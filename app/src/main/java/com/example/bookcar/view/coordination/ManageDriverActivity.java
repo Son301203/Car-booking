@@ -8,17 +8,21 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bookcar.R;
 import com.example.bookcar.adapter.DriverAdapter;
+import com.example.bookcar.adapter.DriverManagementPagerAdapter;
 import com.example.bookcar.model.Driver;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,7 +34,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ManageDriverActivity extends AppCompatActivity implements DriverAdapter.OnDriverActionListener {
-    private ListView listViewDrivers;
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
     private FloatingActionButton fabAddDriver;
 
     private FirebaseAuth mAuth;
@@ -53,17 +58,55 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
         // Load drivers
         loadDrivers();
 
-        // FAB click listener
+        // FAB click listener (only show on driver list tab)
         fabAddDriver.setOnClickListener(v -> showAddDriverDialog());
+
+        // Handle FAB visibility based on tab
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                // Show FAB only on Driver List tab (position 0)
+                if (position == 0) {
+                    fabAddDriver.show();
+                } else {
+                    fabAddDriver.hide();
+                }
+            }
+        });
     }
 
     private void initViews() {
-        listViewDrivers = findViewById(R.id.listViewDrivers);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
         fabAddDriver = findViewById(R.id.fabAddDriver);
 
+        // Setup driver list and adapter
         driverList = new ArrayList<>();
         driverAdapter = new DriverAdapter(this, R.layout.item_driver, driverList, this);
-        listViewDrivers.setAdapter(driverAdapter);
+
+        // Setup ViewPager2 with adapter
+        DriverManagementPagerAdapter pagerAdapter = new DriverManagementPagerAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
+
+        // Connect TabLayout with ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                switch (position) {
+                    case 0:
+                        tab.setText("Danh sách tài xế");
+                        break;
+                    case 1:
+                        tab.setText("Xếp khách hàng");
+                        break;
+                }
+            }
+        }).attach();
+    }
+
+    public DriverAdapter getDriverAdapter() {
+        return driverAdapter;
     }
 
     private void showAddDriverDialog() {
