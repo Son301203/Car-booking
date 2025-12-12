@@ -25,6 +25,9 @@
             android:name=".view.ChangePasswordActivity"
             android:exported="false" />
         <activity
+            android:name=".view.coordination.AccountCoordinationActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.coordination.ManageDriverActivity"
             android:exported="false" />
         <activity

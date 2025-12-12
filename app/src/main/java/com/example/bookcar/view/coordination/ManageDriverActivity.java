@@ -2,12 +2,14 @@ package com.example.bookcar.view.coordination;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -80,6 +82,13 @@ public class ManageDriverActivity extends AppCompatActivity implements DriverAda
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
         fabAddDriver = findViewById(R.id.fabAddDriver);
+        ImageView btnAccountCoordination = findViewById(R.id.btnAccountCoordination);
+
+        // Account button click
+        btnAccountCoordination.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AccountCoordinationActivity.class);
+            startActivity(intent);
+        });
 
         // Setup driver list and adapter
         driverList = new ArrayList<>();

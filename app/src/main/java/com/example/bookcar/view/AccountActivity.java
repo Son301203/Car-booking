@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bookcar.R;
 import com.example.bookcar.model.roles.ClientRole;
+import com.example.bookcar.model.roles.CoordinationRole;
 import com.example.bookcar.model.roles.DriverRole;
 import com.example.bookcar.model.roles.UserRole;
 import com.example.bookcar.view.bottomtab.TabManager;
@@ -90,6 +91,10 @@ public class AccountActivity extends AppCompatActivity {
             TabUtils.setupTabDriverUI(this);
             bottomNavigation.setVisibility(View.GONE);
             bottomNavigationDriver.setVisibility(View.VISIBLE);
+        } else if (userRole instanceof CoordinationRole) {
+            // Coordination doesn't use bottom nav
+            bottomNavigation.setVisibility(View.GONE);
+            bottomNavigationDriver.setVisibility(View.GONE);
         } else if (userRole instanceof ClientRole) {
             TabUtils.setupTabClientUI(this);
             bottomNavigation.setVisibility(View.VISIBLE);
@@ -104,24 +109,38 @@ public class AccountActivity extends AppCompatActivity {
             return;
         }
 
-        db.collection("drivers")
+        // Check user's role from unified users collection
+        db.collection("users")
                 .document(userId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult().exists()) {
-                        userRole = new DriverRole();
-                        Log.d(TAG, "Xác định vai trò: Tài xế");
-                        setupTabDriverUI(this);
-                        bottomNavigation.setVisibility(View.GONE);
-                        bottomNavigationDriver.setVisibility(View.VISIBLE);
+                        String roleId = task.getResult().getString("role_id");
+
+                        if ("driver".equals(roleId)) {
+                            userRole = new DriverRole();
+                            Log.d(TAG, "Xác định vai trò: Tài xế");
+                            setupTabDriverUI(this);
+                            bottomNavigation.setVisibility(View.GONE);
+                            bottomNavigationDriver.setVisibility(View.VISIBLE);
+                        } else if ("coordination".equals(roleId)) {
+                            userRole = new CoordinationRole();
+                            Log.d(TAG, "Xác định vai trò: Điều phối viên");
+                            // Coordination doesn't use bottom nav in AccountActivity
+                            bottomNavigation.setVisibility(View.GONE);
+                            bottomNavigationDriver.setVisibility(View.GONE);
+                        } else {
+                            userRole = new ClientRole();
+                            Log.d(TAG, "Xác định vai trò: Khách hàng");
+                            setupTabClientUI(this);
+                            bottomNavigation.setVisibility(View.VISIBLE);
+                            bottomNavigationDriver.setVisibility(View.GONE);
+                        }
+                        fetchAccountInfo(userId);
                     } else {
-                        userRole = new ClientRole();
-                        Log.d(TAG, "Xác định vai trò: Khách hàng");
-                        setupTabClientUI(this);
-                        bottomNavigation.setVisibility(View.VISIBLE);
-                        bottomNavigationDriver.setVisibility(View.GONE);
+                        Log.e(TAG, "User not found");
+                        Toast.makeText(this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
                     }
-                    fetchAccountInfo(userId);
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Lỗi khi kiểm tra vai trò: " + e.getMessage());

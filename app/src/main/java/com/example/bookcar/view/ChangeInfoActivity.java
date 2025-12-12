@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bookcar.R;
 import com.example.bookcar.model.roles.ClientRole;
+import com.example.bookcar.model.roles.CoordinationRole;
 import com.example.bookcar.model.roles.DriverRole;
 import com.example.bookcar.model.roles.UserRole;
 import com.google.firebase.auth.FirebaseAuth;
@@ -100,6 +101,8 @@ public class ChangeInfoActivity extends AppCompatActivity {
                         String roleId = task.getResult().getString("role_id");
                         if ("driver".equals(roleId)) {
                             userRole = new DriverRole();
+                        } else if ("coordination".equals(roleId)) {
+                            userRole = new CoordinationRole();
                         } else {
                             userRole = new ClientRole();
                         }
@@ -156,9 +159,9 @@ public class ChangeInfoActivity extends AppCompatActivity {
                 .document(userId)
                 .update(updates)
                 .addOnSuccessListener(unused -> {
-                    String roleText = userRole instanceof DriverRole ? "tài xế" : "người dùng";
+                    String roleText = userRole instanceof DriverRole ? "tài xế" :
+                                    (userRole instanceof CoordinationRole ? "điều phối viên" : "người dùng");
                     Toast.makeText(this, "Thông tin " + roleText + " được cập nhật thành công!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, AccountActivity.class));
                     finish();
                 })
                 .addOnFailureListener(e -> {
