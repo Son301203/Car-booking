@@ -4,7 +4,6 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,13 +17,11 @@ import com.example.bookcar.adapter.TripDetailAdapter;
 import com.example.bookcar.databinding.ActivityTripDetailBinding;
 import com.example.bookcar.model.Seat;
 import com.example.bookcar.view.animations.FadeIn;
-import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,22 +68,59 @@ public class TripDetailActivity extends AppCompatActivity {
         binding.backIcon.setOnClickListener(v -> finish());
     }
 
+    private void checkAndUpdateTripCompletion() {
+        // Check if all orders are either Completed or Cancelled
+        db.collection("orders")
+                .whereEqualTo("trip_id", tripId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        boolean allCompleted = true;
+                        int totalOrders = 0;
+
+                        for (QueryDocumentSnapshot orderDoc : task.getResult()) {
+                            totalOrders++;
+                            String state = orderDoc.getString("state");
+                            if (!"Completed".equals(state) && !"Cancelled".equals(state)) {
+                                allCompleted = false;
+                                break;
+                            }
+                        }
+
+                        // If there are orders and all are completed/cancelled, mark trip as completed
+                        if (totalOrders > 0 && allCompleted) {
+                            db.collection("trips")
+                                    .document(tripId)
+                                    .update("status", "completed")
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d(TAG, "Trip marked as completed");
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error updating trip status", e);
+                                    });
+                        }
+                    }
+                });
+    }
+
     public void fetchClients() {
         tripsDetailList.clear();
         tripDetailAdapter.notifyDataSetChanged();
 
-        // Get all orders for this trip
+        // Get all orders for this trip (including Completed and Cancelled)
         db.collection("orders")
                 .whereEqualTo("trip_id", tripId)
-                .whereIn("state", Arrays.asList("Booked", "Picked Up", "Arranged"))
+                .whereIn("state", Arrays.asList("Booked", "Picked Up", "Arranged", "Completed", "Cancelled"))
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         List<Task<DocumentSnapshot>> userTasks = new ArrayList<>();
                         List<String> validClientIds = new ArrayList<>();
+                        List<String> orderStates = new ArrayList<>();
 
                         for (QueryDocumentSnapshot orderDoc : task.getResult()) {
                             String clientId = orderDoc.getString("client_id");
+                            String orderState = orderDoc.getString("state");
 
                             // Validate client_id before fetching user
                             if (clientId == null || clientId.isEmpty()) {
@@ -95,6 +129,7 @@ public class TripDetailActivity extends AppCompatActivity {
                             }
 
                             validClientIds.add(clientId);
+                            orderStates.add(orderState);
 
                             // Fetch user details
                             Task<DocumentSnapshot> userTask = db.collection("users")
@@ -113,6 +148,7 @@ public class TripDetailActivity extends AppCompatActivity {
                             if (allTasks.isSuccessful()) {
                                 for (int i = 0; i < validClientIds.size(); i++) {
                                     String clientId = validClientIds.get(i);
+                                    String orderState = orderStates.get(i);
                                     DocumentSnapshot userSnapshot = (DocumentSnapshot) allTasks.getResult().get(i);
 
                                     if (userSnapshot.exists()) {
@@ -122,11 +158,15 @@ public class TripDetailActivity extends AppCompatActivity {
                                         Seat seat = new Seat(clientId, driverId, tripId);
                                         seat.setUsername(customerName);
                                         seat.setPhone(phone);
+                                        seat.setOrderState(orderState);
 
                                         tripsDetailList.add(seat);
                                     }
                                 }
                                 tripDetailAdapter.notifyDataSetChanged();
+
+                                // Check if trip is completed
+                                checkAndUpdateTripCompletion();
                             } else {
                                 Log.e(TAG, "Error in user tasks", allTasks.getException());
                             }

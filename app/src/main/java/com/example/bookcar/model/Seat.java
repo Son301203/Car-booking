@@ -6,6 +6,7 @@ public class Seat {
     private String phone;
     private String driverId;
     private String tripId;
+    private String orderState; // "Booked", "Picked Up", "Completed", "Cancelled"
 
     public Seat(String clientId, String driverId, String tripId) {
         this.clientId = clientId;
@@ -53,5 +54,13 @@ public class Seat {
 
     public void setTripId(String tripId) {
         this.tripId = tripId;
+    }
+
+    public String getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(String orderState) {
+        this.orderState = orderState;
     }
 }

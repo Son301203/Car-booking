@@ -57,6 +57,30 @@ public class TripDetailAdapter extends ArrayAdapter<Seat> {
         TextView guestPhone = convertView.findViewById(R.id.guest_phone);
         guestPhone.setText(seat.getPhone());
 
+        // Get order state
+        String orderState = seat.getOrderState();
+        boolean isCompleted = "Completed".equals(orderState);
+        boolean isCancelled = "Cancelled".equals(orderState);
+
+        // Show/hide status indicator and buttons based on order state
+        TextView orderStatus = convertView.findViewById(R.id.order_status);
+        View buttonsLayout = convertView.findViewById(R.id.buttons_layout);
+
+        if (isCompleted) {
+            orderStatus.setVisibility(View.VISIBLE);
+            orderStatus.setText("✓ Đã hoàn thành chuyến đi");
+            orderStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
+            buttonsLayout.setVisibility(View.GONE);
+        } else if (isCancelled) {
+            orderStatus.setVisibility(View.VISIBLE);
+            orderStatus.setText("✗ Đã hủy chuyến đi");
+            orderStatus.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+            buttonsLayout.setVisibility(View.GONE);
+        } else {
+            orderStatus.setVisibility(View.GONE);
+            buttonsLayout.setVisibility(View.VISIBLE);
+        }
+
         TextView showLocation = convertView.findViewById(R.id.location_link);
         showLocation.setOnClickListener(view -> {
             String driverId = seat.getDriverId();
