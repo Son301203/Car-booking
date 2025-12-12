@@ -58,15 +58,71 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void checkUserRole(String uid) {
-        db.collection("drivers").document(uid).get()
+        // Check user's role from unified users collection
+        db.collection("users").document(uid).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult().exists()) {
-                        startActivity(new Intent(this, HomeDriversActivity.class));
-                        finish();
+                        String roleId = task.getResult().getString("role_id");
+
+                        if (roleId == null || roleId.isEmpty()) {
+                            Toast.makeText(MainActivity.this, "Không tìm thấy role cho user", Toast.LENGTH_SHORT).show();
+                            // Logout and go to login
+                            mAuth.signOut();
+                            startActivity(new Intent(this, LoginActivity.class));
+                            finish();
+                            return;
+                        }
+
+                        // Get role name from roles collection
+                        db.collection("roles").document(roleId).get()
+                                .addOnSuccessListener(roleDoc -> {
+                                    if (roleDoc.exists()) {
+                                        String roleName = roleDoc.getString("name");
+
+                                        if ("coordination".equals(roleName)) {
+                                            Log.d("MainActivity", "Coordination user detected, redirecting to ManageDriverActivity");
+                                            startActivity(new Intent(this, com.example.bookcar.view.coordination.ManageDriverActivity.class));
+                                            finish();
+                                        } else if ("drivers".equals(roleName)) {
+                                            Log.d("MainActivity", "Driver user detected, redirecting to HomeDriversActivity");
+                                            startActivity(new Intent(this, HomeDriversActivity.class));
+                                            finish();
+                                        } else {
+                                            Log.d("MainActivity", "Client user detected, redirecting to HomeActivity");
+                                            startActivity(new Intent(this, HomeActivity.class));
+                                            finish();
+                                        }
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "Không tìm thấy role", Toast.LENGTH_SHORT).show();
+                                        // Logout and go to login
+                                        mAuth.signOut();
+                                        startActivity(new Intent(this, LoginActivity.class));
+                                        finish();
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(MainActivity.this, "Lỗi khi kiểm tra role: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Log.e("MainActivity", "Error checking role: " + e.getMessage());
+                                    // Logout and go to login
+                                    mAuth.signOut();
+                                    startActivity(new Intent(this, LoginActivity.class));
+                                    finish();
+                                });
                     } else {
-                        startActivity(new Intent(this, HomeActivity.class));
+                        Toast.makeText(MainActivity.this, "Không tìm thấy thông tin user", Toast.LENGTH_SHORT).show();
+                        // Logout and go to login
+                        mAuth.signOut();
+                        startActivity(new Intent(this, LoginActivity.class));
                         finish();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(MainActivity.this, "Lỗi khi tải thông tin user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("MainActivity", "Error loading user info: " + e.getMessage());
+                    // Logout and go to login
+                    mAuth.signOut();
+                    startActivity(new Intent(this, LoginActivity.class));
+                    finish();
                 });
     }
 }
