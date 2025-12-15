@@ -5,9 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +20,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bookcar.R;
 import com.example.bookcar.view.bottomtab.TabUtils;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,10 +35,10 @@ import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private TextView tvDepartureDate, tvReturnDate, tvLocationPickerDeparture, tvLocationPickerDestination;
-    private EditText etPickup, etDestination;
-    private Switch switchRoundTrip;
-    private Button btnBook;
+    private TextView tvDepartureDate, tvLocationPickerDeparture, tvLocationPickerDestination;
+    private TextInputEditText etPickup, etDestination;
+    private MaterialButton btnBook;
+    private MaterialCardView cardSelectPickupMap, cardSelectDestinationMap;
     private Calendar calendar;
 
     private FirebaseAuth mAuth;
@@ -68,18 +68,18 @@ public class HomeActivity extends AppCompatActivity {
         etPickup = findViewById(R.id.et_pickup);
         etDestination = findViewById(R.id.et_destination);
         tvDepartureDate = findViewById(R.id.tv_departure_date);
-        tvReturnDate = findViewById(R.id.tv_return_date);
+        cardSelectPickupMap = findViewById(R.id.card_select_pickup_map);
+        cardSelectDestinationMap = findViewById(R.id.card_select_destination_map);
         tvLocationPickerDeparture = findViewById(R.id.tv_select_pickup_map);
         tvLocationPickerDestination = findViewById(R.id.tv_select_destination_map);
-        switchRoundTrip = findViewById(R.id.switch_round_trip);
         btnBook = findViewById(R.id.btn_book);
         calendar = Calendar.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Handle Location picker departure
-        tvLocationPickerDeparture.setOnClickListener(new View.OnClickListener() {
+        // Handle Location picker departure - via card click
+        cardSelectPickupMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isPickingDeparture = true;
@@ -88,7 +88,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        tvLocationPickerDestination.setOnClickListener(new View.OnClickListener() {
+        cardSelectDestinationMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isPickingDeparture = false;
@@ -97,16 +97,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // Handle Departure Date Selection
+        // Handle Departure Date Selection - make the entire card clickable
         tvDepartureDate.setOnClickListener(v -> showDatePickerDialog(tvDepartureDate));
-
-        // Handle Return Date Selection
-        tvReturnDate.setOnClickListener(v -> showDatePickerDialog(tvReturnDate));
-
-        // Handle Round Trip Toggle
-        switchRoundTrip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            tvReturnDate.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
 
         // Handle Booking
         btnBook.setOnClickListener(v -> checkStateOrder());
@@ -134,18 +126,28 @@ public class HomeActivity extends AppCompatActivity {
                             address = data.getStringExtra("address");
 
                             if(isPickingDeparture) {
-                                tvLocationPickerDeparture.setText(address);
+                                // Save coordinates for pickup
                                 departureLatitude = latitude;
                                 departureLongitude = longitude;
+
+                                // Only auto-fill if the field is empty
+                                if (etPickup.getText() == null || etPickup.getText().toString().trim().isEmpty()) {
+                                    etPickup.setText(address);
+                                }
                             }else{
-                                tvLocationPickerDestination.setText(address);
+                                // Save coordinates for destination
                                 destinationLatitude = latitude;
                                 destinationLongitude = longitude;
+
+                                // Only auto-fill if the field is empty
+                                if (etDestination.getText() == null || etDestination.getText().toString().trim().isEmpty()) {
+                                    etDestination.setText(address);
+                                }
                             }
                         }
                     }
                     else{
-                        Toast.makeText(HomeActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, R.string.cancelled, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -163,6 +165,8 @@ public class HomeActivity extends AppCompatActivity {
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
         );
+        // Set minimum date to today
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
 
@@ -197,13 +201,12 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void bookCar(String userId) {
-        String pickup = etPickup.getText().toString();
-        String destination = etDestination.getText().toString();
+        String pickup = etPickup.getText().toString().trim();
+        String destination = etDestination.getText().toString().trim();
         String departureDate = tvDepartureDate.getText().toString();
-        String returnDate = switchRoundTrip.isChecked() ? tvReturnDate.getText().toString() : "";
 
-        if (pickup.isEmpty() || destination.isEmpty() || departureDate.equals("Select Departure Date")) {
-            Toast.makeText(this, "Bạn hãy nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+        if (pickup.isEmpty() || destination.isEmpty() || departureDate.equals(getString(R.string.select_departure_date))) {
+            Toast.makeText(this, R.string.validation_error, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -212,7 +215,6 @@ public class HomeActivity extends AppCompatActivity {
         order.put("pickup", pickup);
         order.put("destination", destination);
         order.put("departureDate", departureDate);
-        order.put("returnDate", returnDate);
         order.put("state", "Booked");
         order.put("timestamp", System.currentTimeMillis());
         order.put("created_at", com.google.firebase.Timestamp.now());
@@ -224,20 +226,15 @@ public class HomeActivity extends AppCompatActivity {
         db.collection("orders")
                 .add(order)
                 .addOnSuccessListener(documentReference -> {
-
-                    Toast.makeText(HomeActivity.this, "Bạn đã đặt xe thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, R.string.booking_success, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(HomeActivity.this, "Đặt xe thất bại " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, getString(R.string.booking_failed) + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
         etPickup.setText("");
         etDestination.setText("");
-        tvDepartureDate.setText("Ngày đi");
-        tvReturnDate.setText("Ngày về");
-        tvLocationPickerDeparture.setText("Chọn điểm đón trên bản đồ");
-        tvLocationPickerDestination.setText("Chọn điểm đến trên bản đồ");
-
+        tvDepartureDate.setText(R.string.select_departure_date);
     }
 
 }

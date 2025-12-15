@@ -1,210 +1,379 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background_order">
+    android:background="#F5F7FA">
 
-    <!-- Header Section -->
-    <LinearLayout
+    <!-- App Bar with Modern Design -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@drawable/header_background"
-        android:elevation="4dp">
+        android:background="@android:color/transparent"
+        android:elevation="0dp"
+        app:elevation="0dp">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Đặt Xe"
-            android:textColor="@android:color/white"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:shadowColor="#40000000"
-            android:shadowDy="2"
-            android:shadowDx="2"
-            android:shadowRadius="4" />
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <!-- Decorative Subtitle -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Hành trình của bạn bắt đầu từ đây!"
-            android:textColor="#B0BEC5"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:background="@drawable/header_background">
 
-    <!-- Main Content in ScrollView -->
-    <ScrollView
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_subtitle"
+                    android:textColor="#E3F2FD"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"
+                    android:alpha="0.9" />
+            </LinearLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <!-- Main Content with NestedScrollView for Material Design -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
-        android:layout_above="@id/bottomNavigation"
-        android:padding="16dp">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/card_background"
-            android:padding="20dp"
-            android:elevation="6dp">
+            android:padding="16dp">
 
-            <!-- Decorative Divider -->
-            <View
-                android:layout_width="50dp"
-                android:layout_height="2dp"
-                android:background="@drawable/gradient_divider"
-                android:layout_gravity="center"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Pickup Location -->
-            <EditText
-                android:id="@+id/et_pickup"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@drawable/rounded_input_background"
-                android:drawableStart="@drawable/ic_location"
-                android:drawablePadding="12dp"
-                android:hint="Chọn điểm đón"
-                android:padding="12dp"
-                android:textColor="@color/black"
-                android:textColorHint="#757575"
-                android:textSize="16sp" />
-
-            <!-- Destination -->
-            <EditText
-                android:id="@+id/et_destination"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_input_background"
-                android:drawableStart="@drawable/ic_destination"
-                android:drawablePadding="12dp"
-                android:hint="Chọn điểm đến"
-                android:padding="12dp"
-                android:textColor="@color/black"
-                android:textColorHint="#757575"
-                android:textSize="16sp" />
-
-            <!-- Select on Map Options -->
-            <TextView
-                android:id="@+id/tv_select_pickup_map"
+            <!-- Main Booking Card with Modern Material Design -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_clickable_background"
-                android:drawableStart="@drawable/ic_map"
-                android:drawablePadding="12dp"
-                android:padding="14dp"
-                android:text="Chọn điểm đón trên bản đồ"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="16sp"
-                android:clickable="true"
-                android:focusable="true" />
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="0dp"
+                android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/tv_select_destination_map"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/rounded_clickable_background"
-                android:drawableStart="@drawable/ic_map"
-                android:drawablePadding="12dp"
-                android:padding="14dp"
-                android:text="Chọn điểm đến trên bản đồ"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="16sp"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <!-- Departure Date -->
-            <TextView
-                android:id="@+id/tv_departure_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_input_background"
-                android:drawableStart="@drawable/ic_calendar"
-                android:drawablePadding="12dp"
-                android:padding="14dp"
-                android:text="Ngày đi"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <!-- Round-Trip Toggle -->
-            <LinearLayout
-                android:id="@+id/round_trip_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:background="@drawable/rounded_toggle_background"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Khứ hồi"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <Switch
-                    android:id="@+id/switch_round_trip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:thumbTint="@android:color/white"
-                    android:trackTint="#B0BEC5" />
-            </LinearLayout>
-
-            <!-- Return Date -->
-            <TextView
-                android:id="@+id/tv_return_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/rounded_input_background"
-                android:drawableStart="@drawable/ic_calendar"
-                android:drawablePadding="12dp"
-                android:padding="14dp"
-                android:text="Ngày về"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:visibility="gone" />
-
-            <!-- Decorative Icon Next to Button -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp">
-
-                <Button
-                    android:id="@+id/btn_book"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:backgroundTint="#4CAF50"
-                    android:elevation="4dp"
-                    android:text="Đặt Xe Ngay"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
-            </RelativeLayout>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:background="@android:color/white">
+
+                    <!-- Trip Details Header -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trip_details"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A237E"
+                        android:layout_marginBottom="20dp" />
+
+                    <!-- Pickup Location with Modern Design -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_pickup"
+                        app:boxBackgroundMode="filled"
+                        app:boxBackgroundColor="#F8F9FA"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:startIconDrawable="@drawable/ic_location"
+                        app:startIconTint="#2196F3"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_pickup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Destination with Modern Design -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_destination"
+                        app:boxBackgroundMode="filled"
+                        app:boxBackgroundColor="#F8F9FA"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:startIconDrawable="@drawable/ic_destination"
+                        app:startIconTint="#F44336"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_destination"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Map Selection Divider -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/or_select_map"
+                        android:textSize="14sp"
+                        android:textColor="#757575"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Map Selection Buttons in Horizontal Layout -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_marginBottom="24dp">
+
+                        <!-- Select Pickup on Map -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_select_pickup_map"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:strokeColor="#2196F3"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="16dp"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_map"
+                                    app:tint="#2196F3"
+                                    android:layout_marginBottom="8dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_select_pickup_map"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/pickup_map"
+                                    android:textColor="#2196F3"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:gravity="center" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Select Destination on Map -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_select_destination_map"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp"
+                            app:strokeColor="#F44336"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="16dp"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_map"
+                                    app:tint="#F44336"
+                                    android:layout_marginBottom="8dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_select_destination_map"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/destination_map"
+                                    android:textColor="#F44336"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:gravity="center" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+
+                    <!-- Departure Date with Modern Design -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="#F8F9FA"
+                        android:layout_marginBottom="24dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="16dp"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_calendar"
+                                app:tint="#FF9800"
+                                android:layout_marginEnd="16dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/departure_date"
+                                    android:textSize="12sp"
+                                    android:textColor="#757575" />
+
+                                <TextView
+                                    android:id="@+id/tv_departure_date"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/select_departure_date"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="4dp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/baseline_arrow_back_ios_new_24"
+                                app:tint="#9E9E9E"
+                                android:rotation="180" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Book Button with Modern Design -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_book"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:text="@string/book_now"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="#4CAF50"
+                        app:cornerRadius="16dp"
+                        app:elevation="8dp"
+                        app:icon="@drawable/drive_eta"
+                        app:iconGravity="textStart"
+                        app:iconTint="@android:color/white"
+                        app:iconPadding="12dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Info Card with Tips -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#E3F2FD"
+                android:layout_marginBottom="80dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/baseline_sticky_note_2_24"
+                        app:tint="#1976D2"
+                        android:layout_marginEnd="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tips_title"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="#1976D2" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tips_message"
+                            android:textSize="13sp"
+                            android:textColor="#424242"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
 
     <!-- Bottom Navigation -->
-    <include
-        android:id="@+id/bottomNavigation"
-        layout="@layout/activity_bottom_nav_base"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
-</RelativeLayout>
+        android:layout_gravity="bottom">
+
+        <include
+            android:id="@+id/bottomNavigation"
+            layout="@layout/activity_bottom_nav_base"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

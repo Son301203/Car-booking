@@ -3,6 +3,8 @@ package com.example.bookcar.view.clients;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -42,7 +44,23 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import android.os.Handler;
+import android.os.Looper;
 
 public class LocationPickerDepartureActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -53,6 +71,7 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
     private GoogleMap mMap;
     private PlacesClient mPlacesClient;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private Geocoder geocoder;
 
     // These variables hold the user’s selected location
     private Double selectedLatitude = null;
@@ -61,6 +80,9 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
 
     // Reference to the current marker
     private Marker currentMarker;
+
+    // ExecutorService for background tasks
+    private ExecutorService executorService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +110,21 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
 
         // Initialize fused location provider
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // Initialize Geocoder
+        geocoder = new Geocoder(this, Locale.getDefault());
+        Log.d(TAG, "Geocoder initialized. isPresent: " + Geocoder.isPresent());
+
+        // Initialize executor service for background tasks
+        executorService = Executors.newSingleThreadExecutor();
+
+        // Test Geocoder with a sample location
+        if (Geocoder.isPresent()) {
+            Log.d(TAG, "Geocoder is available on this device");
+        } else {
+            Log.w(TAG, "Geocoder is NOT available on this device!");
+            Toast.makeText(this, "Geocoder không khả dụng. Sẽ hiển thị tọa độ.", Toast.LENGTH_LONG).show();
+        }
 
         // Setup AutocompleteSupportFragment for place search
         AutocompleteSupportFragment autocompleteFragment =
@@ -127,6 +164,11 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
 
         // Select button: return the selected location as a result
         binding.btnSelect.setOnClickListener(v -> {
+            Log.d(TAG, "Select button clicked");
+            Log.d(TAG, "Returning - Latitude: " + selectedLatitude);
+            Log.d(TAG, "Returning - Longitude: " + selectedLongitude);
+            Log.d(TAG, "Returning - Address: " + selectedAddress);
+
             Intent resultIntent = new Intent();
             resultIntent.putExtra("latitude", selectedLatitude);
             resultIntent.putExtra("longitude", selectedLongitude);
@@ -143,12 +185,19 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
         // Request location permission when the map is ready
         requestLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION);
 
-        // When the user taps on the map, update the selection without using Geocoder
+        // When the user taps on the map, update the selection and get address
         mMap.setOnMapClickListener(latLng -> {
             selectedLatitude = latLng.latitude;
             selectedLongitude = latLng.longitude;
-            selectedAddress = "Lat: " + selectedLatitude + ", Lng: " + selectedLongitude;
-            addMarker(latLng, "Selected Location", selectedAddress);
+
+            // Show loading state
+            binding.selectPlace.setText("Đang tải địa chỉ...");
+
+            // Get address from coordinates asynchronously
+            getAddressFromLatLngAsync(latLng.latitude, latLng.longitude, address -> {
+                selectedAddress = address;
+                addMarker(latLng, "Địa điểm đã chọn", selectedAddress);
+            });
         });
 
         // Allow marker dragging to fine-tune the selection
@@ -164,9 +213,16 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
                 LatLng newPos = marker.getPosition();
                 selectedLatitude = newPos.latitude;
                 selectedLongitude = newPos.longitude;
-                selectedAddress = "Lat: " + selectedLatitude + ", Lng: " + selectedLongitude;
-                marker.setSnippet(selectedAddress);
-                binding.selectPlace.setText(selectedAddress);
+
+                // Show loading state
+                binding.selectPlace.setText("Đang tải địa chỉ...");
+
+                // Get address from new coordinates asynchronously
+                getAddressFromLatLngAsync(newPos.latitude, newPos.longitude, address -> {
+                    selectedAddress = address;
+                    marker.setSnippet(selectedAddress);
+                    binding.selectPlace.setText(selectedAddress);
+                });
             }
         });
     }
@@ -254,8 +310,15 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
                         LatLng latLng = new LatLng(selectedLatitude, selectedLongitude);
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
-                        selectedAddress = "Lat: " + selectedLatitude + ", Lng: " + selectedLongitude;
-                        addMarker(latLng, "Current Location", selectedAddress);
+
+                        // Show loading state
+                        binding.selectPlace.setText("Đang tải địa chỉ...");
+
+                        // Get address from current location asynchronously
+                        getAddressFromLatLngAsync(selectedLatitude, selectedLongitude, address -> {
+                            selectedAddress = address;
+                            addMarker(latLng, "Vị trí hiện tại", selectedAddress);
+                        });
                     } else {
                         Log.d(TAG, "detectDeviceLocation: Location is null");
                     }
@@ -268,6 +331,245 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
             });
         } catch (SecurityException e) {
             Log.e(TAG, "detectDeviceLocation: SecurityException", e);
+        }
+    }
+
+    /**
+     * Interface for address callback
+     */
+    private interface AddressCallback {
+        void onAddressReceived(String address);
+    }
+
+    /**
+     * Asynchronously gets address from coordinates, trying multiple methods
+     */
+    private void getAddressFromLatLngAsync(double latitude, double longitude, AddressCallback callback) {
+        executorService.execute(() -> {
+            String address = null;
+
+            // Try Android Geocoder first
+            try {
+                address = getAddressFromLatLng(latitude, longitude);
+                // Check if we got coordinates back (fallback) by checking if it contains common address components
+                // Real addresses usually contain letters and various characters, not just numbers, commas and dots
+                if (address != null) {
+                    // Check if address contains letters (a real address should have letters)
+                    // and is not just coordinates (numbers with dots/commas and spaces)
+                    String testAddress = address.replaceAll("[\\d.,\\s-]", ""); // Remove numbers, dots, commas, spaces, dashes
+                    if (!testAddress.isEmpty()) {
+                        // We got a real address with actual text, use it
+                        Log.d(TAG, "Android Geocoder returned real address: " + address);
+                        String finalAddress = address;
+                        new Handler(Looper.getMainLooper()).post(() -> callback.onAddressReceived(finalAddress));
+                        return;
+                    } else {
+                        Log.d(TAG, "Android Geocoder returned coordinates format, will try Google API");
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Android Geocoder failed: " + e.getMessage());
+            }
+
+            // If Android Geocoder failed or returned coordinates, try Google Geocoding API
+            Log.d(TAG, "Attempting Google Geocoding API...");
+            try {
+                address = getAddressFromGoogleGeocodingAPI(latitude, longitude);
+                if (address != null && !address.isEmpty()) {
+                    Log.d(TAG, "Google Geocoding API success: " + address);
+                    String finalAddress = address;
+                    new Handler(Looper.getMainLooper()).post(() -> callback.onAddressReceived(finalAddress));
+                    return;
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Google Geocoding API failed: " + e.getMessage(), e);
+            }
+
+            // If still null, fallback to coordinates
+            if (address == null || address.isEmpty()) {
+                address = String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
+                Log.w(TAG, "All geocoding methods failed, using coordinates: " + address);
+            }
+
+            String finalAddress = address;
+            new Handler(Looper.getMainLooper()).post(() -> callback.onAddressReceived(finalAddress));
+        });
+    }
+
+    /**
+     * Gets address using Google Geocoding API
+     */
+    private String getAddressFromGoogleGeocodingAPI(double latitude, double longitude) {
+        try {
+            String apiKey = getString(R.string.google_map_api_key);
+            String urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng="
+                + latitude + "," + longitude
+                + "&key=" + apiKey
+                + "&language=vi"; // Use Vietnamese language for better results
+
+            Log.d(TAG, "Calling Google Geocoding API for: " + latitude + ", " + longitude);
+
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+
+                // Parse JSON response
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                String status = jsonResponse.getString("status");
+
+                if ("OK".equals(status)) {
+                    JSONArray results = jsonResponse.getJSONArray("results");
+                    if (results.length() > 0) {
+                        JSONObject result = results.getJSONObject(0);
+                        String formattedAddress = result.getString("formatted_address");
+                        Log.d(TAG, "Google API returned address: " + formattedAddress);
+                        return formattedAddress;
+                    }
+                } else {
+                    Log.e(TAG, "Google Geocoding API status: " + status);
+                    // Log error message if available
+                    if (jsonResponse.has("error_message")) {
+                        String errorMessage = jsonResponse.getString("error_message");
+                        Log.e(TAG, "Google API Error: " + errorMessage);
+                    }
+                    Log.d(TAG, "Full response: " + response.toString());
+                }
+            } else {
+                Log.w(TAG, "Google Geocoding API response code: " + responseCode);
+            }
+
+            connection.disconnect();
+        } catch (IOException e) {
+            Log.e(TAG, "Google Geocoding API IOException: " + e.getMessage());
+        } catch (JSONException e) {
+            Log.e(TAG, "JSON parsing error: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Error calling Google Geocoding API: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    /**
+     * Converts latitude and longitude to a human-readable address using Geocoder.
+     * Returns the address string or coordinates if Geocoder fails.
+     */
+    private String getAddressFromLatLng(double latitude, double longitude) {
+        Log.d(TAG, "getAddressFromLatLng: Starting for " + latitude + ", " + longitude);
+
+        try {
+            // Check if Geocoder is available
+            if (!Geocoder.isPresent()) {
+                Log.w(TAG, "Geocoder is not present on this device");
+                return String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
+            }
+
+            if (geocoder == null) {
+                Log.w(TAG, "Geocoder is null");
+                return String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
+            }
+
+            // Get addresses from location
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+            if (addresses == null || addresses.isEmpty()) {
+                Log.w(TAG, "No addresses found for coordinates");
+                return String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
+            }
+
+            Address address = addresses.get(0);
+            Log.d(TAG, "Address found: " + address.toString());
+
+            // Try to get the full address line first (usually the most complete)
+            String addressLine = address.getAddressLine(0);
+            if (addressLine != null && !addressLine.isEmpty()) {
+                Log.d(TAG, "Using address line: " + addressLine);
+                return addressLine;
+            }
+
+            // If no address line, build from components
+            StringBuilder addressString = new StringBuilder();
+
+            // Add feature name (building, landmark)
+            if (address.getFeatureName() != null && !address.getFeatureName().matches("^[0-9.]+$")) {
+                addressString.append(address.getFeatureName());
+            }
+
+            // Add street address
+            if (address.getThoroughfare() != null) {
+                if (addressString.length() > 0 && !addressString.toString().equals(address.getThoroughfare())) {
+                    addressString.append(", ");
+                }
+                if (addressString.length() == 0 || !addressString.toString().contains(address.getThoroughfare())) {
+                    addressString.append(address.getThoroughfare());
+                }
+            }
+
+            // Add sub-locality (ward/district)
+            if (address.getSubLocality() != null) {
+                if (addressString.length() > 0) addressString.append(", ");
+                addressString.append(address.getSubLocality());
+            }
+
+            // Add locality (city/town)
+            if (address.getLocality() != null) {
+                if (addressString.length() > 0) addressString.append(", ");
+                addressString.append(address.getLocality());
+            }
+
+            // Add admin area (province/state)
+            if (address.getAdminArea() != null) {
+                if (addressString.length() > 0) addressString.append(", ");
+                addressString.append(address.getAdminArea());
+            }
+
+            // Add country
+            if (address.getCountryName() != null) {
+                if (addressString.length() > 0) addressString.append(", ");
+                addressString.append(address.getCountryName());
+            }
+
+            // Return the formatted address if we have something
+            if (addressString.length() > 0) {
+                String result = addressString.toString();
+                Log.d(TAG, "Formatted address: " + result);
+                return result;
+            }
+
+            Log.w(TAG, "No address components found");
+
+        } catch (IOException e) {
+            Log.e(TAG, "Geocoder IOException: " + e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Invalid coordinates: " + e.getMessage(), e);
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting address: " + e.getMessage(), e);
+        }
+
+        // Fallback to coordinates if everything fails
+        String fallback = String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
+        Log.d(TAG, "Falling back to coordinates: " + fallback);
+        return fallback;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Shutdown executor service
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
         }
     }
 }
