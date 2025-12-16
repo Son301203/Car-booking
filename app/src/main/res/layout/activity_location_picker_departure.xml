@@ -7,59 +7,80 @@
     android:layout_height="match_parent"
     tools:context=".view.clients.LocationPickerDepartureActivity">
 
-    <RelativeLayout
-        android:id="@+id/toolbarRl"
+    <!-- Modern Toolbar with Elevation -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/toolbarCard"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/m_toolbar_height">
+        android:layout_height="wrap_content"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/toolbar_bg">
 
-        <ImageButton
-            android:id="@+id/toolbarbtnBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_arrow_back_ios_new_24"
-            android:background="@android:color/transparent"
-            android:layout_centerVertical="true"
-            android:padding="10dp"/>
-        
-        <TextView
-            android:id="@+id/toolbarTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chọn địa điểm"
-            android:layout_centerInParent="true"
-            style="@style/TextAppearance.Material3.TitleMedium"/>
+        <RelativeLayout
+            android:id="@+id/toolbarRl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/m_toolbar_height"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
-        <ImageButton
-            android:id="@+id/toolbarbtnGps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_gps"
-            android:layout_alignParentEnd="true"
-            android:background="@android:color/transparent"
-            android:layout_centerVertical="true"
-            android:padding="10dp"/>
+            <ImageButton
+                android:id="@+id/toolbarbtnBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/baseline_arrow_back_ios_new_24"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:contentDescription="Back"
+                android:tint="@color/text_primary"/>
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/quantum_grey"
-            android:layout_alignParentBottom="true"/>
+            <TextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chọn địa điểm"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                style="@style/TextAppearance.Material3.TitleMedium"/>
 
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/toolbarbtnGps"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_gps"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:contentDescription="Current Location"
+                android:tint="@color/primary"/>
 
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Map Fragment -->
     <fragment
         android:id="@+id/mapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_below="@+id/toolbarRl"/>
+        android:layout_below="@+id/toolbarCard"/>
 
+    <!-- Modern Search Card with Shadow -->
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/searchCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbarRl"
-        app:cardCornerRadius="8dp"
-        app:cardUseCompatPadding="true">
+        android:layout_below="@+id/toolbarCard"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="12dp"
+        app:cardBackgroundColor="@color/white">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/autocompleleFragment"
@@ -69,34 +90,89 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Center Pin Indicator -->
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_location_pin"
+        android:contentDescription="Location Marker"
+        android:elevation="4dp"/>
+
+    <!-- Modern Bottom Sheet with Selection Info -->
     <LinearLayout
         android:id="@+id/doneLl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
-        
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:elevation="16dp">
+
+        <!-- Location Info Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="8dp"
-            app:contentPadding="10dp">
+            app:cardCornerRadius="20dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/white"
+            android:layout_marginBottom="12dp">
 
-            <TextView
-                android:id="@+id/selectPlace"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/TextAppearance.MaterialComponents.Body1"/>
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <!-- Location Icon -->
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_location"
+                    android:tint="@color/primary"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="Location Icon"/>
+
+                <!-- Location Text -->
+                <TextView
+                    android:id="@+id/selectPlace"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:lineSpacingExtra="2dp"
+                    style="@style/TextAppearance.MaterialComponents.Body1"/>
+
+            </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Modern Confirm Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSelect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chọn"
-            app:cornerRadius="8dp"
-            android:minHeight="55dp"/>
+            android:text="Chọn địa điểm này"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:cornerRadius="16dp"
+            app:elevation="8dp"
+            android:minHeight="56dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            app:backgroundTint="@color/primary"
+            app:rippleColor="@color/primary_dark"
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            app:iconGravity="end"
+            app:iconTint="@color/white"/>
+
     </LinearLayout>
+
 </RelativeLayout>

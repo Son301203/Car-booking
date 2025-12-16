@@ -14,4 +14,14 @@
     <color name="black">#000000</color>
     <color name="error">#F44336</color>
     <color name="warning">#FF9800</color>
+
+    <!-- Modern UI Colors -->
+    <color name="quantum_grey">#E0E0E0</color>
+    <color name="map_overlay">#99FFFFFF</color>
+    <color name="shadow_color">#40000000</color>
+    <color name="toolbar_bg">#FFFFFF</color>
+    <color name="selected_button">#2196F3</color>
+    <color name="unselected_button">#F5F5F5</color>
+    <color name="button_text_selected">#FFFFFF</color>
+    <color name="button_text_unselected">#757575</color>
 </resources>
