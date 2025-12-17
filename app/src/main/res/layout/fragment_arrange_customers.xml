@@ -1,60 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/coordination_background">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Modern Header Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/headerCard"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Xếp khách hàng cho tài xế"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/coordination_card"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chọn khách hàng đã đặt chuyến để phân phối cho tài xế"
-        android:textSize="14sp"
-        android:textColor="#666666"
-        android:layout_marginBottom="16dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_sort_by_size"
+                    app:tint="@color/coordination_accent"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_icon_circle"
+                    android:contentDescription="Arrange Icon" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:text="Xếp khách hàng"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/coordination_text_primary"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Chọn khách hàng đã đặt chuyến để phân phối cho tài xế"
+                android:textSize="14sp"
+                android:textColor="@color/coordination_text_secondary" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progressBarCustomers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+        android:indeterminateTint="@color/coordination_primary"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- RecyclerView for customers -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCustomers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:paddingHorizontal="8dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/headerCard"
+        app:layout_constraintBottom_toTopOf="@id/arrangeButtonCard" />
 
-    <TextView
-        android:id="@+id/tvNoCustomers"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Không có khách hàng nào đã đặt chuyến"
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/emptyStateLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="#999999"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerCard"
+        app:layout_constraintBottom_toTopOf="@id/arrangeButtonCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/btnArrangeDriver"
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@android:drawable/ic_menu_recent_history"
+            app:tint="@color/coordination_divider"
+            android:contentDescription="No Customers" />
+
+        <TextView
+            android:id="@+id/tvNoCustomers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Không có khách hàng nào đã đặt chuyến"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/coordination_text_secondary"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Khách hàng đã đặt chuyến sẽ xuất hiện ở đây"
+            android:textSize="14sp"
+            android:textColor="@color/coordination_text_secondary" />
+    </LinearLayout>
+
+    <!-- Arrange Button Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/arrangeButtonCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Xếp tài xế"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#4CAF50"
-        android:layout_marginTop="16dp"
-        android:padding="16dp"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-</LinearLayout>
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/coordination_card"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnArrangeDriver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xếp tài xế cho khách đã chọn"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            app:icon="@android:drawable/ic_input_add"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"
+            app:backgroundTint="@color/coordination_success"
+            app:cornerRadius="16dp"
+            app:elevation="0dp" />
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 

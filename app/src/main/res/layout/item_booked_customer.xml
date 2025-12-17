@@ -3,102 +3,197 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="@color/coordination_card">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="16dp">
 
-        <CheckBox
+        <!-- Checkbox with modern styling -->
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkboxSelectCustomer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
+            android:buttonTint="@color/coordination_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Customer Info Section -->
         <LinearLayout
+            android:id="@+id/customerInfoLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginStart="12dp"
             android:orientation="vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp">
+            app:layout_constraintStart_toEndOf="@id/checkboxSelectCustomer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/tvCustomerName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Customer Name"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvCustomerPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Phone"
-                android:textColor="#666666"
-                android:textSize="14sp" />
-
+            <!-- Customer Name with Badge -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvCustomerName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Customer Name"
+                    android:textColor="@color/coordination_text_primary"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📍 "
+                    android:text="Booked"
+                    android:textSize="11sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/bg_badge_success"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp" />
+            </LinearLayout>
+
+            <!-- Phone Number -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@android:drawable/ic_menu_call"
+                    app:tint="@color/coordination_text_secondary"
+                    android:contentDescription="Phone" />
+
+                <TextView
+                    android:id="@+id/tvCustomerPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Phone"
+                    android:textColor="@color/coordination_text_secondary"
                     android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
+                android:background="@color/coordination_divider" />
+
+            <!-- Pickup Location -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="top">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@android:drawable/ic_menu_mylocation"
+                    app:tint="@color/coordination_success"
+                    android:contentDescription="Pickup" />
 
                 <TextView
                     android:id="@+id/tvPickupLocation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginStart="8dp"
                     android:text="Pickup Location"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textColor="@color/coordination_text_primary"
+                    android:textSize="14sp"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
             </LinearLayout>
 
+            <!-- Arrow Icon -->
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginVertical="4dp"
+                android:src="@android:drawable/arrow_down_float"
+                app:tint="@color/coordination_text_secondary"
+                android:contentDescription="Arrow" />
+
+            <!-- Destination Location -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="top">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🎯 "
-                    android:textSize="14sp" />
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@android:drawable/ic_menu_mylocation"
+                    app:tint="@color/coordination_error"
+                    android:contentDescription="Destination" />
 
                 <TextView
                     android:id="@+id/tvDestinationLocation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginStart="8dp"
                     android:text="Destination Location"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textColor="@color/coordination_text_primary"
+                    android:textSize="14sp"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvDepartureDate"
+            <!-- Departure Date -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="📅 Departure Date"
-                android:textColor="#4CAF50"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_date_container"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@android:drawable/ic_menu_my_calendar"
+                    app:tint="@color/coordination_accent"
+                    android:contentDescription="Calendar" />
+
+                <TextView
+                    android:id="@+id/tvDepartureDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Departure Date"
+                    android:textColor="@color/coordination_accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
 

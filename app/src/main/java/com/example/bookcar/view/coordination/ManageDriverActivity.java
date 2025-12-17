@@ -22,7 +22,7 @@ import com.example.bookcar.R;
 import com.example.bookcar.adapter.DriverAdapter;
 import com.example.bookcar.adapter.DriverManagementPagerAdapter;
 import com.example.bookcar.model.Driver;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,7 +38,7 @@ import java.util.Map;
 public class ManageDriverActivity extends AppCompatActivity implements DriverAdapter.OnDriverActionListener {
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
-    private FloatingActionButton fabAddDriver;
+    private ExtendedFloatingActionButton fabAddDriver;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;

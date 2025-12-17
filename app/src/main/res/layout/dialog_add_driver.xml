@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/coordination_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,123 +12,243 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thêm tài xế mới"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#4CAF50"
-            android:layout_marginBottom="16dp" />
-
-        <EditText
-            android:id="@+id/edtDialogDriverName"
+        <!-- Header with Icon -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tên tài xế"
-            android:inputType="textPersonName"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
 
-        <EditText
-            android:id="@+id/edtDialogDriverPhone"
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_input_add"
+                app:tint="@color/coordination_primary"
+                android:padding="10dp"
+                android:background="@drawable/bg_icon_circle"
+                android:contentDescription="Add Driver" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:text="Thêm tài xế mới"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/coordination_text_primary"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Input Fields with Material Design -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Số điện thoại"
-            android:inputType="phone"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+            app:startIconTint="@color/coordination_accent">
 
-        <EditText
-            android:id="@+id/edtDialogDriverLicense"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDialogDriverName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tên tài xế"
+                android:inputType="textPersonName"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Số bằng lái"
-            android:inputType="text"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:startIconDrawable="@android:drawable/ic_menu_call"
+            app:startIconTint="@color/coordination_accent">
 
-        <EditText
-            android:id="@+id/edtDialogDriverIdentification"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDialogDriverPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Số điện thoại"
+                android:inputType="phone"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Số CMND/CCCD"
-            android:inputType="number"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:startIconDrawable="@android:drawable/ic_menu_info_details"
+            app:startIconTint="@color/coordination_accent">
 
-        <EditText
-            android:id="@+id/edtDialogDriverDateOfBirth"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDialogDriverLicense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Số bằng lái"
+                android:inputType="text"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ngày sinh (dd/MM/yyyy)"
-            android:focusable="false"
-            android:clickable="true"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:startIconDrawable="@android:drawable/ic_menu_agenda"
+            app:startIconTint="@color/coordination_accent">
 
-        <EditText
-            android:id="@+id/edtDialogDriverEmail"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDialogDriverIdentification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Số CMND/CCCD"
+                android:inputType="number"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:startIconDrawable="@android:drawable/ic_menu_my_calendar"
+            app:startIconTint="@color/coordination_accent">
 
-        <EditText
-            android:id="@+id/edtDialogDriverPassword"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDialogDriverDateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ngày sinh (dd/MM/yyyy)"
+                android:focusable="false"
+                android:clickable="true"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mật khẩu"
-            android:inputType="textPassword"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:startIconDrawable="@android:drawable/ic_dialog_email"
+            app:startIconTint="@color/coordination_accent">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDialogDriverEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:startIconDrawable="@android:drawable/ic_lock_lock"
+            app:startIconTint="@color/coordination_accent"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtDialogDriverPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mật khẩu"
+                android:inputType="textPassword"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Gender Spinner with Label -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Giới tính"
-            android:textSize="12sp"
-            android:textColor="#666666"
-            android:layout_marginBottom="4dp" />
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/coordination_text_primary"
+            android:layout_marginBottom="8dp" />
 
         <Spinner
             android:id="@+id/spinnerDialogDriverGender"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_height="56dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_spinner_modern"
+            android:layout_marginBottom="20dp" />
 
+        <!-- Progress Bar -->
         <ProgressBar
             android:id="@+id/progressBarDialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:indeterminateTint="@color/coordination_primary"
             android:visibility="gone"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="16dp" />
 
+        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="end">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancelAddDriver"
-                style="?attr/materialButtonOutlinedStyle"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hủy"
-                android:layout_marginEnd="8dp" />
+                android:textColor="@color/coordination_text_secondary"
+                app:strokeColor="@color/coordination_divider"
+                app:cornerRadius="12dp"
+                android:layout_marginEnd="12dp"
+                android:paddingHorizontal="24dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnConfirmAddDriver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Thêm tài xế"
-                android:backgroundTint="#4CAF50"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/white"
+                app:backgroundTint="@color/coordination_success"
+                app:cornerRadius="12dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconGravity="textStart"
+                android:paddingHorizontal="24dp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

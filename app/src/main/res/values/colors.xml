@@ -35,4 +35,21 @@
     <color name="warning_light">#FFF3E0</color>
     <color name="divider">#F0F0F0</color>
     <color name="icon_tint">#9E9E9E</color>
+
+    <!-- Coordination UI Colors -->
+    <color name="coordination_primary">#00897B</color>
+    <color name="coordination_primary_dark">#00695C</color>
+    <color name="coordination_primary_light">#4DB6AC</color>
+    <color name="coordination_accent">#26A69A</color>
+    <color name="coordination_background">#F1F8F6</color>
+    <color name="coordination_card">#FFFFFF</color>
+    <color name="coordination_text_primary">#263238</color>
+    <color name="coordination_text_secondary">#607D8B</color>
+    <color name="coordination_divider">#E0F2F1</color>
+    <color name="coordination_success">#66BB6A</color>
+    <color name="coordination_warning">#FFA726</color>
+    <color name="coordination_error">#EF5350</color>
+    <color name="coordination_fab">#00897B</color>
+    <color name="coordination_tab_selected">#FFFFFF</color>
+    <color name="coordination_tab_unselected">#B2DFDB</color>
 </resources>
