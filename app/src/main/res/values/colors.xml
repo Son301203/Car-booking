@@ -24,4 +24,15 @@
     <color name="unselected_button">#F5F5F5</color>
     <color name="button_text_selected">#FFFFFF</color>
     <color name="button_text_unselected">#757575</color>
+
+    <!-- Enhanced Modern Colors -->
+    <color name="background_modern">#F8F9FA</color>
+    <color name="success_light">#E8F5E9</color>
+    <color name="success">#4CAF50</color>
+    <color name="info_light">#E3F2FD</color>
+    <color name="info">#2196F3</color>
+    <color name="error_light">#FFEBEE</color>
+    <color name="warning_light">#FFF3E0</color>
+    <color name="divider">#F0F0F0</color>
+    <color name="icon_tint">#9E9E9E</color>
 </resources>

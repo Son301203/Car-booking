@@ -4,60 +4,98 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="4dp">
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="16dp">
 
-        <!-- Pickup and Destination -->
-        <TextView
-            android:id="@+id/txtDepature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pick Up: Quang Ninh"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:paddingBottom="4dp"/>
-
-        <TextView
-            android:id="@+id/txtDestination"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Destination: Ha Noi"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:paddingBottom="8dp"/>
-
-        <!-- Date Layout -->
+        <!-- Departure Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_location_pin"
+                android:layout_marginEnd="12dp"
+                app:tint="#2196F3"/>
+
+            <TextView
+                android:id="@+id/txtDepature"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pick Up: Quang Ninh"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#212121"/>
+        </LinearLayout>
+
+        <!-- Destination Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_destination"
+                android:layout_marginEnd="12dp"
+                app:tint="#1976D2"/>
+
+            <TextView
+                android:id="@+id/txtDestination"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Destination: Ha Noi"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#212121"/>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F0F0F0"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Departure Date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_calendar"
+                android:layout_marginEnd="8dp"
+                app:tint="#2196F3"/>
 
             <TextView
                 android:id="@+id/txtDepatureDate"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Depature Date: 20/12/2003"
-                android:textSize="16sp"
-                android:textColor="#555555"/>
-
-            <TextView
-                android:id="@+id/txtReturnDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Return Date: 20/12/2003"
-                android:textSize="16sp"
-                android:textColor="#555555"/>
+                android:text="20/12/2003"
+                android:textSize="14sp"
+                android:textColor="#757575"/>
         </LinearLayout>
 
     </LinearLayout>

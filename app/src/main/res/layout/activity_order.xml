@@ -5,30 +5,62 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background_order"
+    android:background="#F8F9FA"
     tools:context=".view.clients.OrderActivity">
+
+    <!-- Modern Header -->
+    <LinearLayout
+        android:id="@+id/modern_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/modern_header_gradient"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="32dp"
+        android:elevation="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Quản lý chuyến đi"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.02"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Theo dõi và quản lý các chuyến đi của bạn"
+            android:textColor="#E3F2FD"
+            android:textSize="13sp"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
 
     <!-- TabHost -->
 <TabHost
 android:id="@+id/TabOrderState"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-android:layout_marginTop="16dp"
-android:layout_above="@id/bottomNavigation">
+android:layout_below="@id/modern_header"
+android:layout_above="@id/bottomNavigation"
+android:layout_marginTop="8dp">
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- TabWidget with Custom Background -->
+    <!-- TabWidget with Modern Design -->
     <TabWidget
         android:id="@android:id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/tab_background"
-        android:padding="8dp"
-        android:elevation="4dp" />
+        android:background="@android:color/transparent"
+        android:padding="12dp"
+        android:elevation="0dp" />
 
     <!-- Tab Content -->
     <FrameLayout
@@ -44,28 +76,58 @@ android:layout_above="@id/bottomNavigation">
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@drawable/card_background_order"
-            android:padding="12dp"
-            android:elevation="6dp">
+            android:background="@android:color/transparent"
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chuyến đi hiện tại"
-                android:textColor="#4CAF50"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:drawableStart="@drawable/ic_current_order"
-                android:drawablePadding="8dp" />
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF">
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="2dp"
-                android:background="@drawable/gradient_divider"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="12dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_current_order"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="#E8F5E9"
+                        android:padding="8dp"
+                        app:tint="#4CAF50"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chuyến đi hiện tại"
+                            android:textColor="#212121"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Các chuyến đang thực hiện"
+                            android:textColor="#757575"
+                            android:textSize="13sp"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <ListView
                 android:id="@+id/lvCurrentOrder"
@@ -74,7 +136,9 @@ android:layout_above="@id/bottomNavigation">
                 android:layout_weight="1"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="8dp"
-                android:background="@null" />
+                android:background="@null"
+                android:clipToPadding="false"
+                android:scrollbarStyle="outsideOverlay" />
         </LinearLayout>
 
         <!-- Tab 2: Completed Orders -->
@@ -83,28 +147,58 @@ android:layout_above="@id/bottomNavigation">
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@drawable/card_background_order"
-            android:padding="12dp"
-            android:elevation="6dp">
+            android:background="@android:color/transparent"
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chuyến đi đã hoàn thành"
-                android:textColor="#2196F3"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:drawableStart="@drawable/ic_complete_order"
-                android:drawablePadding="8dp" />
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF">
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="2dp"
-                android:background="#2196F3"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="12dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_complete_order"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="#E3F2FD"
+                        android:padding="8dp"
+                        app:tint="#2196F3"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chuyến đi đã hoàn thành"
+                            android:textColor="#212121"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lịch sử các chuyến đi thành công"
+                            android:textColor="#757575"
+                            android:textSize="13sp"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <ListView
                 android:id="@+id/lvCompleteOrder"
@@ -113,7 +207,9 @@ android:layout_above="@id/bottomNavigation">
                 android:layout_weight="1"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="8dp"
-                android:background="@null" />
+                android:background="@null"
+                android:clipToPadding="false"
+                android:scrollbarStyle="outsideOverlay" />
         </LinearLayout>
 
         <!-- Tab 3: Canceled Orders -->
@@ -122,28 +218,58 @@ android:layout_above="@id/bottomNavigation">
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@drawable/card_background_order"
-            android:padding="12dp"
-            android:elevation="6dp">
+            android:background="@android:color/transparent"
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chuyến đi đã hủy"
-                android:textColor="#F44336"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:drawableStart="@drawable/ic_cancel_order"
-                android:drawablePadding="8dp" />
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF">
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="2dp"
-                android:background="#F44336"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="12dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_cancel_order"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="#E0E0E0"
+                        android:padding="8dp"
+                        app:tint="#757575"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chuyến đi đã hủy"
+                            android:textColor="#212121"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Các chuyến đi đã bị hủy bỏ"
+                            android:textColor="#757575"
+                            android:textSize="13sp"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <ListView
                 android:id="@+id/lvCancelOrder"
@@ -152,7 +278,9 @@ android:layout_above="@id/bottomNavigation">
                 android:layout_weight="1"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="8dp"
-                android:background="@null" />
+                android:background="@null"
+                android:clipToPadding="false"
+                android:scrollbarStyle="outsideOverlay" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

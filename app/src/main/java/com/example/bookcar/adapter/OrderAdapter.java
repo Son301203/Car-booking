@@ -1,7 +1,6 @@
 package com.example.bookcar.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import androidx.annotation.Nullable;
 
 import com.example.bookcar.R;
 import com.example.bookcar.model.Order;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -44,10 +41,7 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         destination.setText("Điểm đến: " + order.getDestination());
 
         TextView deparureDate = convertView.findViewById(R.id.txtDepatureDate);
-        deparureDate.setText("Ngày đi: " + order.getDepartureDate());
-
-        TextView returnDate = convertView.findViewById(R.id.txtReturnDate);
-        returnDate.setText("Ngày về: " + order.getReturnDate());
+        deparureDate.setText(order.getDepartureDate());
 
         return convertView;
 

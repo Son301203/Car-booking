@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +22,6 @@ import com.example.bookcar.model.roles.ClientRole;
 import com.example.bookcar.model.roles.CoordinationRole;
 import com.example.bookcar.model.roles.DriverRole;
 import com.example.bookcar.model.roles.UserRole;
-import com.example.bookcar.view.bottomtab.TabManager;
 import com.example.bookcar.view.bottomtab.TabUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,7 +36,8 @@ public class AccountActivity extends AppCompatActivity {
     private UserRole userRole;
 
     private ImageView btnLogout;
-    private TextView profileUsername, changeInfo, changePassword;
+    private TextView profileUsername;
+    private View changeInfo, changePassword;
     private View bottomNavigation, bottomNavigationDriver;
 
     @Override

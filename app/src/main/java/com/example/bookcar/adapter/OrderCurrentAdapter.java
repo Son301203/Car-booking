@@ -52,10 +52,7 @@ public class OrderCurrentAdapter extends ArrayAdapter<Order> {
         destination.setText("Điểm đến: " + order.getDestination());
 
         TextView deparureDate = convertView.findViewById(R.id.txtDepatureDateCurrent);
-        deparureDate.setText("Ngày đi: " + order.getDepartureDate());
-
-        TextView returnDate = convertView.findViewById(R.id.txtReturnDateCurrent);
-        returnDate.setText("Ngày về: " + order.getReturnDate());
+        deparureDate.setText(order.getDepartureDate());
 
         //cancel order
         ImageView btnDeleteItem = convertView.findViewById(R.id.btnDeleteItem);

@@ -6,26 +6,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5"
+    android:background="#F8F9FA"
     tools:context=".view.NotificationsActivity">
 
+    <!-- Modern Header with Gradient -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#4CAF50"
-        android:elevation="4dp"
-        android:padding="16dp">
+        android:background="@drawable/modern_notification_header"
+        android:elevation="8dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="32dp"
+        android:paddingHorizontal="16dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thông báo"
+            android:orientation="horizontal"
             android:layout_centerInParent="true"
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_bell"
+                android:layout_marginEnd="12dp"
+                app:tint="#FFFFFF"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thông báo"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cập nhật mới nhất"
+                    android:textColor="#E3F2FD"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 
+    <!-- List View with modern spacing -->
     <ListView
         android:id="@+id/lvNotification"
         android:layout_width="match_parent"
@@ -34,7 +67,9 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="8dp"
         android:clipToPadding="false"
-        android:padding="8dp"
+        android:paddingTop="16dp"
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="8dp"
         android:background="@android:color/transparent"
         android:scrollbarStyle="outsideOverlay"
         android:overScrollMode="never" />
