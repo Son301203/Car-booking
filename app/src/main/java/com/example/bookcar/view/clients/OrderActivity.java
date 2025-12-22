@@ -109,11 +109,13 @@ public class OrderActivity extends AppCompatActivity {
                     String pickup = document.getString("pickup");
                     String destination = document.getString("destination");
                     String departureDate = document.getString("departureDate");
+                    String departureTime = document.getString("departureTime");
                     String returnDate = document.getString("returnDate");
                     String documentId = document.getId();
 
                     // Create Order object
                     Order order = new Order(documentId, pickup, destination, departureDate, returnDate);
+                    order.setDepartureTime(departureTime);
                     orderCurrentList.add(order);
                 }
                 orderCurrentAdapter.notifyDataSetChanged();
@@ -136,11 +138,13 @@ public class OrderActivity extends AppCompatActivity {
                             String pickup = document.getString("pickup");
                             String destination = document.getString("destination");
                             String departureDate = document.getString("departureDate");
+                            String departureTime = document.getString("departureTime");
                             String returnDate = document.getString("returnDate");
                             String documentId = document.getId();
 
                             // Create Order object
                             Order order = new Order(documentId, pickup, destination, departureDate, returnDate);
+                            order.setDepartureTime(departureTime);
                             orderCompleleList.add(order);
                         }
                         orderCompleteAdapter.notifyDataSetChanged();
@@ -163,11 +167,13 @@ public class OrderActivity extends AppCompatActivity {
                             String pickup = document.getString("pickup");
                             String destination = document.getString("destination");
                             String departureDate = document.getString("departureDate");
+                            String departureTime = document.getString("departureTime");
                             String returnDate = document.getString("returnDate");
                             String documentId = document.getId();
 
                             // Create Order object
                             Order order = new Order(documentId, pickup, destination, departureDate, returnDate);
+                            order.setDepartureTime(departureTime);
                             orderCancelList.add(order);
                         }
                         orderCancelAdapter.notifyDataSetChanged();

@@ -41,7 +41,11 @@ public class OrderAdapter extends ArrayAdapter<Order> {
         destination.setText("Điểm đến: " + order.getDestination());
 
         TextView deparureDate = convertView.findViewById(R.id.txtDepatureDate);
-        deparureDate.setText(order.getDepartureDate());
+        String dateTimeText = order.getDepartureDate();
+        if (order.getDepartureTime() != null && !order.getDepartureTime().isEmpty()) {
+            dateTimeText += " - " + order.getDepartureTime();
+        }
+        deparureDate.setText(dateTimeText);
 
         return convertView;
 

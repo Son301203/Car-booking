@@ -17,6 +17,7 @@ public class Order {
     private String departure;
     private String destination;
     private String departureDate;
+    private String departureTime; // Time for departure (HH:mm format)
     private String returnDate;
 
     // New fields for refactored structure
@@ -44,6 +45,7 @@ public class Order {
         this.departure = departure;
         this.destination = destination;
         this.departureDate = departureDate;
+        this.departureTime = ""; // Default empty time for backward compatibility
         this.returnDate = returnDate;
         this.state = STATE_BOOKED;
         this.createdAt = Timestamp.now();
@@ -92,6 +94,7 @@ public class Order {
             order.departure = snapshot.getString("departure");
             order.destination = snapshot.getString("destination");
             order.departureDate = snapshot.getString("departureDate");
+            order.departureTime = snapshot.getString("departureTime");
             order.returnDate = snapshot.getString("returnDate");
             order.state = snapshot.getString("state");
 
@@ -133,6 +136,7 @@ public class Order {
         if (departure != null) data.put("departure", departure);
         if (destination != null) data.put("destination", destination);
         if (departureDate != null) data.put("departureDate", departureDate);
+        if (departureTime != null) data.put("departureTime", departureTime);
         if (returnDate != null) data.put("returnDate", returnDate);
         if (pickupCoordinates != null) data.put("pickup_coordinates", pickupCoordinates);
         if (destinationCoordinates != null) data.put("destination_coordinates", destinationCoordinates);
@@ -210,6 +214,14 @@ public class Order {
 
     public void setDepartureDate(String departureDate) {
         this.departureDate = departureDate;
+    }
+
+    public String getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(String departureTime) {
+        this.departureTime = departureTime;
     }
 
     public String getReturnDate() {

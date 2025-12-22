@@ -15,6 +15,8 @@
     <string name="destination_map">Điểm đến</string>
     <string name="departure_date">Ngày đi</string>
     <string name="select_departure_date">Chọn ngày đi</string>
+    <string name="departure_time">Giờ đi</string>
+    <string name="select_departure_time">Chọn giờ đi</string>
     <string name="book_now">Đặt xe ngay</string>
     <string name="tips_title">Gợi ý</string>
     <string name="tips_message">Đặt xe trước 30 phút để đảm bảo có tài xế</string>

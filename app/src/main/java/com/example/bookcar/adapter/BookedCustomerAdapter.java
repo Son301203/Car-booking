@@ -42,7 +42,13 @@ public class BookedCustomerAdapter extends RecyclerView.Adapter<BookedCustomerAd
         holder.tvCustomerPhone.setText(order.getCustomerPhone() != null ? order.getCustomerPhone() : "N/A");
         holder.tvPickupLocation.setText(order.getDeparture() != null ? order.getDeparture() : "N/A");
         holder.tvDestinationLocation.setText(order.getDestination() != null ? order.getDestination() : "N/A");
-        holder.tvDepartureDate.setText("📅 " + (order.getDepartureDate() != null ? order.getDepartureDate() : "N/A"));
+
+        // Display date and time
+        String dateTimeText = "📅 " + (order.getDepartureDate() != null ? order.getDepartureDate() : "N/A");
+        if (order.getDepartureTime() != null && !order.getDepartureTime().isEmpty()) {
+            dateTimeText += " - " + order.getDepartureTime();
+        }
+        holder.tvDepartureDate.setText(dateTimeText);
 
         // Set checkbox state
         holder.checkboxSelect.setChecked(selectedOrders.contains(order));

@@ -29,7 +29,7 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_location_pin"
                 android:layout_marginEnd="12dp"
-                app:tint="#2196F3"/>
+                app:tint="#4CAF50"/>
 
             <TextView
                 android:id="@+id/txtDepature"
@@ -55,7 +55,7 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_destination"
                 android:layout_marginEnd="12dp"
-                app:tint="#1976D2"/>
+                app:tint="#F44336"/>
 
             <TextView
                 android:id="@+id/txtDestination"
@@ -75,27 +75,57 @@
             android:background="#F0F0F0"
             android:layout_marginBottom="12dp"/>
 
-        <!-- Departure Date -->
+        <!-- Date Layout -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/ic_calendar"
-                android:layout_marginEnd="8dp"
-                app:tint="#2196F3"/>
-
-            <TextView
-                android:id="@+id/txtDepatureDate"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="20/12/2003"
-                android:textSize="14sp"
-                android:textColor="#757575"/>
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_calendar"
+                    android:layout_marginEnd="8dp"
+                    app:tint="#2196F3"/>
+
+                <TextView
+                    android:id="@+id/txtDepatureDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20/12/2003"
+                    android:textSize="14sp"
+                    android:textColor="#757575"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_calendar"
+                    android:layout_marginEnd="8dp"
+                    app:tint="#FF9800"/>
+
+                <TextView
+                    android:id="@+id/txtReturnDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20/12/2003"
+                    android:textSize="14sp"
+                    android:textColor="#757575"/>
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

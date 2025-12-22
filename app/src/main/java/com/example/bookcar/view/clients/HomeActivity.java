@@ -2,6 +2,7 @@ package com.example.bookcar.view.clients;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -35,7 +36,7 @@ import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private TextView tvDepartureDate, tvLocationPickerDeparture, tvLocationPickerDestination;
+    private TextView tvDepartureDate, tvDepartureTime, tvLocationPickerDeparture, tvLocationPickerDestination;
     private TextInputEditText etPickup, etDestination;
     private MaterialButton btnBook;
     private MaterialCardView cardSelectPickupMap, cardSelectDestinationMap;
@@ -68,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
         etPickup = findViewById(R.id.et_pickup);
         etDestination = findViewById(R.id.et_destination);
         tvDepartureDate = findViewById(R.id.tv_departure_date);
+        tvDepartureTime = findViewById(R.id.tv_departure_time);
         cardSelectPickupMap = findViewById(R.id.card_select_pickup_map);
         cardSelectDestinationMap = findViewById(R.id.card_select_destination_map);
         tvLocationPickerDeparture = findViewById(R.id.tv_select_pickup_map);
@@ -99,6 +101,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // Handle Departure Date Selection - make the entire card clickable
         tvDepartureDate.setOnClickListener(v -> showDatePickerDialog(tvDepartureDate));
+
+        // Handle Departure Time Selection
+        tvDepartureTime.setOnClickListener(v -> showTimePickerDialog(tvDepartureTime));
 
         // Handle Booking
         btnBook.setOnClickListener(v -> checkStateOrder());
@@ -170,6 +175,23 @@ public class HomeActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    private void showTimePickerDialog(TextView textView) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                HomeActivity.this,
+                (view, selectedHour, selectedMinute) -> {
+                    String time = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+                    textView.setText(time);
+                },
+                hour,
+                minute,
+                true // 24-hour format
+        );
+        timePickerDialog.show();
+    }
+
     private void checkStateOrder() {
         String userId = mAuth.getCurrentUser().getUid();
 
@@ -204,8 +226,11 @@ public class HomeActivity extends AppCompatActivity {
         String pickup = etPickup.getText().toString().trim();
         String destination = etDestination.getText().toString().trim();
         String departureDate = tvDepartureDate.getText().toString();
+        String departureTime = tvDepartureTime.getText().toString();
 
-        if (pickup.isEmpty() || destination.isEmpty() || departureDate.equals(getString(R.string.select_departure_date))) {
+        if (pickup.isEmpty() || destination.isEmpty() ||
+            departureDate.equals(getString(R.string.select_departure_date)) ||
+            departureTime.equals(getString(R.string.select_departure_time))) {
             Toast.makeText(this, R.string.validation_error, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -215,6 +240,7 @@ public class HomeActivity extends AppCompatActivity {
         order.put("pickup", pickup);
         order.put("destination", destination);
         order.put("departureDate", departureDate);
+        order.put("departureTime", departureTime);
         order.put("state", "Booked");
         order.put("timestamp", System.currentTimeMillis());
         order.put("created_at", com.google.firebase.Timestamp.now());
@@ -235,6 +261,7 @@ public class HomeActivity extends AppCompatActivity {
         etPickup.setText("");
         etDestination.setText("");
         tvDepartureDate.setText(R.string.select_departure_date);
+        tvDepartureTime.setText(R.string.select_departure_time);
     }
 
 }
