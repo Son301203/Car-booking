@@ -2,9 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="135"
-        android:startColor="#4CAF50"
-        android:centerColor="#66BB6A"
-        android:endColor="#81C784"
-        android:type="linear"/>
+        android:startColor="@color/driver_primary"
+        android:centerColor="@color/driver_accent"
+        android:endColor="@color/driver_primary_light"
+        android:type="linear" />
 </shape>
 

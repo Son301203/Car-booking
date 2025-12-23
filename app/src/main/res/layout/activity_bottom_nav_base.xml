@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="0dp"
+    app:cardBackgroundColor="@color/white">
 
     <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:elevation="2dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/home_tab"
@@ -25,14 +27,26 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:contentDescription="Home Icon"
-                android:src="@drawable/baseline_home_24" />
-        </LinearLayout>
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
 
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:contentDescription="Home Icon"
+                android:src="@drawable/baseline_home_24"
+                app:tint="@color/driver_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Trang chủ"
+                android:textSize="11sp"
+                android:textColor="@color/driver_primary"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/order_tab"
@@ -40,12 +54,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
+
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:contentDescription="Order Icon"
-                android:src="@drawable/baseline_sticky_note_2_24" />
+                android:src="@drawable/baseline_sticky_note_2_24"
+                app:tint="@color/icon_tint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Đơn hàng"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="sans-serif" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,12 +81,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
+
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:contentDescription="Notification"
-                android:src="@drawable/baseline_notifications_none_24" />
+                android:src="@drawable/baseline_notifications_none_24"
+                app:tint="@color/icon_tint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Thông báo"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="sans-serif" />
         </LinearLayout>
 
         <LinearLayout
@@ -68,16 +108,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:contentDescription="Account Icon"
-                android:src="@drawable/baseline_manage_accounts_24" />
+                android:src="@drawable/baseline_manage_accounts_24"
+                app:tint="@color/icon_tint" />
 
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Tài khoản"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="sans-serif" />
         </LinearLayout>
     </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

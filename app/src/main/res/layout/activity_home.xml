@@ -86,7 +86,7 @@
                         android:text="@string/trip_details"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="#1A237E"
+                        android:textColor="@color/driver_primary_dark"
                         android:layout_marginBottom="20dp" />
 
                     <!-- Pickup Location with Modern Design -->
@@ -101,7 +101,7 @@
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:startIconDrawable="@drawable/ic_location"
-                        app:startIconTint="#2196F3"
+                        app:startIconTint="@color/driver_primary"
                         app:boxStrokeWidth="0dp"
                         app:boxStrokeWidthFocused="2dp"
                         android:layout_marginBottom="16dp">
@@ -127,7 +127,7 @@
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:startIconDrawable="@drawable/ic_destination"
-                        app:startIconTint="#F44336"
+                        app:startIconTint="@color/driver_error"
                         app:boxStrokeWidth="0dp"
                         app:boxStrokeWidthFocused="2dp"
                         android:layout_marginBottom="16dp">
@@ -169,7 +169,7 @@
                             android:layout_marginEnd="8dp"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="2dp"
-                            app:strokeColor="#2196F3"
+                            app:strokeColor="@color/driver_primary"
                             app:strokeWidth="1dp">
 
                             <LinearLayout
@@ -183,7 +183,7 @@
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
                                     android:src="@drawable/ic_map"
-                                    app:tint="#2196F3"
+                                    app:tint="@color/driver_primary"
                                     android:layout_marginBottom="8dp" />
 
                                 <TextView
@@ -191,7 +191,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/pickup_map"
-                                    android:textColor="#2196F3"
+                                    android:textColor="@color/driver_primary"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:gravity="center" />
@@ -207,7 +207,7 @@
                             android:layout_marginStart="8dp"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="2dp"
-                            app:strokeColor="#F44336"
+                            app:strokeColor="@color/driver_error"
                             app:strokeWidth="1dp">
 
                             <LinearLayout
@@ -221,7 +221,7 @@
                                     android:layout_width="32dp"
                                     android:layout_height="32dp"
                                     android:src="@drawable/ic_map"
-                                    app:tint="#F44336"
+                                    app:tint="@color/driver_error"
                                     android:layout_marginBottom="8dp" />
 
                                 <TextView
@@ -229,7 +229,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/destination_map"
-                                    android:textColor="#F44336"
+                                    android:textColor="@color/driver_error"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:gravity="center" />
@@ -257,7 +257,7 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_calendar"
-                                app:tint="#FF9800"
+                                app:tint="@color/driver_warning"
                                 android:layout_marginEnd="16dp" />
 
                             <LinearLayout
@@ -313,7 +313,7 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_time"
-                                app:tint="#4CAF50"
+                                app:tint="@color/driver_success"
                                 android:layout_marginEnd="16dp" />
 
                             <LinearLayout
@@ -358,7 +358,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
-                        app:backgroundTint="#4CAF50"
+                        app:backgroundTint="@color/driver_success"
                         app:cornerRadius="16dp"
                         app:elevation="8dp"
                         app:icon="@drawable/drive_eta"
@@ -374,7 +374,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#E3F2FD"
+                app:cardBackgroundColor="@color/driver_divider"
                 android:layout_marginBottom="80dp">
 
                 <LinearLayout
@@ -388,7 +388,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/baseline_sticky_note_2_24"
-                        app:tint="#1976D2"
+                        app:tint="@color/driver_primary_dark"
                         android:layout_marginEnd="16dp" />
 
                     <LinearLayout
@@ -403,7 +403,7 @@
                             android:text="@string/tips_title"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="#1976D2" />
+                            android:textColor="@color/driver_primary_dark" />
 
                         <TextView
                             android:layout_width="wrap_content"

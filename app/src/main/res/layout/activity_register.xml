@@ -32,8 +32,8 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:layout_marginTop="24dp"
-        app:boxStrokeColor="#4CAF50"
-        app:hintTextColor="#4CAF50"
+        app:boxStrokeColor="@color/driver_primary"
+        app:hintTextColor="@color/driver_primary"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -57,8 +57,8 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:layout_marginTop="16dp"
-        app:boxStrokeColor="#4CAF50"
-        app:hintTextColor="#4CAF50"
+        app:boxStrokeColor="@color/driver_primary"
+        app:hintTextColor="@color/driver_primary"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -167,7 +167,7 @@
         android:layout_marginStart="14dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="14dp"
-        android:backgroundTint="#4CAF50"
+        android:backgroundTint="@color/driver_success"
         android:elevation="4dp"
         android:text="Đăng Ký"
         android:textAllCaps="false"

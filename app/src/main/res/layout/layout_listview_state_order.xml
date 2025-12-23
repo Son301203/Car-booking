@@ -29,7 +29,7 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_location_pin"
                 android:layout_marginEnd="12dp"
-                app:tint="#4CAF50"/>
+                app:tint="@color/driver_primary"/>
 
             <TextView
                 android:id="@+id/txtDepature"
@@ -55,7 +55,7 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_destination"
                 android:layout_marginEnd="12dp"
-                app:tint="#F44336"/>
+                app:tint="@color/driver_error"/>
 
             <TextView
                 android:id="@+id/txtDestination"
@@ -93,7 +93,7 @@
                     android:layout_height="18dp"
                     android:src="@drawable/ic_calendar"
                     android:layout_marginEnd="8dp"
-                    app:tint="#2196F3"/>
+                    app:tint="@color/driver_warning"/>
 
                 <TextView
                     android:id="@+id/txtDepatureDate"
