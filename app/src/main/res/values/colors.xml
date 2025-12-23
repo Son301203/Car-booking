@@ -52,4 +52,20 @@
     <color name="coordination_fab">#00897B</color>
     <color name="coordination_tab_selected">#FFFFFF</color>
     <color name="coordination_tab_unselected">#B2DFDB</color>
+
+    <!-- Driver UI Colors -->
+    <color name="driver_primary">#1E88E5</color>
+    <color name="driver_primary_dark">#1565C0</color>
+    <color name="driver_primary_light">#42A5F5</color>
+    <color name="driver_accent">#2196F3</color>
+    <color name="driver_background">#F0F4F8</color>
+    <color name="driver_card">#FFFFFF</color>
+    <color name="driver_text_primary">#263238</color>
+    <color name="driver_text_secondary">#607D8B</color>
+    <color name="driver_divider">#E3F2FD</color>
+    <color name="driver_success">#66BB6A</color>
+    <color name="driver_warning">#FFA726</color>
+    <color name="driver_error">#EF5350</color>
+    <color name="driver_tab_selected">#FFFFFF</color>
+    <color name="driver_tab_unselected">#BBDEFB</color>
 </resources>

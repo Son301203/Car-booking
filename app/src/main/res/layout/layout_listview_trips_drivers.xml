@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
+    android:layout_marginBottom="12dp"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
-    android:radius="12dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/driver_card">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="#FFFFFF">
+        android:padding="16dp">
 
         <!-- Departure Date -->
         <LinearLayout
@@ -22,24 +22,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="12dp">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_date"
-                android:contentDescription="Departure Date"
-                android:layout_marginEnd="8dp"
-                app:tint="#4CAF50" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/driver_primary_light">
 
-            <TextView
-                android:id="@+id/departure_date"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_date"
+                    android:contentDescription="Departure Date"
+                    app:tint="@color/driver_primary_dark" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Ngày: 2025-02-17"
-                android:textSize="16sp"
-                android:textColor="#333333"
-                android:fontFamily="sans-serif-medium"/>
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ngày khởi hành"
+                    android:textSize="12sp"
+                    android:textColor="@color/driver_text_secondary"
+                    android:fontFamily="sans-serif" />
+
+                <TextView
+                    android:id="@+id/departure_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2025-02-17"
+                    android:textSize="16sp"
+                    android:textColor="@color/driver_text_primary"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Departure Time -->
@@ -48,24 +73,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="12dp">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_time"
-                android:contentDescription="Departure Time"
-                app:tint="#4CAF50"
-                android:layout_marginEnd="8dp"/>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/driver_primary_light">
 
-            <TextView
-                android:id="@+id/departure_time"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_time"
+                    android:contentDescription="Departure Time"
+                    app:tint="@color/driver_primary_dark" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Giờ: 14:30"
-                android:textSize="16sp"
-                android:textColor="#333333"
-                android:fontFamily="sans-serif-medium"/>
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Giờ khởi hành"
+                    android:textSize="12sp"
+                    android:textColor="@color/driver_text_secondary"
+                    android:fontFamily="sans-serif" />
+
+                <TextView
+                    android:id="@+id/departure_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14:30"
+                    android:textSize="16sp"
+                    android:textColor="@color/driver_text_primary"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Number of Passengers -->
@@ -75,23 +125,48 @@
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_passenger"
-                android:contentDescription="Number of Passengers"
-                android:layout_marginEnd="8dp"
-                app:tint="#4CAF50" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/driver_primary_light">
 
-            <TextView
-                android:id="@+id/num_passengers"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_passenger"
+                    android:contentDescription="Number of Passengers"
+                    app:tint="@color/driver_primary_dark" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Số khách: 4"
-                android:textSize="16sp"
-                android:textColor="#333333"
-                android:fontFamily="sans-serif-medium"/>
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Số lượng khách"
+                    android:textSize="12sp"
+                    android:textColor="@color/driver_text_secondary"
+                    android:fontFamily="sans-serif" />
+
+                <TextView
+                    android:id="@+id/num_passengers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 khách"
+                    android:textSize="16sp"
+                    android:textColor="@color/driver_text_primary"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
