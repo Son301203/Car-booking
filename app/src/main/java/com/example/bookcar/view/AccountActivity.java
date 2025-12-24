@@ -34,6 +34,7 @@ public class AccountActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private UserRole userRole;
+    private boolean isDriverMode = false;
 
     private ImageView btnLogout;
     private TextView profileUsername;
@@ -53,6 +54,10 @@ public class AccountActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        // Get driver mode flag from Intent
+        isDriverMode = getIntent().getBooleanExtra("isDriverMode", false);
+        Log.d(TAG, "isDriverMode: " + isDriverMode);
 
         btnLogout = findViewById(R.id.logoutBtn);
         profileUsername = findViewById(R.id.profileUsername);
@@ -86,7 +91,8 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (userRole instanceof DriverRole) {
+        // Always setup UI based on isDriverMode flag
+        if (isDriverMode) {
             TabUtils.setupTabDriverUI(this);
             bottomNavigation.setVisibility(View.GONE);
             bottomNavigationDriver.setVisibility(View.VISIBLE);
@@ -94,7 +100,7 @@ public class AccountActivity extends AppCompatActivity {
             // Coordination doesn't use bottom nav
             bottomNavigation.setVisibility(View.GONE);
             bottomNavigationDriver.setVisibility(View.GONE);
-        } else if (userRole instanceof ClientRole) {
+        } else {
             TabUtils.setupTabClientUI(this);
             bottomNavigation.setVisibility(View.VISIBLE);
             bottomNavigationDriver.setVisibility(View.GONE);
@@ -119,22 +125,29 @@ public class AccountActivity extends AppCompatActivity {
                         if ("driver".equals(roleId)) {
                             userRole = new DriverRole();
                             Log.d(TAG, "Xác định vai trò: Tài xế");
-                            setupTabDriverUI(this);
-                            bottomNavigation.setVisibility(View.GONE);
-                            bottomNavigationDriver.setVisibility(View.VISIBLE);
                         } else if ("coordination".equals(roleId)) {
                             userRole = new CoordinationRole();
                             Log.d(TAG, "Xác định vai trò: Điều phối viên");
+                        } else {
+                            userRole = new ClientRole();
+                            Log.d(TAG, "Xác định vai trò: Khách hàng");
+                        }
+
+                        // Setup UI based on isDriverMode flag
+                        if (isDriverMode) {
+                            setupTabDriverUI(this);
+                            bottomNavigation.setVisibility(View.GONE);
+                            bottomNavigationDriver.setVisibility(View.VISIBLE);
+                        } else if (userRole instanceof CoordinationRole) {
                             // Coordination doesn't use bottom nav in AccountActivity
                             bottomNavigation.setVisibility(View.GONE);
                             bottomNavigationDriver.setVisibility(View.GONE);
                         } else {
-                            userRole = new ClientRole();
-                            Log.d(TAG, "Xác định vai trò: Khách hàng");
                             setupTabClientUI(this);
                             bottomNavigation.setVisibility(View.VISIBLE);
                             bottomNavigationDriver.setVisibility(View.GONE);
                         }
+
                         fetchAccountInfo(userId);
                     } else {
                         Log.e(TAG, "User not found");

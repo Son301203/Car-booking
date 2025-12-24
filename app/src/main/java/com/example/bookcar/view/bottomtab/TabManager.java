@@ -73,6 +73,7 @@ public class TabManager {
                 TabAnimation.animateTab(notifyTab, allTabs);
                 if (!(context instanceof NotificationsActivity)) {
                     Intent intent = new Intent(context, NotificationsActivity.class);
+                    intent.putExtra("isDriverMode", false);
                     context.startActivity(intent);
                 }
             });
@@ -83,6 +84,7 @@ public class TabManager {
                 TabAnimation.animateTab(accountTab, allTabs);
                 if (!(context instanceof AccountActivity)) {
                     Intent intent = new Intent(context, AccountActivity.class);
+                    intent.putExtra("isDriverMode", false);
                     context.startActivity(intent);
                 }
             });
@@ -125,6 +127,7 @@ public class TabManager {
                 TabAnimation.animateTab(notifyTabDriver, allTabs);
                 if (!(context instanceof NotificationsActivity)) {
                     Intent intent = new Intent(context, NotificationsActivity.class);
+                    intent.putExtra("isDriverMode", true);
                     context.startActivity(intent);
                 }
             });
@@ -135,6 +138,7 @@ public class TabManager {
                 TabAnimation.animateTab(accountDriver, allTabs);
                 if (!(context instanceof AccountActivity)) {
                     Intent intent = new Intent(context, AccountActivity.class);
+                    intent.putExtra("isDriverMode", true);
                     context.startActivity(intent);
                 }
             });

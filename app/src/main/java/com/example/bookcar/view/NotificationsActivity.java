@@ -40,6 +40,7 @@ public class NotificationsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private UserRole userRole;
+    private boolean isDriverMode = false;
 
     private View bottomNavigation, bottomNavigationDriver;
 
@@ -56,6 +57,10 @@ public class NotificationsActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        // Get driver mode flag from Intent
+        isDriverMode = getIntent().getBooleanExtra("isDriverMode", false);
+        Log.d("NotificationsActivity", "isDriverMode: " + isDriverMode);
 
         bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigationDriver = findViewById(R.id.bottomNavigationDriver);
@@ -74,11 +79,12 @@ public class NotificationsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (userRole instanceof DriverRole) {
+        // Always setup UI based on isDriverMode flag, regardless of userRole
+        if (isDriverMode) {
             TabUtils.setupTabDriverUI(this);
             bottomNavigation.setVisibility(View.GONE);
             bottomNavigationDriver.setVisibility(View.VISIBLE);
-        } else if (userRole instanceof ClientRole) {
+        } else {
             TabUtils.setupTabClientUI(this);
             bottomNavigation.setVisibility(View.VISIBLE);
             bottomNavigationDriver.setVisibility(View.GONE);
@@ -95,18 +101,28 @@ public class NotificationsActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult().exists()) {
                         String roleId = task.getResult().getString("role_id");
+                        Log.d("NotificationsActivity", "User role_id: " + roleId);
 
                         if ("driver".equals(roleId)) {
                             userRole = new DriverRole();
+                        } else {
+                            userRole = new ClientRole();
+                        }
+
+                        // Setup UI based on isDriverMode flag
+                        Log.d("NotificationsActivity", "Setting up UI with isDriverMode: " + isDriverMode);
+                        if (isDriverMode) {
                             setupTabDriverUI(this);
                             bottomNavigation.setVisibility(View.GONE);
                             bottomNavigationDriver.setVisibility(View.VISIBLE);
+                            Log.d("NotificationsActivity", "Driver UI setup completed");
                         } else {
-                            userRole = new ClientRole();
                             setupTabClientUI(this);
                             bottomNavigation.setVisibility(View.VISIBLE);
                             bottomNavigationDriver.setVisibility(View.GONE);
+                            Log.d("NotificationsActivity", "Client UI setup completed");
                         }
+
                         fetchNotificationInfo(userId);
                     } else {
                         Log.d("role", "User not found");
@@ -120,9 +136,14 @@ public class NotificationsActivity extends AppCompatActivity {
             return;
         }
 
+        // Determine notification collection name based on role
+        String notificationCollection = isDriverMode ? "drivers" : "users";
+
+        Log.d("Notifications", "Fetching notifications from collection: " + notificationCollection + " for userId: " + userId);
+
         db.collection("notifications")
-                .document(userRole.getCollectionName())
-                .collection(userRole.getCollectionName())
+                .document(notificationCollection)
+                .collection(notificationCollection)
                 .document(userId)
                 .collection("messages")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -130,6 +151,7 @@ public class NotificationsActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         notificationList.clear();
+                        Log.d("Notifications", "Successfully fetched " + task.getResult().size() + " notifications");
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String title = document.getString("title");
                             String message = document.getString("message");
@@ -138,10 +160,11 @@ public class NotificationsActivity extends AppCompatActivity {
 
                             Notification notification = new Notification(title, message, imageName, read != null ? read : false);
                             notificationList.add(notification);
+                            Log.d("Notifications", "Added notification: " + title);
                         }
                         notificationAdapter.notifyDataSetChanged();
                     } else {
-                        Log.d("Notifications", "Error getting notifications: ", task.getException());
+                        Log.e("Notifications", "Error getting notifications: ", task.getException());
                     }
                 });
     }
