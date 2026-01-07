@@ -1,0 +1,11 @@
+{
+  "coord_weight": 1.0,
+  "time_weight": 0.5,
+  "max_passengers": 15,
+  "features": [
+    "pickup_coordinates_lat",
+    "pickup_coordinates_lng",
+    "departure_time_minutes"
+  ],
+  "created_at": "2026-01-07T21:27:11.494888"
+}

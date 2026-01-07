@@ -1,0 +1,6 @@
+{
+  "rows": 1000,
+  "seed": 2026,
+  "path": "D:\\code\\Java_Android\\BookCar\\data\\mock_bookings_long_distance_1000.csv",
+  "notes": "Long-distance: pickup in Hanoi <-> destination in Quang Ninh (and vice versa). Coordinates saved as separate lat/lng."
+}
