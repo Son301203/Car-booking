@@ -1,0 +1,28 @@
+{
+  "model_type": "KMeans",
+  "n_clusters": 3,
+  "coord_weight": 1.0,
+  "time_weight": 0.5,
+  "feature_columns": [
+    "pickup_coordinates_lat",
+    "pickup_coordinates_lng",
+    "departure_time_minutes"
+  ],
+  "random_seed": 42,
+  "n_init": 20,
+  "max_iter": 500,
+  "training_metrics": {
+    "inertia": 377.17494258296836,
+    "silhouette_score": 0.3361919577078005,
+    "davies_bouldin_index": 0.9823439640634226,
+    "calinski_harabasz_index": 231.81782068951415,
+    "n_iterations": 9
+  },
+  "train_samples": 376,
+  "cluster_distribution": {
+    "0": 147,
+    "1": 95,
+    "2": 134
+  },
+  "trained_date": "2026-01-08T21:26:34.444250"
+}

@@ -1,0 +1,48 @@
+{
+  "model_info": {
+    "type": "KMeans",
+    "n_clusters": 3,
+    "coord_weight": 1.0,
+    "time_weight": 0.5
+  },
+  "data_split": {
+    "train_samples": 376,
+    "test_samples": 95,
+    "split_ratio": "80/20"
+  },
+  "metrics": {
+    "train": {
+      "silhouette_score": 0.3361919577078005,
+      "davies_bouldin_index": 0.9823439640634226,
+      "calinski_harabasz_index": 231.81782068951415,
+      "inertia": 377.17494258296836
+    },
+    "test": {
+      "silhouette_score": 0.2972290934259732,
+      "davies_bouldin_index": 1.1043885964413895,
+      "calinski_harabasz_index": 51.229001641032454,
+      "inertia": 100.5115954714357
+    },
+    "differences": {
+      "silhouette_diff_pct": 11.589469464850106,
+      "davies_bouldin_diff_pct": 12.423818625925554,
+      "calinski_diff_pct": 77.90118055261757
+    }
+  },
+  "stability": {
+    "distribution_max_diff": 7.365621500559911,
+    "distribution_avg_diff": 4.910414333706606,
+    "status": "EXCELLENT"
+  },
+  "model_fit_analysis": {
+    "status": "GOOD FIT",
+    "confidence": "MEDIUM",
+    "issues": [
+      "Moderate Silhouette gap: 11.6%"
+    ],
+    "recommendations": [
+      "Monitor performance on new data"
+    ]
+  },
+  "evaluation_date": "2026-01-08T21:26:51.754829"
+}

@@ -1,0 +1,19 @@
+{
+  "total_samples": 471,
+  "train_samples": 376,
+  "test_samples": 95,
+  "train_ratio": 0.8,
+  "test_ratio": 0.2,
+  "random_seed": 42,
+  "feature_columns": [
+    "pickup_coordinates_lat",
+    "pickup_coordinates_lng",
+    "departure_time_minutes"
+  ],
+  "direction": "Hanoi_to_QuangNinh",
+  "processed_date": "2026-01-08T21:25:34.415187",
+  "date_range": {
+    "min": "01/01/2026",
+    "max": "31/12/2025"
+  }
+}
