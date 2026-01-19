@@ -2,190 +2,95 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/coordination_background">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="16dp">
 
-        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chọn tài xế và thời gian khởi hành"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thời gian khởi hành đề xuất:"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TimePicker
+            android:id="@+id/timePickerTripStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chọn tài xế:"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBarDrivers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvNoDrivers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Không có tài xế khả dụng"
+            android:textAlignment="center"
+            android:padding="16dp"
+            android:visibility="gone" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupDrivers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
+            android:layout_marginTop="16dp">
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@android:drawable/ic_menu_sort_by_size"
-                app:tint="@color/coordination_accent"
-                android:padding="10dp"
-                android:background="@drawable/bg_icon_circle"
-                android:contentDescription="Arrange" />
-
-            <TextView
+            <Button
+                android:id="@+id/btnCancelSelectDriver"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="16dp"
-                android:text="Xếp tài xế"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/coordination_text_primary"
-                android:fontFamily="sans-serif-medium" />
-        </LinearLayout>
-
-        <!-- Time Picker Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/coordination_card">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_recent_history"
-                        app:tint="@color/coordination_accent"
-                        android:contentDescription="Time" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Giờ khởi hành chuyến đi"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/coordination_text_primary" />
-                </LinearLayout>
-
-                <TimePicker
-                    android:id="@+id/timePickerTripStart"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:timePickerMode="spinner" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Driver Selection Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/coordination_card">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_mylocation"
-                        app:tint="@color/coordination_primary"
-                        android:contentDescription="Driver" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Chọn tài xế"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/coordination_text_primary" />
-                </LinearLayout>
-
-                <ProgressBar
-                    android:id="@+id/progressBarDrivers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:indeterminateTint="@color/coordination_primary"
-                    android:visibility="visible"
-                    android:layout_marginVertical="16dp" />
-
-                <RadioGroup
-                    android:id="@+id/radioGroupDrivers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/tvNoDrivers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Không tìm thấy tài xế"
-                    android:textSize="14sp"
-                    android:textColor="@color/coordination_text_secondary"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Action Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCancelSelectDriver"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="Hủy"
-                android:textColor="@color/coordination_text_secondary"
-                app:strokeColor="@color/coordination_divider"
-                app:cornerRadius="12dp"
-                android:layout_marginEnd="12dp"
-                android:paddingHorizontal="24dp" />
+                android:backgroundTint="@android:color/darker_gray" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btnConfirmArrangeDriver"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Xác nhận xếp lịch"
-                android:textColor="@color/white"
-                app:backgroundTint="@color/coordination_success"
-                app:cornerRadius="12dp"
-                app:icon="@android:drawable/ic_menu_send"
-                app:iconGravity="textStart"
-                android:paddingHorizontal="24dp" />
+                android:layout_weight="1"
+                android:text="Xác nhận"
+                android:backgroundTint="@color/teal_700" />
+
         </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>
 

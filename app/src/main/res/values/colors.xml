@@ -68,4 +68,10 @@
     <color name="driver_error">#EF5350</color>
     <color name="driver_tab_selected">#FFFFFF</color>
     <color name="driver_tab_unselected">#BBDEFB</color>
+
+    <!-- Material Design Colors -->
+    <color name="purple_500">#9C27B0</color>
+    <color name="purple_700">#7B1FA2</color>
+    <color name="teal_700">#00796B</color>
+    <color name="teal_200">#80CBC4</color>
 </resources>

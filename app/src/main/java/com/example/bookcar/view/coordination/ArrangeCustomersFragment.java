@@ -370,6 +370,331 @@ public class ArrangeCustomersFragment extends Fragment {
                 });
     }
 
+    private void showAutoClusterDialog() {
+        if (bookedOrders.isEmpty()) {
+            Toast.makeText(getContext(), "Không có khách hàng nào để phân cụm", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check if all orders have coordinates
+        List<Order> ordersWithCoords = new ArrayList<>();
+        for (Order order : bookedOrders) {
+            if (order.getPickupCoordinates() != null) {
+                ordersWithCoords.add(order);
+            }
+        }
+
+        if (ordersWithCoords.isEmpty()) {
+            Toast.makeText(getContext(), "Không có khách hàng nào có tọa độ hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (ordersWithCoords.size() < bookedOrders.size()) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Cảnh báo")
+                    .setMessage(String.format("Chỉ có %d/%d khách hàng có tọa độ hợp lệ. Tiếp tục?",
+                            ordersWithCoords.size(), bookedOrders.size()))
+                    .setPositiveButton("Tiếp tục", (dialog, which) -> performAutoClustering(ordersWithCoords))
+                    .setNegativeButton("Hủy", null)
+                    .show();
+            return;
+        }
+
+        performAutoClustering(ordersWithCoords);
+    }
+
+    private void performAutoClustering(List<Order> orders) {
+        // Show progress dialog
+        AlertDialog progressDialog = new AlertDialog.Builder(getContext())
+                .setTitle("Đang phân cụm tự động")
+                .setMessage("Vui lòng đợi...")
+                .setCancelable(false)
+                .create();
+        progressDialog.show();
+
+        // Call clustering API
+        ClusteringApiService.getInstance().clusterCustomers(orders, 10, new ClusteringApiService.ClusteringCallback() {
+            @Override
+            public void onSuccess(List<ClusteringApiService.SuggestedTrip> trips) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        progressDialog.dismiss();
+                        showClusteringResults(trips);
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        progressDialog.dismiss();
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Lỗi phân cụm tự động")
+                                .setMessage("Không thể kết nối đến dịch vụ phân cụm.\n\n" +
+                                        "Lỗi: " + error + "\n\n" +
+                                        "Vui lòng kiểm tra:\n" +
+                                        "1. Python API server đang chạy\n" +
+                                        "2. Cấu hình URL trong ClusteringApiService\n\n" +
+                                        "Bạn vẫn có thể phân chuyến thủ công.")
+                                .setPositiveButton("OK", null)
+                                .show();
+                    });
+                }
+            }
+        });
+    }
+
+    private void showClusteringResults(List<ClusteringApiService.SuggestedTrip> trips) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_clustering_results, null);
+        builder.setView(dialogView);
+
+        RecyclerView recyclerViewTrips = dialogView.findViewById(R.id.recyclerViewSuggestedTrips);
+        TextView tvTotalTrips = dialogView.findViewById(R.id.tvTotalTrips);
+        TextView tvTotalCustomers = dialogView.findViewById(R.id.tvTotalCustomers);
+        Button btnApplyAll = dialogView.findViewById(R.id.btnApplyAllTrips);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancelClustering);
+
+        AlertDialog dialog = builder.create();
+
+        // Set summary
+        int totalCustomers = 0;
+        for (ClusteringApiService.SuggestedTrip trip : trips) {
+            totalCustomers += trip.numPassengers;
+        }
+        tvTotalTrips.setText("Tổng số chuyến đề xuất: " + trips.size());
+        tvTotalCustomers.setText("Tổng số khách: " + totalCustomers);
+
+        // Setup RecyclerView
+        ClusteringResultsAdapter adapter = new ClusteringResultsAdapter(getContext(), trips, trip -> {
+            // Apply single trip
+            dialog.dismiss();
+            showDriverSelectionForTrip(trip);
+        });
+        recyclerViewTrips.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewTrips.setAdapter(adapter);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnApplyAll.setOnClickListener(v -> {
+            dialog.dismiss();
+            showConfirmApplyAllTrips(trips);
+        });
+
+        dialog.show();
+    }
+
+    private void showDriverSelectionForTrip(ClusteringApiService.SuggestedTrip trip) {
+        // Get orders for this trip
+        List<Order> tripOrders = new ArrayList<>();
+        for (String orderId : trip.customerIds) {
+            for (Order order : bookedOrders) {
+                if (orderId.equals(order.getDocumentId())) {
+                    tripOrders.add(order);
+                    break;
+                }
+            }
+        }
+
+        if (tripOrders.isEmpty()) {
+            Toast.makeText(getContext(), "Không tìm thấy đơn hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Show driver selection with pre-filled time
+        showDriverSelectionDialogForOrders(tripOrders, trip.suggestedDepartureTime);
+    }
+
+    private void showDriverSelectionDialogForOrders(List<Order> orders, String suggestedTime) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_select_driver_for_trip, null);
+        builder.setView(dialogView);
+
+        TimePicker timePicker = dialogView.findViewById(R.id.timePickerTripStart);
+        RadioGroup radioGroupDrivers = dialogView.findViewById(R.id.radioGroupDrivers);
+        ProgressBar progressBarDrivers = dialogView.findViewById(R.id.progressBarDrivers);
+        TextView tvNoDrivers = dialogView.findViewById(R.id.tvNoDrivers);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancelSelectDriver);
+        Button btnConfirm = dialogView.findViewById(R.id.btnConfirmArrangeDriver);
+
+        // Set 24-hour format
+        timePicker.setIs24HourView(true);
+
+        // Set suggested time
+        if (suggestedTime != null && !suggestedTime.isEmpty()) {
+            try {
+                String[] parts = suggestedTime.split(":");
+                timePicker.setHour(Integer.parseInt(parts[0]));
+                timePicker.setMinute(Integer.parseInt(parts[1]));
+            } catch (Exception e) {
+                Log.e(TAG, "Error parsing suggested time", e);
+            }
+        }
+
+        AlertDialog dialog = builder.create();
+
+        // Load drivers
+        loadDriversForDialog(radioGroupDrivers, progressBarDrivers, tvNoDrivers);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnConfirm.setOnClickListener(v -> {
+            int selectedDriverId = radioGroupDrivers.getCheckedRadioButtonId();
+            if (selectedDriverId == -1) {
+                Toast.makeText(getContext(), "Vui lòng chọn tài xế", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            RadioButton selectedRadio = dialogView.findViewById(selectedDriverId);
+            String driverId = (String) selectedRadio.getTag();
+            String driverName = selectedRadio.getText().toString();
+
+            // Get time
+            int hour = timePicker.getHour();
+            int minute = timePicker.getMinute();
+            String tripStartTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+
+            // Arrange driver
+            arrangeDriver(driverId, driverName, tripStartTime, orders);
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    private void showConfirmApplyAllTrips(List<ClusteringApiService.SuggestedTrip> trips) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Xác nhận")
+                .setMessage("Tự động tạo " + trips.size() + " chuyến đi?\n\n" +
+                        "Bạn sẽ cần chọn tài xế cho từng chuyến.")
+                .setPositiveButton("Tiếp tục", (dialog, which) -> {
+                    applyTripsSequentially(trips, 0);
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void applyTripsSequentially(List<ClusteringApiService.SuggestedTrip> trips, int index) {
+        if (index >= trips.size()) {
+            Toast.makeText(getContext(), "Đã hoàn thành tất cả các chuyến!", Toast.LENGTH_SHORT).show();
+            loadBookedCustomers();
+            return;
+        }
+
+        ClusteringApiService.SuggestedTrip trip = trips.get(index);
+
+        // Show dialog for this trip
+        new AlertDialog.Builder(getContext())
+                .setTitle("Chuyến " + (index + 1) + "/" + trips.size())
+                .setMessage(trip.getTripName() + "\n" +
+                        trip.getDescription() + "\n\n" +
+                        "Chọn tài xế cho chuyến này")
+                .setPositiveButton("Chọn tài xế", (dialog, which) -> {
+                    showDriverSelectionForTripInSequence(trip, trips, index);
+                })
+                .setNegativeButton("Bỏ qua", (dialog, which) -> {
+                    applyTripsSequentially(trips, index + 1);
+                })
+                .setNeutralButton("Dừng lại", null)
+                .show();
+    }
+
+    private void showDriverSelectionForTripInSequence(ClusteringApiService.SuggestedTrip trip,
+                                                       List<ClusteringApiService.SuggestedTrip> allTrips,
+                                                       int currentIndex) {
+        // Get orders for this trip
+        List<Order> tripOrders = new ArrayList<>();
+        for (String orderId : trip.customerIds) {
+            for (Order order : bookedOrders) {
+                if (orderId.equals(order.getDocumentId())) {
+                    tripOrders.add(order);
+                    break;
+                }
+            }
+        }
+
+        if (tripOrders.isEmpty()) {
+            Toast.makeText(getContext(), "Không tìm thấy đơn hàng", Toast.LENGTH_SHORT).show();
+            applyTripsSequentially(allTrips, currentIndex + 1);
+            return;
+        }
+
+        // Show driver selection with callback to continue sequence
+        showDriverSelectionWithCallback(tripOrders, trip.suggestedDepartureTime, success -> {
+            if (success) {
+                // Continue with next trip after a short delay
+                if (getView() != null) {
+                    getView().postDelayed(() -> {
+                        applyTripsSequentially(allTrips, currentIndex + 1);
+                    }, 500);
+                }
+            }
+        });
+    }
+
+    private void showDriverSelectionWithCallback(List<Order> orders, String suggestedTime,
+                                                  DriverSelectionCallback callback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_select_driver_for_trip, null);
+        builder.setView(dialogView);
+
+        TimePicker timePicker = dialogView.findViewById(R.id.timePickerTripStart);
+        RadioGroup radioGroupDrivers = dialogView.findViewById(R.id.radioGroupDrivers);
+        ProgressBar progressBarDrivers = dialogView.findViewById(R.id.progressBarDrivers);
+        TextView tvNoDrivers = dialogView.findViewById(R.id.tvNoDrivers);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancelSelectDriver);
+        Button btnConfirm = dialogView.findViewById(R.id.btnConfirmArrangeDriver);
+
+        timePicker.setIs24HourView(true);
+
+        // Set suggested time
+        if (suggestedTime != null && !suggestedTime.isEmpty()) {
+            try {
+                String[] parts = suggestedTime.split(":");
+                timePicker.setHour(Integer.parseInt(parts[0]));
+                timePicker.setMinute(Integer.parseInt(parts[1]));
+            } catch (Exception e) {
+                Log.e(TAG, "Error parsing suggested time", e);
+            }
+        }
+
+        AlertDialog dialog = builder.create();
+
+        loadDriversForDialog(radioGroupDrivers, progressBarDrivers, tvNoDrivers);
+
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+            callback.onResult(false);
+        });
+
+        btnConfirm.setOnClickListener(v -> {
+            int selectedDriverId = radioGroupDrivers.getCheckedRadioButtonId();
+            if (selectedDriverId == -1) {
+                Toast.makeText(getContext(), "Vui lòng chọn tài xế", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            RadioButton selectedRadio = dialogView.findViewById(selectedDriverId);
+            String driverId = (String) selectedRadio.getTag();
+            String driverName = selectedRadio.getText().toString();
+
+            int hour = timePicker.getHour();
+            int minute = timePicker.getMinute();
+            String tripStartTime = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+
+            arrangeDriver(driverId, driverName, tripStartTime, orders);
+            dialog.dismiss();
+            callback.onResult(true);
+        });
+
+        dialog.show();
+    }
+
+    private interface DriverSelectionCallback {
+        void onResult(boolean success);
+    }
+
     @Override
     public void onResume() {
         super.onResume();

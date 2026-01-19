@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvTripName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cụm 1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/teal_700" />
+
+        <TextView
+            android:id="@+id/tvTripDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="8 khách - Khởi hành: 08:00"
+            android:textSize="14sp"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/btnApplyTrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Chọn tài xế cho chuyến này"
+            android:textSize="14sp"
+            android:backgroundTint="@color/purple_500" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+</LinearLayout>
+
+    </LinearLayout>
+
+            android:backgroundTint="@color/teal_700" />
+            android:text="Áp dụng tất cả"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:id="@+id/btnApplyAllTrips"
+        <Button
+
+            android:backgroundTint="@android:color/darker_gray" />
+            android:text="Hủy"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:id="@+id/btnCancelClustering"
+        <Button
+
+        android:layout_marginTop="16dp">
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+    <LinearLayout
+
+        android:maxHeight="400dp" />
+        android:minHeight="200dp"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:id="@+id/recyclerViewSuggestedTrips"
+    <androidx.recyclerview.widget.RecyclerView
+
+    </LinearLayout>
+
+            android:textColor="@android:color/white" />
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:text="Tổng số khách: 0"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:id="@+id/tvTotalCustomers"
+        <TextView
+
+            android:textColor="@android:color/white" />
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:text="Tổng số chuyến: 0"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:id="@+id/tvTotalTrips"
+        <TextView
+
+        android:layout_marginBottom="12dp">
+        android:padding="12dp"
+        android:background="@android:color/darker_gray"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+    <LinearLayout
+
+        android:layout_marginBottom="16dp" />
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:text="Kết quả phân cụm tự động"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+    <TextView
+
+    android:padding="16dp">
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
