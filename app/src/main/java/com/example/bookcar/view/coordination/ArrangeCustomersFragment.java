@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookcar.R;
 import com.example.bookcar.adapter.BookedCustomerAdapter;
+import com.example.bookcar.adapter.ClusteringResultsAdapter;
+import com.example.bookcar.api.ClusteringApiService;
 import com.example.bookcar.model.Driver;
 import com.example.bookcar.model.Order;
 import com.example.bookcar.model.Trips;
@@ -45,6 +47,7 @@ public class ArrangeCustomersFragment extends Fragment {
     private ProgressBar progressBarCustomers;
     private TextView tvNoCustomers;
     private Button btnArrangeDriver;
+    private Button btnAutoCluster;
 
     private BookedCustomerAdapter adapter;
     private List<Order> bookedOrders;
@@ -66,6 +69,7 @@ public class ArrangeCustomersFragment extends Fragment {
         progressBarCustomers = view.findViewById(R.id.progressBarCustomers);
         tvNoCustomers = view.findViewById(R.id.tvNoCustomers);
         btnArrangeDriver = view.findViewById(R.id.btnArrangeDriver);
+        btnAutoCluster = view.findViewById(R.id.btnAutoCluster);
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
@@ -81,6 +85,7 @@ public class ArrangeCustomersFragment extends Fragment {
 
         // Setup button click
         btnArrangeDriver.setOnClickListener(v -> showDriverSelectionDialog());
+        btnAutoCluster.setOnClickListener(v -> showAutoClusterDialog());
 
         return view;
     }

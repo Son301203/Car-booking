@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-</LinearLayout>
-
-    </LinearLayout>
-
-            android:backgroundTint="@color/teal_700" />
-            android:text="Áp dụng tất cả"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:id="@+id/btnApplyAllTrips"
-        <Button
-
-            android:backgroundTint="@android:color/darker_gray" />
-            android:text="Hủy"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:id="@+id/btnCancelClustering"
-        <Button
-
-        android:layout_marginTop="16dp">
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-    <LinearLayout
-
-        android:maxHeight="400dp" />
-        android:minHeight="200dp"
-        android:layout_weight="1"
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:id="@+id/recyclerViewSuggestedTrips"
-    <androidx.recyclerview.widget.RecyclerView
-
-    </LinearLayout>
-
-            android:textColor="@android:color/white" />
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:text="Tổng số khách: 0"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:id="@+id/tvTotalCustomers"
-        <TextView
-
-            android:textColor="@android:color/white" />
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:text="Tổng số chuyến: 0"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:id="@+id/tvTotalTrips"
-        <TextView
-
-        android:layout_marginBottom="12dp">
-        android:padding="12dp"
-        android:background="@android:color/darker_gray"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-    <LinearLayout
-
-        android:layout_marginBottom="16dp" />
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:text="Kết quả phân cụm tự động"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-    <TextView
-
-    android:padding="16dp">
-    android:orientation="vertical"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kết quả phân cụm tự động"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/darker_gray"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/tvTotalTrips"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tổng số chuyến: 0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tvTotalCustomers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tổng số khách: 0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSuggestedTrips"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="200dp"
+        android:maxHeight="400dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnCancelClustering"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="Hủy"
+            android:backgroundTint="@android:color/darker_gray" />
+
+        <Button
+            android:id="@+id/btnApplyAllTrips"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Áp dụng tất cả"
+            android:backgroundTint="@color/teal_700" />
+
+    </LinearLayout>
+
+</LinearLayout>
 
