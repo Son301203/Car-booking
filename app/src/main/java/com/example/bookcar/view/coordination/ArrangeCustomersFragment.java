@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookcar.R;
 import com.example.bookcar.adapter.BookedCustomerAdapter;
+import com.example.bookcar.adapter.ClusterOrderAdapter;
 import com.example.bookcar.adapter.ClusteringResultsAdapter;
 import com.example.bookcar.api.ClusteringApiService;
 import com.example.bookcar.model.Driver;
@@ -472,10 +475,19 @@ public class ArrangeCustomersFragment extends Fragment {
         tvTotalCustomers.setText("Tổng số khách: " + totalCustomers);
 
         // Setup RecyclerView
-        ClusteringResultsAdapter adapter = new ClusteringResultsAdapter(getContext(), trips, trip -> {
-            // Apply single trip
-            dialog.dismiss();
-            showDriverSelectionForTrip(trip);
+        ClusteringResultsAdapter adapter = new ClusteringResultsAdapter(getContext(), trips, new ClusteringResultsAdapter.OnTripClickListener() {
+            @Override
+            public void onTripClick(ClusteringApiService.SuggestedTrip trip) {
+                // Apply single trip
+                dialog.dismiss();
+                showDriverSelectionForTrip(trip);
+            }
+
+            @Override
+            public void onViewDetails(ClusteringApiService.SuggestedTrip trip) {
+                // Show cluster details
+                showClusterDetailsDialog(trip, trips);
+            }
         });
         recyclerViewTrips.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewTrips.setAdapter(adapter);
@@ -698,6 +710,161 @@ public class ArrangeCustomersFragment extends Fragment {
 
     private interface DriverSelectionCallback {
         void onResult(boolean success);
+    }
+
+    private void showClusterDetailsDialog(ClusteringApiService.SuggestedTrip trip, List<ClusteringApiService.SuggestedTrip> allTrips) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_cluster_order_details, null);
+        builder.setView(dialogView);
+
+        TextView tvClusterTitle = dialogView.findViewById(R.id.tvClusterTitle);
+        TextView tvClusterInfo = dialogView.findViewById(R.id.tvClusterInfo);
+        RecyclerView recyclerViewOrders = dialogView.findViewById(R.id.recyclerViewClusterOrders);
+        Button btnMoveCustomers = dialogView.findViewById(R.id.btnMoveCustomers);
+        Button btnClose = dialogView.findViewById(R.id.btnCloseClusterDetails);
+
+        AlertDialog dialog = builder.create();
+
+        // Set cluster info
+        tvClusterTitle.setText(trip.getTripName());
+        tvClusterInfo.setText(String.format(Locale.getDefault(),
+                "%d khách - Khởi hành: %s",
+                trip.numPassengers,
+                trip.suggestedDepartureTime));
+
+        // Get orders for this cluster
+        List<Order> clusterOrders = new ArrayList<>();
+        for (String orderId : trip.customerIds) {
+            for (Order order : bookedOrders) {
+                if (orderId.equals(order.getDocumentId())) {
+                    clusterOrders.add(order);
+                    break;
+                }
+            }
+        }
+
+        // Setup RecyclerView with cluster orders
+        ClusterOrderAdapter orderAdapter = new ClusterOrderAdapter(getContext(), clusterOrders, false);
+        recyclerViewOrders.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewOrders.setAdapter(orderAdapter);
+
+        // Move customers button
+        btnMoveCustomers.setOnClickListener(v -> {
+            dialog.dismiss();
+            showMoveCustomersDialog(trip, allTrips);
+        });
+
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    private void showMoveCustomersDialog(ClusteringApiService.SuggestedTrip sourceTrip, List<ClusteringApiService.SuggestedTrip> allTrips) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_move_customers, null);
+        builder.setView(dialogView);
+
+        Spinner spinnerTargetCluster = dialogView.findViewById(R.id.spinnerTargetCluster);
+        RecyclerView recyclerViewSelectCustomers = dialogView.findViewById(R.id.recyclerViewSelectCustomers);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancelMove);
+        Button btnConfirm = dialogView.findViewById(R.id.btnConfirmMove);
+
+        AlertDialog dialog = builder.create();
+
+        // Prepare target clusters (exclude source cluster)
+        List<ClusteringApiService.SuggestedTrip> targetTrips = new ArrayList<>();
+        List<String> clusterNames = new ArrayList<>();
+        for (ClusteringApiService.SuggestedTrip trip : allTrips) {
+            if (trip.clusterId != sourceTrip.clusterId || trip.subTripIndex != sourceTrip.subTripIndex) {
+                targetTrips.add(trip);
+                clusterNames.add(String.format(Locale.getDefault(),
+                        "%s (%d/%d khách)",
+                        trip.getTripName(),
+                        trip.numPassengers,
+                        10)); // Max 10 passengers
+            }
+        }
+
+        // Setup spinner
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, clusterNames);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTargetCluster.setAdapter(spinnerAdapter);
+
+        // Get orders for source cluster
+        List<Order> sourceOrders = new ArrayList<>();
+        for (String orderId : sourceTrip.customerIds) {
+            for (Order order : bookedOrders) {
+                if (orderId.equals(order.getDocumentId())) {
+                    sourceOrders.add(order);
+                    break;
+                }
+            }
+        }
+
+        // Setup RecyclerView with selection mode
+        ClusterOrderAdapter orderAdapter = new ClusterOrderAdapter(getContext(), sourceOrders, true);
+        recyclerViewSelectCustomers.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewSelectCustomers.setAdapter(orderAdapter);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnConfirm.setOnClickListener(v -> {
+            List<Order> selectedOrders = orderAdapter.getSelectedOrders();
+            if (selectedOrders.isEmpty()) {
+                Toast.makeText(getContext(), "Vui lòng chọn ít nhất 1 khách hàng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int targetIndex = spinnerTargetCluster.getSelectedItemPosition();
+            if (targetIndex < 0 || targetIndex >= targetTrips.size()) {
+                Toast.makeText(getContext(), "Vui lòng chọn cụm đích", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            ClusteringApiService.SuggestedTrip targetTrip = targetTrips.get(targetIndex);
+
+            // Check if target cluster will exceed max capacity
+            int newTargetSize = targetTrip.numPassengers + selectedOrders.size();
+            if (newTargetSize > 10) {
+                Toast.makeText(getContext(),
+                        String.format(Locale.getDefault(), "Cụm đích sẽ vượt quá giới hạn 10 khách (%d khách)", newTargetSize),
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            // Perform the transfer
+            performCustomerTransfer(sourceTrip, targetTrip, selectedOrders, allTrips);
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    private void performCustomerTransfer(ClusteringApiService.SuggestedTrip sourceTrip,
+                                        ClusteringApiService.SuggestedTrip targetTrip,
+                                        List<Order> customersToMove,
+                                        List<ClusteringApiService.SuggestedTrip> allTrips) {
+        // Remove customers from source
+        for (Order order : customersToMove) {
+            sourceTrip.customerIds.remove(order.getDocumentId());
+        }
+        sourceTrip.numPassengers -= customersToMove.size();
+
+        // Add customers to target
+        for (Order order : customersToMove) {
+            targetTrip.customerIds.add(order.getDocumentId());
+        }
+        targetTrip.numPassengers += customersToMove.size();
+
+        Toast.makeText(getContext(),
+                String.format(Locale.getDefault(), "Đã chuyển %d khách từ %s sang %s",
+                        customersToMove.size(),
+                        sourceTrip.getTripName(),
+                        targetTrip.getTripName()),
+                Toast.LENGTH_LONG).show();
+
+        // Refresh the clustering results view
+        showClusteringResults(allTrips);
     }
 
     @Override

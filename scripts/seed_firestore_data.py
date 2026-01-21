@@ -136,27 +136,55 @@ def generate_test_users(num_users=20):
 
 
 def seed_users_to_firestore(users):
-    """Upload users lên Firestore và trả về danh sách user IDs"""
+    """Upload users lên Firestore và trả về danh sách user IDs (không tạo trùng)"""
     print(f"\n📤 Uploading {len(users)} users to Firestore...")
+    
+    # Kiểm tra users đã tồn tại dựa trên phone
+    existing_users = {}
+    print("🔍 Checking for existing users by phone...")
+    
+    for user in users:
+        phone = user['phone']
+        existing_query = db.collection('users').where('phone', '==', phone).limit(1).stream()
+        existing_docs = list(existing_query)
+        if existing_docs:
+            existing_users[phone] = existing_docs[0].id
+    
+    print(f"  ✅ Found {len(existing_users)} existing users")
     
     batch = db.batch()
     user_ids = []
+    new_count = 0
+    reused_count = 0
     
     for i, user in enumerate(users):
-        # Tạo document với auto-generated ID
-        doc_ref = db.collection('users').document()
-        batch.set(doc_ref, user)
-        user_ids.append(doc_ref.id)
+        phone = user['phone']
+        
+        if phone in existing_users:
+            # Sử dụng user đã có
+            user_ids.append(existing_users[phone])
+            reused_count += 1
+        else:
+            # Tạo user mới
+            doc_ref = db.collection('users').document()
+            batch.set(doc_ref, user)
+            user_ids.append(doc_ref.id)
+            existing_users[phone] = doc_ref.id  # Lưu lại để tránh trùng trong lần seed này
+            new_count += 1
         
         # Firestore batch limit = 500
-        if (i + 1) % 500 == 0:
+        if new_count > 0 and new_count % 500 == 0:
             batch.commit()
-            print(f"  ✅ Committed batch: {i + 1} users")
+            print(f"  ✅ Committed batch: {new_count} new users")
             batch = db.batch()
     
     # Commit remaining
-    batch.commit()
-    print(f"✅ Successfully uploaded {len(users)} users")
+    if new_count > 0:
+        batch.commit()
+    
+    print(f"✅ Users ready: {len(user_ids)} total")
+    print(f"  • New users created: {new_count}")
+    print(f"  • Existing users reused: {reused_count}")
     print(f"📝 User IDs: {user_ids[:5]}... (showing first 5)")
     
     return user_ids
@@ -323,10 +351,49 @@ def generate_sample_trip(driver_id="sample_driver_001", date="21/01/2026", time=
 
 
 def clean_test_data():
-    """Xóa tất cả test data: orders, users"""
+    """Xóa tất cả test data: orders, users, và trips chứa test orders"""
     print("\n🧹 Cleaning existing test data...")
     
-    # Delete test orders
+    # Bước 1: Lấy danh sách test order IDs
+    print("  🔍 Finding test orders...")
+    test_order_ids = set()
+    orders_query = db.collection('orders').where('_test_cluster', '>=', '').stream()
+    for doc in orders_query:
+        test_order_ids.add(doc.id)
+    
+    print(f"  📋 Found {len(test_order_ids)} test orders")
+    
+    # Bước 2: Delete trips chứa test orders
+    print("  🗑️  Deleting trips containing test orders...")
+    all_trips = db.collection('trips').stream()
+    batch = db.batch()
+    trip_count = 0
+    
+    for trip_doc in all_trips:
+        trip_data = trip_doc.to_dict()
+        
+        # Kiểm tra nếu trip có orders subcollection chứa test orders
+        orders_in_trip = db.collection('trips').document(trip_doc.id).collection('orders').stream()
+        has_test_order = False
+        
+        for order_doc in orders_in_trip:
+            if order_doc.id in test_order_ids:
+                has_test_order = True
+                break
+        
+        if has_test_order:
+            # Xóa trip này
+            batch.delete(trip_doc.reference)
+            trip_count += 1
+            
+            if trip_count % 500 == 0:
+                batch.commit()
+                batch = db.batch()
+    
+    batch.commit()
+    print(f"  ✅ Deleted {trip_count} trips")
+    
+    # Bước 3: Delete test orders
     print("  🗑️  Deleting test orders...")
     orders_query = db.collection('orders').where('_test_cluster', '>=', '').stream()
     batch = db.batch()
@@ -342,7 +409,7 @@ def clean_test_data():
     batch.commit()
     print(f"  ✅ Deleted {order_count} test orders")
     
-    # Delete test users
+    # Bước 4: Delete test users (giữ nguyên)
     print("  🗑️  Deleting test users...")
     users_query = db.collection('users').where('_test_user', '==', True).stream()
     batch = db.batch()
@@ -359,9 +426,10 @@ def clean_test_data():
     print(f"  ✅ Deleted {user_count} test users")
     
     print(f"\n📊 Summary:")
+    print(f"  • Trips deleted: {trip_count}")
     print(f"  • Orders deleted: {order_count}")
     print(f"  • Users deleted: {user_count}")
-    print("  ⚠️  Trips created from test orders need manual deletion on Firestore Console")
+    print("  ✅ All test data cleaned!")
 
 
 # ===== MAIN =====

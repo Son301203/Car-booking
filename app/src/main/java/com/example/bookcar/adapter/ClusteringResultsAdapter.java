@@ -24,6 +24,7 @@ public class ClusteringResultsAdapter extends RecyclerView.Adapter<ClusteringRes
 
     public interface OnTripClickListener {
         void onTripClick(ClusteringApiService.SuggestedTrip trip);
+        void onViewDetails(ClusteringApiService.SuggestedTrip trip);
     }
 
     public ClusteringResultsAdapter(Context context, List<ClusteringApiService.SuggestedTrip> trips,
@@ -52,9 +53,17 @@ public class ClusteringResultsAdapter extends RecyclerView.Adapter<ClusteringRes
                 trip.centerLat,
                 trip.centerLng));
 
+        // Click on button to apply trip
         holder.btnApplyTrip.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onTripClick(trip);
+            }
+        });
+
+        // Click on card to view details
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onViewDetails(trip);
             }
         });
     }
