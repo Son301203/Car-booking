@@ -91,7 +91,7 @@ public class Order {
             order.documentId = snapshot.getId();
             order.tripId = snapshot.getString("trip_id");
             order.clientId = snapshot.getString("client_id");
-            order.departure = snapshot.getString("departure");
+            order.departure = snapshot.getString("pickup");
             order.destination = snapshot.getString("destination");
             order.departureDate = snapshot.getString("departureDate");
             order.departureTime = snapshot.getString("departureTime");
