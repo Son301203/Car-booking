@@ -489,6 +489,13 @@ public class ArrangeCustomersFragment extends Fragment {
                 showClusterDetailsDialog(trip, trips);
             }
         });
+
+        // Set map click listener
+        adapter.setMapClickListener((trip, position) -> {
+            // Open map view activity
+            openClusterMapView(trip, position);
+        });
+
         recyclerViewTrips.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewTrips.setAdapter(adapter);
 
@@ -865,6 +872,31 @@ public class ArrangeCustomersFragment extends Fragment {
 
         // Refresh the clustering results view
         showClusteringResults(allTrips);
+    }
+
+    /**
+     * Open cluster map view activity to visualize cluster on map
+     */
+    private void openClusterMapView(ClusteringApiService.SuggestedTrip trip, int position) {
+        android.content.Intent intent = new android.content.Intent(getContext(), ClusterMapViewActivity.class);
+
+        // Convert Order objects to ClusterCustomerInfo to avoid Serialization issues with Firebase Timestamp
+        ArrayList<com.example.bookcar.model.ClusterCustomerInfo> clusterCustomers = new ArrayList<>();
+        for (String orderId : trip.customerIds) {
+            for (Order order : bookedOrders) {
+                if (order.getDocumentId().equals(orderId)) {
+                    clusterCustomers.add(com.example.bookcar.model.ClusterCustomerInfo.fromOrder(order));
+                    break;
+                }
+            }
+        }
+
+        intent.putExtra(ClusterMapViewActivity.EXTRA_CLUSTER_INDEX, position);
+        intent.putExtra(ClusterMapViewActivity.EXTRA_CLUSTER_ORDERS, clusterCustomers);
+        intent.putExtra(ClusterMapViewActivity.EXTRA_CUSTOMER_COUNT, trip.numPassengers);
+        intent.putExtra(ClusterMapViewActivity.EXTRA_DEPARTURE_TIME, trip.suggestedDepartureTime);
+
+        startActivity(intent);
     }
 
     @Override

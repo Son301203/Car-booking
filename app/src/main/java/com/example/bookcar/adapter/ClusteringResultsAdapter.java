@@ -21,10 +21,15 @@ public class ClusteringResultsAdapter extends RecyclerView.Adapter<ClusteringRes
     private Context context;
     private List<ClusteringApiService.SuggestedTrip> trips;
     private OnTripClickListener listener;
+    private OnMapClickListener mapClickListener;
 
     public interface OnTripClickListener {
         void onTripClick(ClusteringApiService.SuggestedTrip trip);
         void onViewDetails(ClusteringApiService.SuggestedTrip trip);
+    }
+
+    public interface OnMapClickListener {
+        void onViewOnMap(ClusteringApiService.SuggestedTrip trip, int position);
     }
 
     public ClusteringResultsAdapter(Context context, List<ClusteringApiService.SuggestedTrip> trips,
@@ -32,6 +37,10 @@ public class ClusteringResultsAdapter extends RecyclerView.Adapter<ClusteringRes
         this.context = context;
         this.trips = trips;
         this.listener = listener;
+    }
+
+    public void setMapClickListener(OnMapClickListener mapClickListener) {
+        this.mapClickListener = mapClickListener;
     }
 
     @NonNull
@@ -60,6 +69,13 @@ public class ClusteringResultsAdapter extends RecyclerView.Adapter<ClusteringRes
             }
         });
 
+        // Click on view on map button
+        holder.btnViewOnMap.setOnClickListener(v -> {
+            if (mapClickListener != null) {
+                mapClickListener.onViewOnMap(trip, position);
+            }
+        });
+
         // Click on card to view details
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -77,12 +93,14 @@ public class ClusteringResultsAdapter extends RecyclerView.Adapter<ClusteringRes
         TextView tvTripName;
         TextView tvTripDetails;
         Button btnApplyTrip;
+        Button btnViewOnMap;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTripName = itemView.findViewById(R.id.tvTripName);
             tvTripDetails = itemView.findViewById(R.id.tvTripDetails);
             btnApplyTrip = itemView.findViewById(R.id.btnApplyTrip);
+            btnViewOnMap = itemView.findViewById(R.id.btnViewOnMap);
         }
     }
 }

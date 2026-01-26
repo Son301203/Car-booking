@@ -26,6 +26,10 @@
             android:name=".view.ChangePasswordActivity"
             android:exported="false" />
         <activity
+            android:name=".view.coordination.ClusterMapViewActivity"
+            android:exported="false"
+            android:label="Xem cụm trên bản đồ" />
+        <activity
             android:name=".view.coordination.AccountCoordinationActivity"
             android:exported="false" />
         <activity

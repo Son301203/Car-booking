@@ -31,14 +31,32 @@
             android:textSize="14sp"
             android:textColor="@android:color/black" />
 
-        <Button
-            android:id="@+id/btnApplyTrip"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Chọn tài xế cho chuyến này"
-            android:textSize="14sp"
-            android:backgroundTint="@color/purple_500" />
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <Button
+                android:id="@+id/btnViewOnMap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Xem trên bản đồ"
+                android:textSize="13sp"
+                android:backgroundTint="@color/teal_700" />
+
+            <Button
+                android:id="@+id/btnApplyTrip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chọn tài xế"
+                android:textSize="13sp"
+                android:backgroundTint="@color/purple_500" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

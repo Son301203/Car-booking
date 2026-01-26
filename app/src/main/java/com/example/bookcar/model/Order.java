@@ -7,11 +7,13 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Order {
+public class Order implements Serializable {
     private static final String TAG = "Order";
+    private static final long serialVersionUID = 1L;
 
     private String documentId;
     private String departure;
