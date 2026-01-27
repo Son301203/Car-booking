@@ -121,9 +121,9 @@ def create_trip(trip_data, cluster_id, sub_trip_index):
     center_lat = trip_data['pickup_coordinates_lat'].mean()
     center_lng = trip_data['pickup_coordinates_lng'].mean()
 
-    # Calculate suggested departure time (median)
-    median_time_minutes = int(trip_data['departure_time_minutes'].median())
-    suggested_time = f"{median_time_minutes // 60:02d}:{median_time_minutes % 60:02d}"
+    # Calculate suggested departure time (earliest time to ensure on-time pickup)
+    earliest_time_minutes = int(trip_data['departure_time_minutes'].min())
+    suggested_time = f"{earliest_time_minutes // 60:02d}:{earliest_time_minutes % 60:02d}"
 
     # Get departure date (assume all same date)
     departure_date = trip_data['departureDate'].iloc[0]
@@ -209,21 +209,47 @@ def cluster_customers():
                 'error': 'No orders provided'
             }), 400
 
-        # Preprocess
-        df, features = preprocess_orders(orders)
-
-        # Cluster
-        cluster_labels = apply_clustering(features, coord_weight, time_weight)
-        df['cluster'] = cluster_labels
-
-        # Generate trips with max passenger constraint
-        trips = split_large_clusters(df, max_passengers)
+        # Group orders by date first to ensure each cluster is for the same day
+        df_all = pd.DataFrame(orders)
+        df_all['departure_time_minutes'] = df_all['departureTime'].apply(parse_time_to_minutes)
+        
+        all_trips = []
+        cluster_id_offset = 0
+        
+        # Process each date separately
+        for date in df_all['departureDate'].unique():
+            date_orders = df_all[df_all['departureDate'] == date].copy()
+            
+            # Skip if only one order for this date
+            if len(date_orders) < 1:
+                continue
+            
+            # Prepare features for this date's orders
+            features = date_orders[[
+                'pickup_coordinates_lat',
+                'pickup_coordinates_lng',
+                'departure_time_minutes'
+            ]].values
+            
+            # Apply clustering only if we have enough orders
+            if len(date_orders) > 1:
+                cluster_labels = apply_clustering(features, coord_weight, time_weight)
+                date_orders['cluster'] = cluster_labels + cluster_id_offset
+                cluster_id_offset += len(np.unique(cluster_labels))
+            else:
+                # Single order gets its own cluster
+                date_orders['cluster'] = cluster_id_offset
+                cluster_id_offset += 1
+            
+            # Generate trips for this date
+            date_trips = split_large_clusters(date_orders, max_passengers)
+            all_trips.extend(date_trips)
 
         return jsonify({
             'success': True,
-            'trips': trips,
+            'trips': all_trips,
             'total_customers': len(orders),
-            'total_trips': len(trips),
+            'total_trips': len(all_trips),
             'parameters': {
                 'max_passengers': max_passengers,
                 'coord_weight': coord_weight,
