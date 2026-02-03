@@ -134,14 +134,6 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_below="@id/tabCard"/>
 
-    <!-- Center Pin Indicator -->
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_location_pin"
-        android:contentDescription="Location Marker"
-        android:elevation="4dp"/>
 
     <!-- Modern Floating Zoom Controls -->
     <LinearLayout

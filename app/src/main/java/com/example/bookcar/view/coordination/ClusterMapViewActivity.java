@@ -39,7 +39,6 @@ public class ClusterMapViewActivity extends AppCompatActivity implements OnMapRe
     private TextView tvClusterInfo;
     private TextView tvCustomerCount;
     private TextView tvDepartureTime;
-    private TextView tvCenterPoint;
     private ImageButton btnBack;
     private Button btnAssignDriver;
 
@@ -61,7 +60,6 @@ public class ClusterMapViewActivity extends AppCompatActivity implements OnMapRe
         tvClusterInfo = findViewById(R.id.tvClusterInfo);
         tvCustomerCount = findViewById(R.id.tvCustomerCount);
         tvDepartureTime = findViewById(R.id.tvDepartureTime);
-        tvCenterPoint = findViewById(R.id.tvCenterPoint);
         btnBack = findViewById(R.id.btnBack);
         btnAssignDriver = findViewById(R.id.btnAssignDriver);
 

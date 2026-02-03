@@ -32,7 +32,7 @@
                 android:layout_centerVertical="true"
                 android:padding="12dp"
                 android:contentDescription="Back"
-                android:tint="@color/text_primary"/>
+                app:tint="@color/text_primary"/>
 
             <TextView
                 android:id="@+id/toolbarTitle"
@@ -55,7 +55,7 @@
                 android:layout_centerVertical="true"
                 android:padding="12dp"
                 android:contentDescription="Current Location"
-                android:tint="@color/primary"/>
+                app:tint="@color/primary"/>
 
         </RelativeLayout>
 
@@ -90,14 +90,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Center Pin Indicator -->
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_location_pin"
-        android:contentDescription="Location Marker"
-        android:elevation="4dp"/>
 
     <!-- Modern Bottom Sheet with Selection Info -->
     <LinearLayout
@@ -132,7 +124,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_location"
-                    android:tint="@color/primary"
+                    app:tint="@color/primary"
                     android:layout_marginEnd="12dp"
                     android:contentDescription="Location Icon"/>
 

@@ -123,7 +123,6 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
             Log.d(TAG, "Geocoder is available on this device");
         } else {
             Log.w(TAG, "Geocoder is NOT available on this device!");
-            Toast.makeText(this, "Geocoder không khả dụng. Sẽ hiển thị tọa độ.", Toast.LENGTH_LONG).show();
         }
 
         // Setup AutocompleteSupportFragment for place search
@@ -143,7 +142,7 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
                     selectedLatitude = place.getLatLng().latitude;
                     selectedLongitude = place.getLatLng().longitude;
                     selectedAddress = place.getAddress() != null ? place.getAddress()
-                            : "Lat: " + selectedLatitude + ", Lng: " + selectedLongitude;
+                            : (place.getName() != null ? place.getName() : "Vị trí đã chọn");
                     addMarker(place.getLatLng(), place.getName(), selectedAddress);
                 }
             }
@@ -280,7 +279,7 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
                 public void onActivityResult(Boolean isGranted) {
                     if (isGranted) {
                         try {
-                            mMap.setMyLocationEnabled(true);
+                            // Removed setMyLocationEnabled(true) to hide the blue location button
                             detectDeviceLocation();
                         } catch (SecurityException e) {
                             Toast.makeText(LocationPickerDepartureActivity.this,
@@ -385,10 +384,10 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
                 Log.e(TAG, "Google Geocoding API failed: " + e.getMessage(), e);
             }
 
-            // If still null, fallback to coordinates
+            // If still null, fallback to friendly message instead of coordinates
             if (address == null || address.isEmpty()) {
-                address = String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
-                Log.w(TAG, "All geocoding methods failed, using coordinates: " + address);
+                address = "Vị trí đã chọn";
+                Log.w(TAG, "All geocoding methods failed, using fallback message");
             }
 
             String finalAddress = address;
@@ -473,12 +472,12 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
             // Check if Geocoder is available
             if (!Geocoder.isPresent()) {
                 Log.w(TAG, "Geocoder is not present on this device");
-                return String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
+                return "Vị trí đã chọn";
             }
 
             if (geocoder == null) {
                 Log.w(TAG, "Geocoder is null");
-                return String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
+                return "Vị trí đã chọn";
             }
 
             // Get addresses from location
@@ -486,7 +485,7 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
 
             if (addresses == null || addresses.isEmpty()) {
                 Log.w(TAG, "No addresses found for coordinates");
-                return String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
+                return "Vị trí đã chọn";
             }
 
             Address address = addresses.get(0);
@@ -558,9 +557,9 @@ public class LocationPickerDepartureActivity extends AppCompatActivity implement
             Log.e(TAG, "Error getting address: " + e.getMessage(), e);
         }
 
-        // Fallback to coordinates if everything fails
-        String fallback = String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
-        Log.d(TAG, "Falling back to coordinates: " + fallback);
+        // Fallback to friendly message if everything fails
+        String fallback = "Vị trí đã chọn";
+        Log.d(TAG, "Falling back to friendly message");
         return fallback;
     }
 
