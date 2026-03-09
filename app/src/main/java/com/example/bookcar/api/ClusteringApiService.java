@@ -33,7 +33,7 @@ public class ClusteringApiService {
     // TODO: Update this to your server URL
     // For local development: "http://10.0.2.2:5000" (Android emulator)
     // For LDPlayer/real device: Use your PC's LAN IP
-    private static final String BASE_URL = "http://192.168.1.4:5000";
+    private static final String BASE_URL = "http://192.168.1.8:5000";
 
     private static ClusteringApiService instance;
     private OkHttpClient client;

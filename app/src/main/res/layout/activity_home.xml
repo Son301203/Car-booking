@@ -313,7 +313,7 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_time"
-                                app:tint="@color/driver_success"
+                                app:tint="@color/driver_primary"
                                 android:layout_marginEnd="16dp" />
 
                             <LinearLayout
@@ -358,7 +358,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
-                        app:backgroundTint="@color/driver_success"
+                        app:backgroundTint="@color/driver_primary"
                         app:cornerRadius="16dp"
                         app:elevation="8dp"
                         app:icon="@drawable/drive_eta"
